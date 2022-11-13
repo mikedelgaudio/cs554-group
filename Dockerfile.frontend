@@ -1,10 +1,24 @@
-FROM node:18.12
+### STAGE 1: BUILD ###
+FROM node:18.12 AS build
 WORKDIR /app
+ENV API_ENDPOINT = "https://cs554-api.delgaudio.dev/"
 COPY ./frontend/package*.json ./
 RUN npm install
-COPY ./frontend/ .
+COPY ./frontend/ ./
 RUN npm run build
-EXPOSE 3000
 
-# USER node
-CMD [ "npm", "run", "dev" ]
+### STAGE 2: NGINX ###
+FROM nginx:1.22 as production
+WORKDIR /app
+RUN chown -R nginx:nginx /app && chmod -R 755 /app && \
+        chown -R nginx:nginx /var/cache/nginx && \
+        chown -R nginx:nginx /var/log/nginx && \
+        chown -R nginx:nginx /etc/nginx/conf.d
+RUN touch /var/run/nginx.pid && \
+        chown -R nginx:nginx /var/run/nginx.pid
+## switch to non-root user
+COPY --from=build /app/dist/ /usr/share/nginx/html
+COPY --from=build /app/conf/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+USER nginx
+CMD ["nginx", "-g", "daemon off;"]
