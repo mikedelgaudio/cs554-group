@@ -4,6 +4,8 @@ services:
     image: "redis:7.0"
     expose:
       - "6379"
+    networks:
+      - internal-proxy
   backend:
     build:
       context: ./
@@ -12,9 +14,11 @@ services:
       - redis
     env_file:
       - ./backend/.env
+    networks:
+      - external-proxy
     ports:
       - "3001:3001"
-    command: npm run dev
+    command: npm start
   frontend:
     build:
       context: ./
@@ -25,3 +29,11 @@ services:
       - ./frontend/.env
     ports:
       - "3000:80"
+    networks:
+      - external-proxy
+
+networks:
+  external-proxy:
+    external: true
+  internal-proxy:
+    external: false
