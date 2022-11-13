@@ -1,0 +1,8 @@
+FROM node:18.12
+WORKDIR /app
+COPY ./backend/package*.json ./
+RUN npm install
+COPY ./backend/dist/ ./
+EXPOSE 3001
+USER node
+CMD [ "npm", "start" ]

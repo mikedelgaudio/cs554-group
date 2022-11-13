@@ -1,0 +1,43 @@
+:root {
+  --hamburger-width: 32px;
+}
+
+.hamburger-menu-button {
+  position: relative;
+  width: var(--hamburger-width);
+  height: var(--hamburger-width);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 150ms ease-in-out;
+}
+
+.hamburger-menu,
+.hamburger-menu::after {
+  height: calc(0.125 * var(--hamburger-width));
+  border-radius: calc(0.15 * var(--hamburger-width));
+  background-color: #50585d;
+  transition: all 0.25s ease-in-out;
+}
+
+.hamburger-menu {
+  width: calc(0.75 * var(--hamburger-width));
+  transform: translateY(calc(-0.125 * var(--hamburger-width)));
+}
+
+.hamburger-menu::after {
+  position: absolute;
+  width: calc(0.375 * var(--hamburger-width));
+  transform: translateY(calc(0.25 * var(--hamburger-width)));
+  content: "";
+}
+
+.open {
+  transform: translateY(0px) rotate(45deg);
+}
+
+.open::after {
+  width: calc(0.75 * var(--hamburger-width));
+  transform: translateY(0px) rotate(-90deg);
+}
