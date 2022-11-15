@@ -22,6 +22,15 @@ const Navbar = () => {
         </li>
         <li>
           <a
+            className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
+            href="/favorited"
+            onClick={navigated}
+          >
+            Favorited
+          </a>
+        </li>
+        <li>
+          <a
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
             href="/profile"
             onClick={navigated}
