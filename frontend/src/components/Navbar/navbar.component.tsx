@@ -14,19 +14,19 @@ const Navbar = () => {
         <li>
           <a
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            href="/dashboard"
+            href="/discover"
             onClick={navigated}
           >
-            Dashboard
+            Discover
           </a>
         </li>
         <li>
           <a
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-            href="/#team"
+            href="/profile"
             onClick={navigated}
           >
-            Settings
+            Profile
           </a>
         </li>
         <li>
