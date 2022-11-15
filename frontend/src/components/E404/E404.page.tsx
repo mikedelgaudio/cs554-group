@@ -1,4 +1,7 @@
+import { useTitle } from "../../hooks/useTitle.hook";
+
 const E404 = () => {
+  useTitle("404");
   return (
     <div className="flex min-h-screen flex-col gap-2 items-center pt-5">
       <h1 className="text-7xl font-bold">Error 404</h1>
