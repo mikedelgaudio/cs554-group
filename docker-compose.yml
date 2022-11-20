@@ -5,9 +5,15 @@ services:
     # the port that we want to publish for mongodb
     ports:
       - "27017:27017"
+    domainname: cs554
+    deploy:
+      resources:
+        limits:
+          cpus: "0.05"
+          memory: 0.5GB
     # our mongodb depends on volume to keep the data alive.
-    volumes:
-      - mongo-data:/data/db
+    # volumes:
+    #   - mongo-data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: "testing123"
@@ -15,18 +21,34 @@ services:
       - internal-proxy
   redis:
     image: "redis:7.0"
-    expose:
-      - "6379"
+    domainname: cs554
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.05"
+          memory: 0.5GB
     networks:
       - internal-proxy
+    ports:
+      - "6379:6379"
   backend:
+    platform: linux/amd64
     build:
       context: ./
       dockerfile: Dockerfile.backend
+    domainname: cs554
+    image: cs554acr.azurecr.io/backend
+    deploy:
+      resources:
+        limits:
+          cpus: "0.05"
+          memory: 0.5GB
     depends_on:
       - redis
-    env_file:
-      - ./backend/.env
+      - mongodb
+    # env_file:
+    #   - ./backend/.env
     networks:
       - external-proxy
       - internal-proxy
@@ -34,24 +56,34 @@ services:
       - "3001:3001"
     command: npm start
   frontend:
+    platform: linux/amd64
     build:
       context: ./
       dockerfile: Dockerfile.frontend
+    domainname: cs554
+    image: cs554acr.azurecr.io/frontend
+    deploy:
+      resources:
+        limits:
+          cpus: "0.05"
+          memory: 0.5GB
     depends_on:
       - backend
-    env_file:
-      - ./frontend/.env
+    # env_file:
+    #   - ./frontend/.env
     ports:
-      - "3000:80"
+      - "80:80"
+    command: ["nginx", "-g", "daemon off;"]
     networks:
       - external-proxy
-
 networks:
   external-proxy:
     external: true
   internal-proxy:
     external: false
-
-volumes:
-  mongo-data:
-    external: false
+# volumes:
+#   mongo-data:
+#     driver: azure_file
+#     driver_opts:
+#       share_name: cs554storageshare
+#       storage_account_name: cs554storage
