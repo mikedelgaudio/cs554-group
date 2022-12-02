@@ -6,12 +6,13 @@ import { useCurrentUser } from "../../hooks/useCurrentUser.hook";
 
 const Profile = () => {
     useTitle("Profile");
-    // profile id = id param
-    const { id } = useParams();
-    // if profile id  = current user id
-    // const isCurrentUser = id === useCurrentUser().id;
-    const isCurrentUser = false;
+    const params = useParams();
+    const id = params.id;
+    const isCurrentUser = id === useCurrentUser().id;
+    console.log('Param Id: ', id);
+    console.log('Current User Id: ', useCurrentUser().id);
     if (isCurrentUser) {
+        console.log('This profile is the current user');
         // const profile = useSelector((state: RootState) => state.profile);
         return (
             <div className="flex flex-col items-center justify-center w-full h-full">
@@ -21,6 +22,7 @@ const Profile = () => {
     }
     else {
         // get profile from backend
+        console.log('This profile is not the current user');
         return (
             <div className="flex flex-col items-center justify-center w-full h-full">
                 {/* Profile Fields: username, firstName, lastName, profileImage, contactInfo{}, socialMedia[], likes[], dislikes[], favoritedUsers[] */}

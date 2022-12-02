@@ -21,7 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/favorited" element={<Favorited />} />
-          <Route path="/profile/:username" element={<Profile />} />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="*" element={<E404 />} />
         </Routes>
       </main>
