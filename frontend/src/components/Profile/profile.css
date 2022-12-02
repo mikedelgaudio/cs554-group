@@ -1,0 +1,18 @@
+.form {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.input {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+}

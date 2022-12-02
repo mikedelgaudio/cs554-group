@@ -8,7 +8,7 @@ export function useCurrentUser() {
             username: "test",
             firstName: "test",
             lastName: "test",
-            profileImage: "test",
+            profileImage: "https://picsum.photos/200/300",
             contactInfo: {
                 phoneNumer: "test",
                 email: "test",
