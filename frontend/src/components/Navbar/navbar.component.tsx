@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./navbar.component.css";
+import { useCurrentUser } from "../../hooks/useCurrentUser.hook";
 
 const Navbar = () => {
   const [toggled, setToggle] = useState(false);
@@ -32,7 +33,7 @@ const Navbar = () => {
         <li>
           <a
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-            href="/profile"
+            href={"/profile/" + useCurrentUser().id}
             onClick={navigated}
           >
             Profile
