@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/useTitle.hook";
 import { TOAST_SERVICE } from "../../../utils/toast.util";
-import { AuthLayout } from "../Shared/auth-layout.component";
+import { AuthLayout } from "../layouts/auth-layout.component";
 
 const Login = () => {
   useTitle("Login - Prism");
@@ -21,7 +21,7 @@ const Login = () => {
     try {
       setLoading(true);
       if (login) await login(email, password);
-      navigate("/dashboard/day");
+      navigate("/");
     } catch (e: any) {
       let errorMsg =
         "Unexpected error logging in. Please refresh the page and try again.";

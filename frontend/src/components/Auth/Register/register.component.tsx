@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/useTitle.hook";
 import { TOAST_SERVICE } from "../../../utils/toast.util";
-import { AuthLayout } from "../Shared/auth-layout.component";
+import { AuthLayout } from "../layouts/auth-layout.component";
 
 const Register = () => {
   useTitle("Register - Prism");
@@ -37,10 +37,7 @@ const Register = () => {
       setLoading(true);
       if (register) await register(email, password);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
-
-      // TODO
-      // ! Where should this navigate to after registering?
-      navigate("/profile");
+      navigate("/");
     } catch (e) {
       const TOAST_ID = "FAILED_TO_REGISTER";
       TOAST_SERVICE.error(
