@@ -14,3 +14,8 @@ html {
 body {
   min-width: 300px;
 }
+
+.required:after {
+  color: #e32;
+  content: " *";
+}
