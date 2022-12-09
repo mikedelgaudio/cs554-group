@@ -1,32 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+
+// TODO
+// Must align footer profile URL
 
 const Footer = () => {
   const links = () => {
     return (
       <>
         <li>
-          <Link
+          <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            to="#"
+            to="/discover"
           >
-            Link 1
-          </Link>
+            Discover
+          </NavLink>
         </li>
         <li>
-          <Link
+          <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            to="#"
+            to="/favorited"
           >
-            Link 2
-          </Link>
+            Favorited
+          </NavLink>
         </li>
+
         <li>
-          <Link
+          <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            to="#"
+            to={"/profile/1"}
           >
-            Link 3
-          </Link>
+            Profile
+          </NavLink>
         </li>
       </>
     );
@@ -39,7 +43,7 @@ const Footer = () => {
             className="text-3xl lg:text-4xl font-semibold rounded text-slate-900 transition-all duration-200 hover:text-opacity-50 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
             to="/"
           >
-            LOGO NAME
+            DuckedIn
           </Link>
           <nav className="pt-1">
             <ul className="flex list-none items-center gap-9">{links()}</ul>
