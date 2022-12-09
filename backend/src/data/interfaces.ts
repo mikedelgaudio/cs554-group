@@ -1,4 +1,4 @@
-interface contactInfo {
+export interface contactInfo {
     phoneNumber: string;
     email: string;
     personalWebsite: string;
@@ -6,21 +6,21 @@ interface contactInfo {
 }
 
 
-interface socialMedia {
+export interface socialMedia {
     _id: string;
     profileUrl: string;
 }
-interface like {
+export interface like {
     _id: string;
     like: string;
 }
-interface dislike {
+export interface dislike {
     _id: string;
     dislike: string;
 }
 
 
-interface user {
+export interface user {
     username: string;
     password: string;
     firstName: string;
@@ -34,7 +34,7 @@ interface user {
 };
 
 interface users {
-    users: Array<user>;
+    users: Array<userI>;
 }
 
 
