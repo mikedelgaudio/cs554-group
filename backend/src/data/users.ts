@@ -1,4 +1,4 @@
-import {contactInfo, socialMedia, like, dislike, user, users as usersInterface} from "./interfaces";
+import {contactInfo, socialMedia, like, dislike, user, usersI } from "./interfaces";
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 const {ObjectId} = require('mongodb');

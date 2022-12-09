@@ -18,6 +18,6 @@ const getCollectionFn = (collection: string) => {
   }
 };
 
-export const collections = {
+module.exports = {
   users: getCollectionFn("users"),
 };

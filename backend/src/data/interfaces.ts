@@ -33,7 +33,7 @@ export interface user {
     favoritedUsers: Array<string>;
 };
 
-export interface users {
+export interface usersI {
     users: Array<user>;
 }
 
