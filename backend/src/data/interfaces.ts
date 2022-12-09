@@ -26,15 +26,15 @@ interface user {
     firstName: string;
     lastName: string;
     profileImage: string;
-    contactInfo: contactInfoI;
-    socialMedias: Array<socialMediaI>;
-    likes: Array<likeI>;
-    dislikes: Array<dislikeI>;
+    contactInfo: contactInfo;
+    socialMedias: Array<socialMedia>;
+    likes: Array<like>;
+    dislikes: Array<dislike>;
     favoritedUsers: Array<string>;
 };
 
 interface users {
-    users: Array<userI>;
+    users: Array<user>;
 }
 
 

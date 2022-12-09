@@ -2,8 +2,20 @@ import express, { Request, Response, Router } from "express";
 
 export const usersRouter: Router = express.Router();
 
-usersRouter.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+
+
+usersRouter.get('/', (req: Request, res: Response) => {
+    res.send('Hello world!');
+  });
+ 
+usersRouter.get('/profile/:username', (req: Request, res: Response) => {
+    res.send('Hello world!');
+  });
+ 
+
+usersRouter.get("/favorited", (req: Request, res: Response) => {
+    res.send("Express + TypeScript Server");
+
 
 
 /* 
