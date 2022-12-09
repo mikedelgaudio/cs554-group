@@ -1,12 +1,26 @@
+const mongoCollections = require('../config/mongoCollections');
+const users = mongoCollections.users;
 import express, { Request, Response, Router } from "express";
+let data = require("../data/users");
 
 export const usersRouter: Router = express.Router();
 
 
 
-usersRouter.get('/', (req: Request, res: Response) => {
-    res.send('Hello world!');
-  });
+usersRouter.post('/register', async (req: Request, res: Response) => {
+
+    try {
+        let {username, email, password} = req.body;
+        //console.log(username, email, password);
+        let answer = await data.createUser(username, email, password);
+        //console.log(answer.username);
+        res.json(answer);
+      }
+      catch (e) {
+        res.status(404).json({error:e});
+      }
+    })
+
  
 usersRouter.get('/profile/:username', (req: Request, res: Response) => {
     res.send('Hello world!');
@@ -16,7 +30,8 @@ usersRouter.get('/profile/:username', (req: Request, res: Response) => {
 usersRouter.get("/favorited", (req: Request, res: Response) => {
     res.send("Express + TypeScript Server");
 
-usersRouter.post("/register", (req: Request, res: Response) => {
+usersRouter.get("/", (req: Request, res: Response) => {
+
         res.send("Express + TypeScript Server");
       });
 
