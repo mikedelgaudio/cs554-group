@@ -16,7 +16,9 @@ usersRouter.get('/profile/:username', (req: Request, res: Response) => {
 usersRouter.get("/favorited", (req: Request, res: Response) => {
     res.send("Express + TypeScript Server");
 
-
+usersRouter.post("/register", (req: Request, res: Response) => {
+        res.send("Express + TypeScript Server");
+      });
 
 /* 
 
