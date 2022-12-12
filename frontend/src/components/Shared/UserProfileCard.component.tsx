@@ -13,15 +13,16 @@ import { Loading } from "./Loading.component";
 const UserProfileCard = ({ id }: { id: string }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        // TODO
-        // ! Update this with actual backend, why is this erroring?
-        // ! You'd use ID from the passed props
-        const { data } = await axios.request("http://localhost:3000/user");
-        setUser(data[0]);
+        // TODO Update with actual backend URL
+        const { data } = await axios.request(
+          `http://localhost:3000/users/${id}`,
+        );
+        setUser(data);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILE_CARD";
 
