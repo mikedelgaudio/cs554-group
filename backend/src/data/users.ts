@@ -27,6 +27,14 @@ async createUser(username: string, email: string, password: string) {
       email: email,
       username: username,
       password: newPassword,
+      firstName: "",
+      lastName:"",
+      profileImage: null, 
+      contactInfo:{},
+      socialMedia: [],
+      likes:[],
+      dislikes:[],
+      favoritedUsers:[]
     }
     console.log(newUser);
     
@@ -53,5 +61,13 @@ async createUser(username: string, email: string, password: string) {
     console.log(userList);
     return userList;
   },
+
+  async getFavoritedUsers(username: string){
+    let userCollection = await users();
+    console.log("Get Specific User");
+    let userList = await userCollection.find({"username": username}).toArray();
+    
+    return userList;
+  }
     }
 
