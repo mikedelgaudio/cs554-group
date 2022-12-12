@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import noImg from "../../assets/noImg.jpg";
-import { useFirebaseAuth } from "../../firebase/firebase.context";
 import {
   SocialMediaItem,
   User,
@@ -14,16 +13,13 @@ import { Loading } from "./Loading.component";
 const UserProfileCard = ({ id }: { id: string }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
-  const { currentUser } = useFirebaseAuth();
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
         // TODO Update with actual backend URL
-        const { data } = await axios.request(
-          `http://localhost:3000/users/${id}`,
-        );
+        const { data } = await axios.get(`http://localhost:3000/users/${id}`);
         setUser(data);
 
         // Get current user's favorite user
