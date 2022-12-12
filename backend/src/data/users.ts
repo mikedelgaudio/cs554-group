@@ -45,5 +45,13 @@ async createUser(username: string, email: string, password: string) {
 
     return userList;
   }, 
+
+  async getOneUser(username: string) {
+    let userCollection = await users();
+    console.log("Get Specific User");
+    let userList = await userCollection.find({"username": username}).toArray();
+    console.log(userList);
+    return userList;
+  },
     }
 

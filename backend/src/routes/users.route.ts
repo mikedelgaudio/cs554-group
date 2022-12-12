@@ -26,8 +26,16 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
     });
 
 
-usersRouter.get('/profile/:username', (req: Request, res: Response) => {
-    res.send('Hello world!');
+usersRouter.get('/profile/:username', async (req: Request, res: Response) => {
+    let username = req.params.username;
+    console.log(username);
+    console.log("getUser route");
+    try{
+        let users = await data.getOneUser(username);
+        res.json(users);
+    }catch(e){
+        res.status(404).json({error:e});
+    }
   });
  
 
