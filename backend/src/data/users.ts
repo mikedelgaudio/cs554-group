@@ -39,5 +39,11 @@ async createUser(username: string, email: string, password: string) {
 
     }
   },
+  async getAllUsers() {
+    let userCollection = await users();
+    let userList = await userCollection.find().toArray();
+
+    return userList;
+  }, 
     }
 

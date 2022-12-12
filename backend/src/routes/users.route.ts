@@ -11,7 +11,11 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
 
     try {
         let {username, email, password} = req.body;
+        console.log(typeof(username));
+        console.log(typeof(email));
+        console.log(typeof(password));
         //console.log(username, email, password);
+        
         let answer = await data.createUser(username, email, password);
         //console.log(answer.username);
         res.json(answer);
@@ -19,9 +23,9 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
       catch (e) {
         res.status(404).json({error:e});
       }
-    })
+    });
 
- 
+
 usersRouter.get('/profile/:username', (req: Request, res: Response) => {
     res.send('Hello world!');
   });
@@ -29,11 +33,18 @@ usersRouter.get('/profile/:username', (req: Request, res: Response) => {
 
 usersRouter.get("/favorited", (req: Request, res: Response) => {
     res.send("Express + TypeScript Server");
+});
 
-usersRouter.get("/", (req: Request, res: Response) => {
+usersRouter.get("/", async(req: Request, res: Response) => {
 
-        res.send("Express + TypeScript Server");
-      });
+    try{
+        let users = await data.getAllUsers();
+        return res.json(users);
+    }catch(e){
+        res.status(404).json({error:e});
+
+    }
+});
 
 /* 
 
@@ -87,4 +98,3 @@ usersRouter.get("/", (req: Request, res: Response) => {
 
 
 
-});
