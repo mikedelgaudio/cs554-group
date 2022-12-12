@@ -12,8 +12,30 @@ const INITIAL_STATE: ReduxInitialState = {
   fetchedError: false,
 };
 
+// Is this correct? -Sydney
 const appReducer = (state = INITIAL_STATE, action: any) => {
-  switch (action.type) {
+  switch (action) {
+    case "FETCH_USER":
+      return {
+        ...state,
+        user: action.payload,
+        fetched: true,
+        fetchedError: false,
+      };
+    case "FETCH_USER_ERROR":
+      return {
+        ...state,
+        user: null,
+        fetched: true,
+        fetchedError: true,
+      }; 
+      case "LOGOUT_USER":
+        return {
+          ...state,
+          user: null,
+          fetched: true,
+          fetchedError: false,
+        };
     // case LOAD_USER:
     //   break;
     // case TOGGLE_USER_FAVORITE:
