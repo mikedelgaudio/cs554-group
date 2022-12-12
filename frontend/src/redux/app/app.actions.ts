@@ -1,58 +1,91 @@
 import * as types from "./app.types";
 
-export const createTeam = (trainerName: string) => {
+export const userFetch = () => {
   return {
-    type: types.CREATE_TEAM,
+    type: types.USER_FETCH,
     payload: {
-      trainerName,
+      fetched: true,
     },
   };
 };
 
-export const addPokemonToTeam = (
-  teamId: string,
-  pokemonId: string,
-  pokemonName: string,
-  imgSrc: string,
-  imgAlt: string,
-) => {
+export const userFetchSuccess = () => {
   return {
-    type: types.ADD_POKEMON_TO_TEAM,
+    type: types.USER_FETCH_SUCCESS,
     payload: {
-      teamId,
-      pokemonId,
-      pokemonName,
-      imgSrc,
-      imgAlt,
+      fetchedError: false,
     },
   };
 };
 
-export const removePokemonFromTeam = (teamId: string, pokemonId: string) => {
+export const userFetchFail = () => {
   return {
-    type: types.REMOVE_POKEMON_FROM_TEAM,
+    type: types.USER_FETCH_FAIL,
     payload: {
-      teamId,
-      pokemonId,
+      fetchedError: true,
     },
   };
 };
 
-export const setSelectedTeam = (teamId: string, trainerName: string) => {
+export const toggleUserFavorite = (favoritedUserId: string) => {
   return {
-    type: types.SET_SELECTED_TEAM,
+    type: types.TOGGLE_USER_FAVORITE,
     payload: {
-      teamId,
-      trainerName,
+      id: favoritedUserId,
     },
   };
 };
 
-export const deleteTeam = (teamId: string) => {
+export const addUserLike = (name: string) => {
   return {
-    type: types.DELETE_TEAM,
+    type: types.ADD_USER_LIKE,
     payload: {
-      teamId,
+      name,
+    },
+  };
+};
+
+export const deleteUserLike = (likeId: string) => {
+  return {
+    type: types.DELETE_USER_LIKE,
+    payload: {
+      likeId,
+    },
+  };
+};
+
+export const addUserDislike = (name: string) => {
+  return {
+    type: types.ADD_USER_DISLIKE,
+    payload: {
+      name,
+    },
+  };
+};
+
+export const deleteUserDislike = (dislikeId: string) => {
+  return {
+    type: types.DELETE_USER_DISLIKE,
+    payload: {
+      dislikeId,
+    },
+  };
+};
+
+export const addUserSocialMedia = (profileUrl: string) => {
+  return {
+    type: types.ADD_USER_SOCIAL_MEDIA,
+    payload: {
+      profileUrl,
+    },
+  };
+};
+
+export const deleteUserSocialMedia = (socialMediaId: string) => {
+  return {
+    type: types.DELETE_USER_SOCIAL_MEDIA,
+    payload: {
+      socialMediaId,
     },
   };
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import noImg from "../../assets/noImg.jpg";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 import {
   SocialMediaItem,
   User,
@@ -13,6 +14,7 @@ import { Loading } from "./Loading.component";
 const UserProfileCard = ({ id }: { id: string }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
+  const { currentUser } = useFirebaseAuth();
 
   useEffect(() => {
     async function fetchData() {
@@ -23,6 +25,9 @@ const UserProfileCard = ({ id }: { id: string }) => {
           `http://localhost:3000/users/${id}`,
         );
         setUser(data);
+
+        // Get current user's favorite user
+        // Determine if favorited
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILE_CARD";
 

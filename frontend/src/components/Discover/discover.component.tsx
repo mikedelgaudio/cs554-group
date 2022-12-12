@@ -18,7 +18,6 @@ const Discover = () => {
       try {
         // TODO Update with actual backend URL
         const { data } = await axios.request("http://localhost:3000/users");
-        console.log(data);
         setUsers(data);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILES";
