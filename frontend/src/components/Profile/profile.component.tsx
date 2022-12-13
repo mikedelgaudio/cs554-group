@@ -1,6 +1,5 @@
 import { useTitle } from "../../hooks/useTitle.hook";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useCurrentUser } from "../../hooks/useCurrentUser.hook";
 import "./profile.css";
 import { useEffect } from "react";
@@ -20,7 +19,6 @@ const Profile = () => {
   console.log("Current User Id: ", useCurrentUser().id);
   if (isCurrentUser) {
     console.log("This profile is the current user");
-    // const profile = useSelector((state: RootState) => state.profile);
     return (
       <div className="flex flex-col items-center justify-center w-full h-full">
         <h1>First Name: {useCurrentUser().firstName}</h1>

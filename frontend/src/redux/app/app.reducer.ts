@@ -13,6 +13,7 @@ const INITIAL_STATE: ReduxInitialState = {
   fetchedError: false,
 };
 
+// Is this correct? -Sydney
 const appReducer = (state = INITIAL_STATE, action: any) => {
   switch (action.type) {
     case USER_FETCH:
