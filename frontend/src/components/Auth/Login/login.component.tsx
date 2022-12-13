@@ -1,19 +1,26 @@
 import { FormEvent, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/useTitle.hook";
+import { ReduxInitialState } from "../../../redux/app/app.reducer";
 import { TOAST_SERVICE } from "../../../utils/toast.util";
 import { AuthLayout } from "../layouts/auth-layout.component";
 
 const Login = () => {
   useTitle("Login - Prism");
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { login } = useFirebaseAuth();
+  const { login, currentUser } = useFirebaseAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const loggedInUserFetch = useSelector(
+    (state: ReduxInitialState) => state.fetched,
+  );
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,6 +28,25 @@ const Login = () => {
     try {
       setLoading(true);
       if (login) await login(email, password);
+
+      // if (!loggedInUserFetch) {
+      //   // TODO Uncomment
+      //   // const { data } = await axios.get(`http://localhost:3000/users/${currentUser?.uid}`);
+
+      //   dispatch(userFetch());
+      //   const { data } = await axios.get(`http://localhost:3000/users/2`);
+
+      //   if (!data) {
+      //     dispatch(userFetchFail());
+      //     const TOAST_ID = "LOAD_USER_FAIL";
+      //     TOAST_SERVICE.error(TOAST_ID, "Failed to load logged in user", true);
+      //     // TODO How should user recover from this state?
+      //     return;
+      //   }
+
+      //   dispatch(userFetchSuccess(data));
+      // }
+
       navigate("/");
     } catch (e: any) {
       let errorMsg =

@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.model";
+import { ReduxInitialState } from "../../redux/app/app.reducer";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "../Shared/Loading.component";
 import { UserProfileCard } from "../Shared/UserProfileCard.component";
@@ -12,6 +14,7 @@ const Discover = () => {
   const [users, setUsers] = useState<User[]>();
   const [loading, setLoading] = useState<boolean>(true);
 
+  const storeUser = useSelector((state: ReduxInitialState) => state.user);
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -30,6 +33,7 @@ const Discover = () => {
     fetchData();
   }, []);
 
+  console.log(storeUser);
   return (
     <div id="home" className="relative py-6 bg-slate-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

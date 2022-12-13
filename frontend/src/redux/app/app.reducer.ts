@@ -1,4 +1,5 @@
 import { User } from "../../models/user.model";
+import { USER_FETCH, USER_FETCH_FAIL, USER_FETCH_SUCCESS } from "./app.types";
 
 export interface ReduxInitialState {
   user: User | null; // Logged in user data
@@ -14,10 +15,26 @@ const INITIAL_STATE: ReduxInitialState = {
 
 const appReducer = (state = INITIAL_STATE, action: any) => {
   switch (action.type) {
-    // case LOAD_USER:
-    //   break;
-    // case TOGGLE_USER_FAVORITE:
-    //   break;
+    case USER_FETCH:
+      return {
+        ...state,
+        fetched: action.payload.fetched,
+        fetchedError: action.payload.fetchedError,
+      };
+    case USER_FETCH_SUCCESS:
+      return {
+        ...state,
+        user: action.payload.user,
+        fetched: action.payload.fetched,
+        fetchedError: action.payload.fetchedError,
+      };
+    case USER_FETCH_FAIL:
+      return {
+        ...state,
+        fetched: action.payload.fetched,
+        fetchedError: action.payload.fetchedError,
+      };
+
     // case types.ADD_POKEMON_TO_TEAM:
     //   return {
     //     ...state,

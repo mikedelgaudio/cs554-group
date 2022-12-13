@@ -1,13 +1,16 @@
 import { FormEvent, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/useTitle.hook";
+import { ReduxInitialState } from "../../../redux/app/app.reducer";
 import { TOAST_SERVICE } from "../../../utils/toast.util";
 import { AuthLayout } from "../layouts/auth-layout.component";
 
 const Register = () => {
   useTitle("Register - Prism");
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, register, updateDisplayName } = useFirebaseAuth();
 
@@ -17,6 +20,10 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const loggedInUserFetch = useSelector(
+    (state: ReduxInitialState) => state.fetched,
+  );
 
   useEffect(() => {
     if (currentUser) {
@@ -37,6 +44,25 @@ const Register = () => {
       setLoading(true);
       if (register) await register(email, password);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
+
+      // if (!loggedInUserFetch) {
+      //   // TODO Uncomment
+      //   // const { data } = await axios.get(`http://localhost:3000/users/${currentUser?.uid}`);
+
+      //   dispatch(userFetch());
+      //   const { data } = await axios.get(`http://localhost:3000/users/2`);
+
+      //   if (!data) {
+      //     dispatch(userFetchFail());
+      //     const TOAST_ID = "LOAD_USER_FAIL";
+      //     TOAST_SERVICE.error(TOAST_ID, "Failed to load logged in user", true);
+      //     // TODO How should user recover from this state?
+      //     return;
+      //   }
+
+      //   dispatch(userFetchSuccess(data));
+      // }
+
       navigate("/");
     } catch (e) {
       const TOAST_ID = "FAILED_TO_REGISTER";

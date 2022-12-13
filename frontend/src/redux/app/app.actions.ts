@@ -1,3 +1,4 @@
+import { User } from "../../models/user.model";
 import * as types from "./app.types";
 
 export const userFetch = () => {
@@ -5,14 +6,18 @@ export const userFetch = () => {
     type: types.USER_FETCH,
     payload: {
       fetched: true,
+      fetchedError: false,
     },
   };
 };
 
-export const userFetchSuccess = () => {
+export const userFetchSuccess = (user: User) => {
+  console.log(user);
   return {
     type: types.USER_FETCH_SUCCESS,
     payload: {
+      user,
+      fetched: true,
       fetchedError: false,
     },
   };
@@ -22,6 +27,7 @@ export const userFetchFail = () => {
   return {
     type: types.USER_FETCH_FAIL,
     payload: {
+      fetched: true,
       fetchedError: true,
     },
   };
