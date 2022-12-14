@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useTitle } from "../../hooks/useTitle.hook";
-import { User } from "../../models/user.model";
-import { ReduxInitialState } from "../../redux/app/app.reducer";
+import { FavoritedUser, User } from "../../models/user.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "../Shared/Loading.component";
 import { UserProfileCard } from "../Shared/UserProfileCard.component";
@@ -12,16 +10,22 @@ const Discover = () => {
   useTitle("Discover");
 
   const [users, setUsers] = useState<User[]>();
+  const [loggedInUser, setLoggedInUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const storeUser = useSelector((state: ReduxInitialState) => state.user);
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
         // TODO Update with actual backend URL
-        const { data } = await axios.get("http://localhost:3000/users");
-        setUsers(data);
+        const allUsersData = await axios.get("http://localhost:3000/users");
+        setUsers(allUsersData.data);
+
+        // const loggedInUserData = await axios.get(`http://localhost:3000/users/${currentUser?.uid}`);
+        const loggedInUserData = await axios.get(
+          "http://localhost:3000/users/2",
+        );
+        setLoggedInUser(loggedInUserData.data);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILES";
 
@@ -33,7 +37,6 @@ const Discover = () => {
     fetchData();
   }, []);
 
-  console.log(storeUser);
   return (
     <div id="home" className="relative py-6 bg-slate-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -48,7 +51,16 @@ const Discover = () => {
             <Loading />
           ) : (
             users?.map((user: User) => {
-              return <UserProfileCard key={user?.id} id={user?.id} />;
+              const favorited = loggedInUser?.favoritedUsers?.find(
+                (fUser: FavoritedUser) => fUser.id === user?.id,
+              );
+              return (
+                <UserProfileCard
+                  key={user?.id}
+                  id={user?.id}
+                  wasFavorited={!!favorited ?? false}
+                />
+              );
             })
           )}
         </div>

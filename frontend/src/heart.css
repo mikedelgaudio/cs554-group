@@ -17,7 +17,8 @@
   -webkit-animation: pulse 0.6s 0.3s infinite;
   animation: pulse 0.6s 0.3s infinite;
 }
-.heart-clip:hover::before {
+.heart-clip:hover::before,
+.heart-clip.heart-on::before {
   transform: scale(1);
   opacity: 1;
 }
