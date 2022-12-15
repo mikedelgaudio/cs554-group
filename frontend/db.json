@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "graffixnyc",
+      "firstName": "Patrick",
+      "lastName": "Hill",
+      "profileImage": "https://via.placeholder.com/150",
+      "contactInfo": {
+        "phoneNumber": "718-555-5555",
+        "email": "phill@stevens.edu",
+        "personalWebsite": "http://www.patrickhill.nyc/",
+        "currentRole": "test"
+      },
+      "socialMedia": [
+        {
+          "id": "1",
+          "profileURL": "test"
+        }
+      ],
+      "likes": [
+        {
+          "id": "1",
+          "name": "test"
+        }
+      ],
+      "dislikes": [
+        {
+          "id": "1",
+          "name": "test"
+        }
+      ],
+      "favoritedUsers": [
+        {
+          "id": "1"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "username": "mdelgaud",
+      "firstName": "Mike",
+      "lastName": "Dell",
+      "profileImage": "https://via.placeholder.com/150",
+      "contactInfo": {
+        "phoneNumber": "718-555-5555",
+        "email": "mdelgaud@stevens.edu",
+        "personalWebsite": "http://www.patrickhill.nyc/",
+        "currentRole": "test"
+      },
+      "socialMedia": [
+        {
+          "id": "1",
+          "profileURL": "test"
+        }
+      ],
+      "likes": [
+        {
+          "id": "1",
+          "name": "test"
+        }
+      ],
+      "dislikes": [
+        {
+          "id": "1",
+          "name": "test"
+        }
+      ],
+      "favoritedUsers": [
+        {
+          "id": "1"
+        }
+      ]
+    }
+  ]
+}

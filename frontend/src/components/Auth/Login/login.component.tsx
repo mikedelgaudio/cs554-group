@@ -21,6 +21,7 @@ const Login = () => {
     try {
       setLoading(true);
       if (login) await login(email, password);
+
       navigate("/");
     } catch (e: any) {
       let errorMsg =

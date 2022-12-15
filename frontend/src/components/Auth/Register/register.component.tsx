@@ -37,6 +37,7 @@ const Register = () => {
       setLoading(true);
       if (register) await register(email, password);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
+
       navigate("/");
     } catch (e) {
       const TOAST_ID = "FAILED_TO_REGISTER";
