@@ -48,26 +48,36 @@ async createUser(username: string, email: string, password: string) {
     }
   },
   async getAllUsers() {
-    let userCollection = await users();
-    let userList = await userCollection.find().toArray();
-
-    return userList;
+    try{
+      let userCollection = await users();
+      let userList = await userCollection.find().toArray();
+      return userList;
+    }catch(e){
+      throw new Error("Could not get users.")
+    }
   }, 
 
   async getOneUser(username: string) {
+    try{
     let userCollection = await users();
-    console.log("Get Specific User");
     let userList = await userCollection.find({"username": username}).toArray();
     console.log(userList);
     return userList;
+  }catch(e){
+    throw new Error("Could not get user.")
+  }
+
   },
 
   async getFavoritedUsers(username: string){
-    let userCollection = await users();
-    console.log("Get Specific User");
-    let userList = await userCollection.find({"username": username}).toArray();
-    
-    return userList;
+    try{
+      let userCollection = await users();
+      let userList = await userCollection.find({"username": username}).toArray();
+      let favorites = userList["favoritedUsers"];
+      return favorites;
+    }catch(e){
+      throw new Error("Could not get favorited users.")
   }
     }
+  }
 
