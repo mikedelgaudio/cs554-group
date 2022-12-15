@@ -7,7 +7,7 @@ import { Loading } from "../Shared/Loading.component";
 import { UserProfileCard } from "../Shared/UserProfileCard.component";
 
 const Discover = () => {
-  useTitle("Discover");
+  useTitle("Discover - DuckedIn");
 
   const [users, setUsers] = useState<User[]>();
   const [loggedInUser, setLoggedInUser] = useState<User>();
