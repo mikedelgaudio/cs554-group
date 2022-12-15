@@ -112,7 +112,7 @@ const Profile = () => {
         <img src={user.profileImage} alt="Profile Image"/>
 
         {/* Contact Info (phone number, email, website, current role) */}
-        <h2>Contact Information</h2>
+        <h2>Contact Information: </h2>
         <p>Phone Number: {user.contactInfo.phoneNumber}</p>
         <p>Email: {user.contactInfo.email}</p>
         <p>Website: {user.contactInfo.website}</p>
@@ -120,6 +120,7 @@ const Profile = () => {
         <br/>
 
         {/* Social Media */}
+        <p>Social Media: </p>
         {user.socialMedia? user.socialMedia.map((socialMedia) => (
           <div>
             <p>{socialMedia.profileURL}</p>
@@ -128,25 +129,31 @@ const Profile = () => {
         <br/>
 
         {/* Likes */}
+        <p>Likes: </p>
         {user.likes? user.likes.map((like) => (
           <div>
             <p>{like.name}</p>
           </div>
         )) : <p>No Likes</p>}
+        <br/>
 
         {/* Dislikes */}
+        <p>Dislikes: </p>
         {user.dislikes? user.dislikes.map((dislike) => (
           <div>
             <p>{dislike.name}</p>
           </div>
         )) : <p>No Dislikes</p>}
+        <br/>
 
         {/* Favorited Users */}
+        <p>Favorited Users: </p>
         {user.favoritedUsers? user.favoritedUsers.map((favoritedUser) => (
           <div>
             <p>{favoritedUser.name}</p>
           </div>
         )) : <p>No Favorited Users</p>}
+        <br/>
 
         {/* Add to Favorites Button */}
         <button>Add to Favorites</button>
