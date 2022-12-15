@@ -10,8 +10,10 @@ const Profile = () => {
   useTitle("Profile");
   const params = useParams();
   const [user, setUser] = React.useState<User>();
+  const [isFavorited, setisFavorited] = React.useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   const url = `http://localhost:3000/users/${params.id}`;
+  const url2 = `http://localhost:3000/users/1`;
   useEffect(
     () => {
       console.log ("useEffect fired")
@@ -19,7 +21,11 @@ const Profile = () => {
         try {
           // check if url has data
           const {data: userData} = await axios.get(url)
+          const {data: currentUserData} = await axios.get(url2)
           setUser(userData);
+          if (currentUserData.favoritedUsers.find((favoritedUser: { id: any; }) => favoritedUser.id === userData.id)) {
+            setisFavorited(true);
+          }
         } catch (error) {
           console.log(error);
         }
@@ -114,7 +120,9 @@ const Profile = () => {
         <h2>Contact Information: </h2>
         <p>Phone Number: {user.contactInfo.phoneNumber}</p>
         <p>Email: {user.contactInfo.email}</p>
-        <p>Website: {user.contactInfo.website}</p>
+        <p>Website: 
+          <a href={user.contactInfo.website}>{user.contactInfo.website}</a>
+        </p>
         <p>Current Role: {user.contactInfo.occupation}</p>
         <br/>
 
@@ -122,7 +130,7 @@ const Profile = () => {
         <p>Social Media: </p>
         {user.socialMedia? user.socialMedia.map((socialMedia) => (
           <div key={socialMedia.id}>
-            <p>{socialMedia.profileURL}</p>
+            <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
           </div>
         )) : <p>No Social Media</p>}
         <br/>
@@ -153,9 +161,13 @@ const Profile = () => {
           </div>
         )) : <p>No Favorited Users</p>}
         <br/>
-
+        
         {/* Add to Favorites Button */}
-        <button>Add to Favorites</button>
+        {/* if user.id is in currentUserFavorites, then the button should say "Remove from Favorites" */}
+        {isFavorited ? 
+          <button>Unfavorite</button> : 
+          <button>Favorite</button>
+        }
       </div>
     )
   }
