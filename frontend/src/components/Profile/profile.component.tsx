@@ -20,7 +20,6 @@ const Profile = () => {
           // check if url has data
           const {data: userData} = await axios.get(url)
           setUser(userData);
-          console.log("User Data: ", userData);
         } catch (error) {
           console.log(error);
         }
@@ -122,7 +121,7 @@ const Profile = () => {
         {/* Social Media */}
         <p>Social Media: </p>
         {user.socialMedia? user.socialMedia.map((socialMedia) => (
-          <div>
+          <div key={socialMedia.id}>
             <p>{socialMedia.profileURL}</p>
           </div>
         )) : <p>No Social Media</p>}
@@ -131,7 +130,7 @@ const Profile = () => {
         {/* Likes */}
         <p>Likes: </p>
         {user.likes? user.likes.map((like) => (
-          <div>
+          <div key={like.id}>
             <p>{like.name}</p>
           </div>
         )) : <p>No Likes</p>}
@@ -140,7 +139,7 @@ const Profile = () => {
         {/* Dislikes */}
         <p>Dislikes: </p>
         {user.dislikes? user.dislikes.map((dislike) => (
-          <div>
+          <div key={(dislike.id)}>
             <p>{dislike.name}</p>
           </div>
         )) : <p>No Dislikes</p>}
@@ -149,7 +148,7 @@ const Profile = () => {
         {/* Favorited Users */}
         <p>Favorited Users: </p>
         {user.favoritedUsers? user.favoritedUsers.map((favoritedUser) => (
-          <div>
+          <div key={favoritedUser.id}>
             <p>{favoritedUser.id}</p>
           </div>
         )) : <p>No Favorited Users</p>}
