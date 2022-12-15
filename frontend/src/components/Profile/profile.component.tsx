@@ -1,172 +1,166 @@
-import { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { useCurrentUser } from "../../hooks/useCurrentUser.hook";
 import { useTitle } from "../../hooks/useTitle.hook";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
+import { User } from "../../models/user.model";
 import "./profile.css";
 
 const Profile = () => {
   useTitle("Profile");
   const params = useParams();
-
-  useEffect(() => {
-    // Fetch data from BE of the user id
-    // If logged in user is the same id as the fetched user allow for editing
-  }, [params.id]);
-
-  const id = params.id;
-  const isCurrentUser = id === useCurrentUser().id;
-  console.log("Param Id: ", id);
-  console.log("Current User Id: ", useCurrentUser().id);
-  if (isCurrentUser) {
-    console.log("This profile is the current user");
+  const [user, setUser] = React.useState<User>();
+  const { currentUser } = useFirebaseAuth();
+  const url = `http://localhost:3000/users/${params.id}`;
+  useEffect(
+    () => {
+      console.log ("useEffect fired")
+      async function getUser() {
+        try {
+          // check if url has data
+          const {data: userData} = await axios.get(url)
+          setUser(userData);
+          console.log("User Data: ", userData);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      getUser();
+    }, [url]
+  );
+  // if params.id is the same as the current user's id, then this is the current user's profile
+  if (params.id === currentUser?.uid && user!==undefined) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-full">
-        <h1>First Name: {useCurrentUser()?.firstName}</h1>
-        {/* Edit firstName */}
-        <form className="form">
-          <input
-            type="text"
-            name="firstName"
-            id="firstName"
-            className="input"
-          />
-          <button type="submit">Submit</button>
+      <div className="profile">        
+        {/* Form to edit Username */}
+        <form>
+          <label>
+            Username:
+            <input type="text" name="username" defaultValue={user.username} />
+          </label>
+          <input type="submit" value="Submit"/>
         </form>
-        <br />
-        <h1>Last Name: {useCurrentUser().lastName}</h1>
-        {/* Edit lastName */}
-        <form className="form">
-          <input type="text" name="lastName" id="lastName" className="input" />
-          <button type="submit">Submit</button>
+
+        {/* Form to edit First Name */}
+        <form>
+          <label>
+            First Name:
+            <input type="text" name="firstName" defaultValue={user.firstName} />
+          </label>
+          <input type="submit" value="Submit"/>
         </form>
-        <br />
-        <h2>Username: {useCurrentUser().username}</h2>
-        {/* Edit username */}
-        <form className="form">
-          <input type="text" name="username" id="username" className="input" />
-          <button type="submit">Submit</button>
+
+        {/* Form to edit Last Name */}
+        <form>
+          <label>
+            Last Name:
+            <input type="text" name="lastName" defaultValue={user.lastName} />
+          </label>
+          <input type="submit" value="Submit"/>
         </form>
-        <br />
-        <img src={useCurrentUser().profileImage} alt="Profile Image" />
-        {/* Edit profileImage */}
-        <form className="form">
-          <input
-            type="text"
-            name="profileImage"
-            id="profileImage"
-            className="input"
-          />
-          <button type="submit">Submit</button>
+
+        {/* Form to Edit Profile Image URL */}
+        <form>
+          <label>
+            Profile Image URL:
+            <input type="text" name="profileImageURL" defaultValue={user.profileImage} />
+          </label>
+          <input type="submit" value="Submit"/>
         </form>
-        <br />
-        <h3>Phone Number: {useCurrentUser().contactInfo.phoneNumer}</h3>
-        <h3>Email: {useCurrentUser().contactInfo.email}</h3>
-        <h3>
-          Personal Website: {useCurrentUser().contactInfo.personalWebsite}
-        </h3>
-        <h3>Current Role: {useCurrentUser().contactInfo.currentRole}</h3>
-        {/* Edit contactInfo */}
-        <form className="form">
-          <input
-            type="text"
-            name="phoneNumer"
-            id="phoneNumer"
-            className="input"
-          />
-          <input type="text" name="email" id="email" className="input" />
-          <input
-            type="text"
-            name="personalWebsite"
-            id="personalWebsite"
-            className="input"
-          />
-          <input
-            type="text"
-            name="currentRole"
-            id="currentRole"
-            className="input"
-          />
-          <button type="submit">Submit</button>
+
+        {/* Form to Edit Contact Info (phone number, email, website, current role) */}
+        <form>
+          <label>
+            Phone Number:
+            <input type="text" name="phoneNumber" defaultValue={user.contactInfo.phoneNumber} />
+          </label>
+          <label>
+            Email:
+            <input type="text" name="email" defaultValue={user.contactInfo.email} />
+          </label>
+          <label>
+            Website:
+            <input type="text" name="website" defaultValue={user.contactInfo.website} />
+          </label>
+          <label>
+            Current Role:
+            <input type="text" name="currentRole" defaultValue={user.contactInfo.occupation} />
+          </label>
+          <input type="submit" value="Submit"/>
         </form>
-        <br />
-        <h3>
-          Social Media:{" "}
-          {useCurrentUser().socialMedia.map(
-            socialMedia => socialMedia.profileURL,
-          )}
-        </h3>
-        {/* Edit socialMedia */}
-        <form className="form">
-          <input
-            type="text"
-            name="socialMedia"
-            id="socialMedia"
-            className="input"
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <br />
-        <h3>Likes: {useCurrentUser().likes.map(like => like.name)}</h3>
-        {/* Edit likes */}
-        <form className="form">
-          <input type="text" name="likes" id="likes" className="input" />
-          <button type="submit">Submit</button>
-        </form>
-        <br />
-        <h3>
-          Dislikes: {useCurrentUser().dislikes.map(dislike => dislike.name)}
-        </h3>
-        {/* Edit dislikes */}
-        <form className="form">
-          <input type="text" name="dislikes" id="dislikes" className="input" />
-          <button type="submit">Submit</button>
-        </form>
-        <br />
-        <h3>
-          Favorited Users:{" "}
-          {useCurrentUser().favoritedUsers.map(
-            favoritedUser => favoritedUser.id,
-          )}
-        </h3>
-        {/* Edit favoritedUsers */}
-        <form className="form">
-          <input
-            type="text"
-            name="favoritedUsers"
-            id="favoritedUsers"
-            className="input"
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <br />
-      </div>
-    );
-  } else {
-    // get profile from backend
-    console.log("This profile is not the current user");
-    return (
-      <div className="flex flex-col items-center justify-center w-full h-full">
-        {/* Profile Fields: username, firstName, lastName, profileImage, contactInfo{}, socialMedia[], likes[], dislikes[], favoritedUsers[] */}
-        <h1>Name: </h1>
-        {/* firstName + lastName */}
-        <h2>Username: </h2>
-        {/* Profile Image */}
-        <img src="" alt="Profile Image" />
-        {/* Contact Info */}
-        <h3>Contact Info: </h3>
-        {/* Social Media */}
-        <h3>Social Media: </h3>
-        {/* Likes */}
-        <h3>Likes: </h3>
-        {/* Dislikes */}
-        <h3>Dislikes: </h3>
-        {/* Favorited Users */}
-        <h3>Favorited Users: </h3>
+
+        {/* Form to edit, delete, or add social media (generated ID, and Profile URL) */}
+
+        {/* Form to edit, delete, or add likes (generated ID, and like)  */}
+
+        {/* Form to edit, delete, or add dislikes (generated ID, and dislike) */}
+
+        {/* Form to delete a favorited user */}
       </div>
     );
   }
-  // If profile is not the current user's, just show fields
-  // If profile is the current user's, show fields and edit button
+  else if (params.id !== currentUser?.uid && user!==undefined) {
+    return (
+      <div className="profile">
+        {/* Username */}
+        <h1>Username: {user.username}</h1>
+
+        {/* Full Name */}
+        <h2>Name: {user.firstName} {user.lastName}</h2>
+
+        {/* Profile Image */}
+        <img src={user.profileImage} alt="Profile Image"/>
+
+        {/* Contact Info (phone number, email, website, current role) */}
+        <h2>Contact Information</h2>
+        <p>Phone Number: {user.contactInfo.phoneNumber}</p>
+        <p>Email: {user.contactInfo.email}</p>
+        <p>Website: {user.contactInfo.website}</p>
+        <p>Current Role: {user.contactInfo.occupation}</p>
+        <br/>
+
+        {/* Social Media */}
+        {user.socialMedia? user.socialMedia.map((socialMedia) => (
+          <div>
+            <p>{socialMedia.profileURL}</p>
+          </div>
+        )) : <p>No Social Media</p>}
+        <br/>
+
+        {/* Likes */}
+        {user.likes? user.likes.map((like) => (
+          <div>
+            <p>{like.name}</p>
+          </div>
+        )) : <p>No Likes</p>}
+
+        {/* Dislikes */}
+        {user.dislikes? user.dislikes.map((dislike) => (
+          <div>
+            <p>{dislike.name}</p>
+          </div>
+        )) : <p>No Dislikes</p>}
+
+        {/* Favorited Users */}
+        {user.favoritedUsers? user.favoritedUsers.map((favoritedUser) => (
+          <div>
+            <p>{favoritedUser.name}</p>
+          </div>
+        )) : <p>No Favorited Users</p>}
+
+        {/* Add to Favorites Button */}
+        <button>Add to Favorites</button>
+      </div>
+    )
+  }
+  // User is undefined
+  else {
+    return (
+      <div className="profile">
+        <p>User Does Not Exist</p>
+      </div>
+    )
+  }
 };
 
 export { Profile };
