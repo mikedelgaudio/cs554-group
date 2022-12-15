@@ -150,7 +150,7 @@ const Profile = () => {
         <p>Favorited Users: </p>
         {user.favoritedUsers? user.favoritedUsers.map((favoritedUser) => (
           <div>
-            <p>{favoritedUser.name}</p>
+            <p>{favoritedUser.id}</p>
           </div>
         )) : <p>No Favorited Users</p>}
         <br/>
