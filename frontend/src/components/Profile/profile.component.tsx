@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { User } from "../../models/user.model";
+import { toggleUserFavorite, addUserLike, deleteUserLike, addUserDislike, deleteUserDislike, addUserSocialMedia, deleteUserSocialMedia } from "../../redux/app/app.actions";
 import "./profile.css";
 
 const Profile = () => {
@@ -94,16 +95,119 @@ const Profile = () => {
           <input type="submit" value="Submit"/>
         </form>
 
-        {/* Form to edit, delete, or add social media (generated ID, and Profile URL) */}
+        {/* Delete Social Media */}
+        {user.socialMedia? user.socialMedia.map((socialMedia) => (
+          <div key={socialMedia.id}>
+            <p><a href={socialMedia.profileURL}>{socialMedia.profileURL}</a></p>
+            <button onClick={
+              () => {
+                deleteUserSocialMedia(socialMedia.id);
+              }
+            }
+            >Delete</button>
+          </div>
+        )) : null}
 
-        {/* Form to edit, delete, or add likes (generated ID, and like)  */}
+        {/* Add Social Media */}
+        <form onSubmit={
+          (event) => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const socialMediaURL = formData.get("socialMediaURL");
+            if (socialMediaURL !== null && typeof socialMediaURL === "string") {
+              addUserSocialMedia(socialMediaURL);
+            }
+          }
+        }>
+          <label>
+            Social Media URL:
+            <input type="text" name="socialMediaURL" defaultValue='google.com'/>
+          </label>
+          <input type="submit" value="Submit"/>
+        </form>
 
-        {/* Form to edit, delete, or add dislikes (generated ID, and dislike) */}
+        {/* Delete User Like */}
+        {user.likes? user.likes.map((like) => (
+          <div key={like.id}>
+            <p>{like.name}</p>
+            <button onClick={
+              () => {
+                deleteUserLike(like.id);
+              }
+            }
+            >Delete</button>
+          </div>
+        )) : null}
+
+        {/* Add User Like */}
+        <form onSubmit={
+          (event) => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const like = formData.get("like");
+            if (like !== null && typeof like === "string") {
+              addUserLike(like);
+            }
+          }
+        }>
+          <label>
+            Like:
+            <input type="text" name="like" defaultValue='like'/>
+          </label>
+          <input type="submit" value="Submit"/>
+        </form>
+
+        {/* Delete Dislike */}
+        {user.dislikes? user.dislikes.map((dislike) => (
+          <div key={dislike.id}>
+            <p>{dislike.name}</p>
+            <button onClick={
+              () => {
+                deleteUserDislike(dislike.id);
+              }
+            }
+            >Delete</button>
+          </div>
+        )) : null}
+
+        {/* Add Dislike */}
+        <form onSubmit={
+          (event) => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const dislike = formData.get("dislike");
+            if (dislike !== null && typeof dislike === "string") {
+              addUserDislike(dislike);
+            }
+          }
+        }>
+          <label>
+            Dislike:
+            <input type="text" name="dislike" defaultValue='dislike'/>
+          </label>
+          <input type="submit" value="Submit"/>
+        </form>
 
         {/* Form to delete a favorited user */}
+        {user.favoritedUsers? user.favoritedUsers.map((favorite) => (
+          <div key={favorite.id}>
+            <p>{favorite.id}</p>
+            <button onClick={
+              () => {
+                toggleUserFavorite(favorite.id);
+              }
+            }
+            >Delete</button>
+          </div>
+        )) : null}
       </div>
     );
   }
+
+  // If the user is viewing someone else's profile
   else if (params.id !== currentUser?.uid && user!==undefined) {
     return (
       <div className="profile">
@@ -165,8 +269,19 @@ const Profile = () => {
         {/* Add to Favorites Button */}
         {/* if user.id is in currentUserFavorites, then the button should say "Remove from Favorites" */}
         {isFavorited ? 
-          <button>Unfavorite</button> : 
-          <button>Favorite</button>
+          // toggleUserFavorite(user.id)
+          <button onClick={
+            () => {
+              toggleUserFavorite(user.id);
+              setisFavorited(false);
+            }
+          }>Unfavorite</button> : 
+          <button onClick={
+            () => {
+              toggleUserFavorite(user.id);
+              setisFavorited(true);
+            }
+          }>Favorite</button>
         }
       </div>
     )
