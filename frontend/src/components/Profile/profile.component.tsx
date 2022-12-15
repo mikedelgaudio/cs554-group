@@ -13,7 +13,9 @@ const Profile = () => {
   const [user, setUser] = React.useState<User>();
   const [isFavorited, setisFavorited] = React.useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
+  // Chage url to 'http://localhost:3001/users/${params.id}' when FE is done -Sydney
   const url = `http://localhost:3000/users/${params.id}`;
+  // Chage url2 to 'http://localhost:3001/users/${currentUser?.uid}' when FE is done -Sydney
   const url2 = `http://localhost:3000/users/1`;
   useEffect(
     () => {
@@ -37,6 +39,7 @@ const Profile = () => {
   // if params.id is the same as the current user's id, then this is the current user's profile
   if (params.id === currentUser?.uid && user!==undefined) {
     return (
+      // Check w/ Michael about what forms we need to have here -Sydney
       <div className="profile">        
         {/* Form to edit Username */}
         <form>
@@ -267,7 +270,6 @@ const Profile = () => {
         <br/>
         
         {/* Add to Favorites Button */}
-        {/* if user.id is in currentUserFavorites, then the button should say "Remove from Favorites" */}
         {isFavorited ? 
           // toggleUserFavorite(user.id)
           <button onClick={
