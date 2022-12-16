@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
-import { useCurrentUser } from "../../hooks/useCurrentUser.hook";
 import "./navbar.component.css";
 
 const Navbar = () => {
@@ -36,7 +35,7 @@ const Navbar = () => {
         <li>
           <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-            to={"/profile/" + useCurrentUser().id}
+            to={"/profile/" + currentUser?.uid}
             onClick={navigated}
           >
             Profile

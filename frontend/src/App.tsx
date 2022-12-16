@@ -12,9 +12,6 @@ import { Navbar } from "./components/Navbar";
 import { Profile } from "./components/Profile";
 import { FirebaseGuards, FirebaseProvider } from "./firebase/firebase.context";
 
-// TODO
-// ! Must protect routes with FirebaseGuards
-
 function App() {
   return (
     <FirebaseProvider>
