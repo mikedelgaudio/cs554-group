@@ -128,7 +128,7 @@ export const deleteLike = async (profileID: any, likeID: any) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
     // user.data.likes.splice(likeID, 1);
     // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
-    const user = await axios.get(`http://localhost:3000/users/${id}`);
+    const user = await axios.get(`http://localhost:3000/users/${profileID}`);
     await axios.delete(`http://localhost:3000/users/likes/${likeID}`);
 }
 
