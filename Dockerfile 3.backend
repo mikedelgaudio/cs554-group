@@ -1,0 +1,14 @@
+### STAGE 1: BUILD ###
+FROM node:18.12 AS build
+WORKDIR /app
+COPY ./backend/package*.json ./
+RUN npm install
+COPY ./backend/ ./
+RUN npm run build
+
+### STAGE 2: RUN ###
+FROM node:18.12-alpine as production
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/dist/ ./
+USER node
+CMD [ "npm", "start" ]
