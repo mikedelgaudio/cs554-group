@@ -67,8 +67,13 @@ async createUser(username:string, password:string, email:string) {
     try{
     let userCollection = await users();
     id = ObjectId(id);
-    let userList = await userCollection.deleteOne({"_id":id });
-    return userList;
+    let deletedUser = await userCollection.deleteOne({"_id":id });
+    if (deletedUser.deletedCount != 1) {
+      throw new Error("could not delete user");
+    }
+    else {
+      return true
+    }
   }catch(e){
     throw new Error("Could not get user.")
   }
