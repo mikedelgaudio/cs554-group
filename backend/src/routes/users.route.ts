@@ -26,12 +26,11 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
     });
 
 
-usersRouter.get('/profile/:username', async (req: Request, res: Response) => {
-    let username = req.params.username;
-    console.log(username);
+usersRouter.get('/profile/:id', async (req: Request, res: Response) => {
+    let id = req.params.id;
     console.log("getUser route");
     try{
-        let users = await data.getOneUser(username);
+        let users = await data.getOneUser(id);
         res.json(users);
     }catch(e){
         res.status(404).json({error:e});
@@ -56,6 +55,24 @@ usersRouter.get("/", async(req: Request, res: Response) => {
 
     }
 });
+
+
+usersRouter.post('/:username/editUser', async (req: Request, res: Response) => {
+
+    try {
+        let {username, email, password} = req.body;
+
+        //console.log(username, email, password);
+        
+        let answer = await data.createUser(username, email, password);
+        //console.log(answer.username);
+        res.json(answer);
+      }
+      catch (e) {
+        res.status(404).json({error:e});
+      }
+    });
+
 
 /* 
 
