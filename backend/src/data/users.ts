@@ -23,20 +23,19 @@ async createUser(username: string, email: string, password: string) {
     }
     console.log("3");
     let newPassword = await bcrypt.hash(password, saltRounds);
-    let newUser = {
-      email: email,
+    let newUser: user = {
       username: username,
       password: newPassword,
       firstName: "",
       lastName:"",
-      profileImage: null, 
-      contactInfo:{},
-      socialMedia: [],
+      profileImage: "", 
+      contactInfo:{email:email} as contactInfo,
+      socialMedias: [],
       likes:[],
       dislikes:[],
       favoritedUsers:[]
     }
-    console.log(newUser);
+
     
     let newInsertInformation = await userCollection.insertOne(newUser);
     if (newInsertInformation.insertedCount == 0) {
@@ -57,10 +56,13 @@ async createUser(username: string, email: string, password: string) {
     }
   }, 
 
-  async getOneUser(username: string) {
+  async getOneUser(id: string) {
     try{
+    console.log(id);
     let userCollection = await users();
-    let userList = await userCollection.find({"username": username}).toArray();
+    console.log(id);
+    id = ObjectId(id);
+    let userList = await userCollection.find({"_id":id }).toArray();
     console.log(userList);
     return userList;
   }catch(e){
@@ -69,15 +71,57 @@ async createUser(username: string, email: string, password: string) {
 
   },
 
-  async getFavoritedUsers(username: string){
+  async getFavoritedUsers(id: string){
     try{
       let userCollection = await users();
-      let userList = await userCollection.find({"username": username}).toArray();
+      let userList = await userCollection.find({"_id": id}).toArray();
       let favorites = userList["favoritedUsers"];
       return favorites;
     }catch(e){
       throw new Error("Could not get favorited users.")
   }
+    }, 
+
+  async patchUser(user: user, id:string){
+    const userObj = {} as user;
+    id = ObjectId(id);
+
+    if(user.username){
+      userObj.username = user.username;
     }
+
+    if(user.firstName){
+      userObj.firstName = user.firstName
+    }
+
+    if(user.lastName){
+      userObj.lastName = user.lastName
+    }
+    if(user.profileImage){
+      userObj.profileImage = user.profileImage
+    }
+    if(user.contactInfo){
+      userObj.contactInfo = user.contactInfo
+    }
+    if(user.socialMedias){
+      userObj.socialMedias = user.socialMedias
+    }
+    if(user.likes){
+      userObj.likes = user.likes
+    }
+    if(user.dislikes){
+      userObj.dislikes = user.dislikes
+    }
+    if(user.favoritedUsers){
+      userObj.favoritedUsers = user.favoritedUsers
+    }
+  
+    let userCollection = await users();
+    const userList = await userCollection.find({'_id': id}).toArray();
+
+    const updateUser = await userCollection.updateOne({ _id: id }, { $set: userObj })
+    return userObj;
+
+  }
   }
 
