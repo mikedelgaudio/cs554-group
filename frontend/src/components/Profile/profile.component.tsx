@@ -33,9 +33,9 @@ const Profile = () => {
   const [favorited, setFavorited] = React.useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
-  // Chage url to 'http://localhost:3001/users/${params.id}' when FE is done -Sydney
+  // const url = 'http://localhost:3001/profile/${params.id}';
   const url = `http://localhost:3000/users/${params.id}`;
-  // Chage url2 to 'http://localhost:3001/users/${currentUser?.uid}' when FE is done -Sydney
+  // const url = 'http://localhost:3001/profile/${currentUser?.uid}';
   const url2 = `http://localhost:3000/users/1`;
   useEffect(() => {
     console.log("useEffect fired");
