@@ -38,25 +38,18 @@ usersRouter.get('/profile/:id', async (req: Request, res: Response) => {
   });
  
 
-usersRouter.get("/favorited", (req: Request, res: Response) => {
+usersRouter.get("/favorited/:id", async (req: Request, res: Response) => {
+    let id = req.params.id;
+    let favorites;
     try {
-        let users = await data.getOneUser
+        favorites = await data.getFavoritedUsers(id);
+        res.json(favorites);
     }
-    res.send("Express + TypeScript Server");
-});
-
-usersRouter.get("/", async(req: Request, res: Response) => {
-
-    try{
-        let users = await data.getAllUsers();
-        return res.json(users);
-    }catch(e){
+    catch (e) {
         res.status(404).json({error:e});
-
     }
+    res.send(favorites);
 });
-
-
 usersRouter.post('/:username/editUser', async (req: Request, res: Response) => {
 
     try {
@@ -72,6 +65,20 @@ usersRouter.post('/:username/editUser', async (req: Request, res: Response) => {
         res.status(404).json({error:e});
       }
     });
+
+usersRouter.get("/", async(req: Request, res: Response) => {
+
+    try{
+        let users = await data.getAllUsers();
+        return res.json(users);
+    }catch(e){
+        res.status(404).json({error:e});
+
+    }
+});
+
+
+
 
 
 /* 
