@@ -3,27 +3,27 @@ import axios from "axios";
 // Change username
 export const changeUsername = async (id: any, newUserName: string) => { 
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     const user = await axios.get(`http://localhost:3000/users/${id}`);
     user.data.username = newUserName;
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
 };
 
 // Change First Name
 export const changeFirstName = async (id: any, newFirstName: string) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     const user = await axios.get(`http://localhost:3000/users/${id}`);
     user.data.firstName = newFirstName;
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
 };
 
 // Change Last Name
 export const changeLastName = async (id: any, newLastName: string) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     const user = await axios.get(`http://localhost:3000/users/${id}`);
     user.data.lastName = newLastName;
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
 };
 
@@ -127,15 +127,15 @@ export const addLike = async (id: any, like: string) => {
 export const deleteLike = async (profileID: any, likeID: any) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
     // user.data.likes.splice(likeID, 1);
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data)
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     const user = await axios.get(`http://localhost:3000/users/${id}`);
-    await axios.delete(`http://localhost:3000/users/likes/${likeID}`)
+    await axios.delete(`http://localhost:3000/users/likes/${likeID}`);
 }
 
 // Add a Dislike
 export const addDislike = async (id: any, dislike: string) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data)
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     const user = await axios.get(`http://localhost:3000/users/${id}`);
     user.data.dislikes.push({name: dislike});
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
@@ -145,14 +145,14 @@ export const addDislike = async (id: any, dislike: string) => {
 export const deleteDislike = async (profileID: any, dislikeID: any) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
     // user.data.dislikes.splice(dislikeID, 1);
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data)
-    await axios.delete(`http://localhost:3000/users/dislikes/${dislikeID}`)
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
+    await axios.delete(`http://localhost:3000/users/dislikes/${dislikeID}`);
 }
 
 // Add a Favorited User
 export const addFavoritedUser = async (id: any, favoritedUserID: any) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data)
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
     const user = await axios.get(`http://localhost:3000/users/${id}`);
     user.data.favoritedUsers.push({id: favoritedUserID});
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
@@ -162,6 +162,6 @@ export const addFavoritedUser = async (id: any, favoritedUserID: any) => {
 export const deleteFavoritedUser = async (profileID: any, favoritedUserID: any) => {
     // const user = await axios.get(`http://localhost:3001/profile/${id}`);
     // user.data.favoritedUsers.splice(favoritedUserID, 1);
-    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data)
-    await axios.delete(`http://localhost:3000/users/favorited/${favoritedUserID}`)
+    // await axios.post(`http://localhost:3001/${id}/editUser`, user.data);
+    await axios.delete(`http://localhost:3000/users/favorited/${favoritedUserID}`);
 }
