@@ -32,7 +32,7 @@ const Profile = () => {
   const [user, setUser] = React.useState<User>();
   const [favorited, setFavorited] = React.useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
-  const TOAST_ID = "ERROR_UPDATING_PROFILE";
+  let TOAST_ID = "ERROR_UPDATING_PROFILE";
   // Chage url to 'http://localhost:3001/users/${params.id}' when FE is done -Sydney
   const url = `http://localhost:3000/users/${params.id}`;
   // Chage url2 to 'http://localhost:3001/users/${currentUser?.uid}' when FE is done -Sydney
@@ -81,8 +81,9 @@ const Profile = () => {
 
       setFavorited(prev => (prev = !prev));
     } catch (e) {
-      const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
+      TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
       TOAST_SERVICE.error(TOAST_ID, "Failed to update user? favorites", true);
+      TOAST_ID = "ERROR_UPDATING_PROFILE";
     }
   };
 
@@ -100,16 +101,14 @@ const Profile = () => {
           if (username !== null && typeof username === "string") {
             changeUsername(currentUser?.uid, username);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
+          }
         }}
       >
         <label>
           Username:
-          <input
-            className="profileInput"
-            type="text"
-            name="username"
-            defaultValue={user?.username}
-          />
+          <input className="profileInput" type="text" name="username" defaultValue={user?.username}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -125,16 +124,14 @@ const Profile = () => {
           if (firstName !== null && typeof firstName === "string") {
             changeFirstName(currentUser?.uid, firstName);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
+          }
         }}
       >
         <label>
           First Name:
-          <input
-            className="profileInput"
-            type="text"
-            name="firstName"
-            defaultValue={user?.firstName}
-          />
+          <input className="profileInput" type="text" name="firstName" defaultValue={user?.firstName}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -150,16 +147,14 @@ const Profile = () => {
           if (lastName !== null && typeof lastName === "string") {
             changeLastName(currentUser?.uid, lastName);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
+          }
         }}
       >
         <label>
           Last Name:
-          <input
-            className="profileInput"
-            type="text"
-            name="lastName"
-            defaultValue={user?.lastName}
-          />
+          <input className="profileInput" type="text" name="lastName" defaultValue={user?.lastName}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -175,16 +170,14 @@ const Profile = () => {
           if (profileImageURL !== null && typeof profileImageURL === "string") {
             changeProfilePicture(currentUser?.uid, profileImageURL);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Profile Image URL cannot be blank", true);
+          }
         }}
       >
         <label>
           Profile Image URL:
-          <input
-            className="profileInput"
-            type="text"
-            name="profileImageURL"
-            defaultValue={user?.profileImage}
-          />
+          <input className="profileInput" type="text" name="profileImageURL" defaultValue={user?.profileImage}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -200,16 +193,14 @@ const Profile = () => {
           if (phoneNumber !== null && typeof phoneNumber === "string") {
             changePhoneNumber(currentUser?.uid, phoneNumber);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
+          }
         }}
       >
         <label>
           Phone Number:
-          <input
-            className="profileInput"
-            type="text"
-            name="phoneNumber"
-            defaultValue={user?.contactInfo.phoneNumber}
-          />
+          <input className="profileInput" type="text" name="phoneNumber" defaultValue={user?.contactInfo.phoneNumber}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -225,16 +216,14 @@ const Profile = () => {
           if (email !== null && typeof email === "string") {
             changeEmail(currentUser?.uid, email);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
+          }
         }}
       >
         <label>
           Email:
-          <input
-            className="profileInput"
-            type="text"
-            name="email"
-            defaultValue={user?.contactInfo.email}
-          />
+          <input className="profileInput" type="text" name="email" defaultValue={user?.contactInfo.email}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -250,16 +239,14 @@ const Profile = () => {
           if (website !== null && typeof website === "string") {
             changeWebsite(currentUser?.uid, website);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
+          }
         }}
       >
         <label>
           Website:
-          <input
-            className="profileInput"
-            type="text"
-            name="website"
-            defaultValue={user?.contactInfo.website}
-          />
+          <input className="profileInput" type="text" name="website" defaultValue={user?.contactInfo.website}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -275,21 +262,17 @@ const Profile = () => {
           if (currentRole !== null && typeof currentRole === "string") {
             changeOccupation(currentUser?.uid, currentRole);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
+          }
         }}
       >
         <label>
           Current Role:
-          <input
-            className="profileInput"
-            type="text"
-            name="currentRole"
-            defaultValue={user?.contactInfo.occupation}
-          />
+          <input className="profileInput" type="text" name="currentRole" defaultValue={user?.contactInfo.occupation}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
-
-      {/* Form to Edit Current Company */}
 
       {/* Delete Social Media */}
       {user?.socialMedia
@@ -320,16 +303,14 @@ const Profile = () => {
           if (socialMediaURL !== null && typeof socialMediaURL === "string") {
             addSocialMedia(currentUser?.uid, socialMediaURL);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Social Media URL cannot be blank", true);
+          }
         }}
       >
         <label>
           Social Media URL:
-          <input
-            className="profileInput"
-            type="text"
-            name="socialMediaURL"
-            defaultValue="google.com"
-          />
+          <input className="profileInput" type="text" name="socialMediaURL" defaultValue="google.com"/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -361,16 +342,14 @@ const Profile = () => {
           if (like !== null && typeof like === "string") {
             addLike(currentUser?.uid, like);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
+          }
         }}
       >
         <label>
           Like:
-          <input
-            className="profileInput"
-            type="text"
-            name="like"
-            defaultValue="like"
-          />
+          <input className="profileInput" type="text" name="like" defaultValue="like"/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -403,16 +382,14 @@ const Profile = () => {
           if (dislike !== null && typeof dislike === "string") {
             addDislike(currentUser?.uid, dislike);
           }
+          else {
+            TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
+          }
         }}
       >
         <label>
           Dislike:
-          <input
-            className="profileInput"
-            type="text"
-            name="dislike"
-            defaultValue="dislike"
-          />
+          <input className="profileInput" type="text" name="dislike" defaultValue="dislike"/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -422,8 +399,7 @@ const Profile = () => {
         ? user?.favoritedUsers.map(favorite => (
             <div key={favorite.id}>
               <p>{favorite.id}</p>
-              <button
-                className="profileButton"
+              <button className="profileButton"
                 onClick={() => {
                   deleteFavoritedUser(currentUser?.uid, favorite.id);
                 }}
