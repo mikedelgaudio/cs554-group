@@ -8,24 +8,24 @@ const saltRounds = 16;
 
 
 module.exports = {
-async createUser(username: string, email: string, password: string) {
-    console.log(username, email, password);
-    username = username.toLowerCase();
-    if(!username || !password || !email) {
+async createUser(user: user) {
+    console.log(user.username, user.contactInfo.email, user.password);
+    user.username = user.username.toLowerCase();
+    if(!user.username || !user.password || !user.contactInfo.email) {
       throw new Error("bad inputs");
     }
     console.log("1");
     let userCollection = await users();
     console.log("2")
-    const userList = await userCollection.find({'username': username}).toArray();
+    const userList = await userCollection.find({'username': user.username}).toArray();
     if (userList.length > 0) {
       throw new Error("that username is already in use")
     }
     console.log("3");
-    let newPassword = await bcrypt.hash(password, saltRounds);
+    let newPassword = await bcrypt.hash(user.password, saltRounds);
     let newUser = {
-      email: email,
-      username: username,
+      email: user.contactInfo.email,
+      username: user.username,
       password: newPassword,
       firstName: "",
       lastName:"",
@@ -69,12 +69,15 @@ async createUser(username: string, email: string, password: string) {
 
   },
 
-  async getFavoritedUsers(username: string){
+  async getFavoritedUsers(id: string){
+    let answer = [];
     try{
       let userCollection = await users();
-      let userList = await userCollection.find({"username": username}).toArray();
-      let favorites = userList["favoritedUsers"];
-      return favorites;
+      let userList = await userCollection.find({"_id": id}).favoritedUsers.toArray();
+      for (let i = 0; i < userList.length; i++) {
+        answer.push(this.getOneUser(userList[i]));
+      }
+      return answer;
     }catch(e){
       throw new Error("Could not get favorited users.")
   }

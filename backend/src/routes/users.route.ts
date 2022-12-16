@@ -40,6 +40,9 @@ usersRouter.get('/profile/:username', async (req: Request, res: Response) => {
  
 
 usersRouter.get("/favorited", (req: Request, res: Response) => {
+    try {
+        let users = await data.getOneUser
+    }
     res.send("Express + TypeScript Server");
 });
 
