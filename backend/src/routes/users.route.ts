@@ -36,6 +36,16 @@ usersRouter.get('/profile/:id', async (req: Request, res: Response) => {
         res.status(404).json({error:e});
     }
   });
+  usersRouter.delete('/profile/:id', async (req: Request, res: Response) => {
+    let id = req.params.id;
+    console.log("getUser route");
+    try{
+        let users = await data.deleteOneUser(id);
+        res.json(users);
+    }catch(e){
+        res.status(404).json({error:e});
+    }
+  });
  
 
 usersRouter.get("/favorited/:id", async (req: Request, res: Response) => {
@@ -49,7 +59,6 @@ usersRouter.get("/favorited/:id", async (req: Request, res: Response) => {
     catch (e) {
         res.status(404).json({error:e});
     }
-    res.send(favorites);
 });
 usersRouter.post('/:username/editUser', async (req: Request, res: Response) => {
 

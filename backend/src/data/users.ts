@@ -61,8 +61,19 @@ async createUser(username:string, password:string, email:string) {
   }catch(e){
     throw new Error("Could not get user.")
   }
-
   },
+
+  async deleteOneUser(id: string) {
+    try{
+    let userCollection = await users();
+    id = ObjectId(id);
+    let userList = await userCollection.deleteOne({"_id":id });
+    return userList;
+  }catch(e){
+    throw new Error("Could not get user.")
+  }
+  },
+
 
   async getFavoritedUsers(id: string){
     let answer = [];
