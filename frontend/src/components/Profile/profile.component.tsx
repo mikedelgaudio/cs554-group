@@ -4,16 +4,22 @@ import { useParams } from "react-router-dom";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.model";
-import {
-  addUserDislike,
-  addUserLike,
-  addUserSocialMedia,
-  deleteUserDislike,
-  deleteUserLike,
-  deleteUserSocialMedia,
-  toggleUserFavorite,
-} from "../../redux/app/app.actions";
 import { PageLayout } from "../Shared/PageLayout.component";
+import {
+  changeUsername,
+  changeFirstName,
+  changeLastName,
+  changeProfilePicture,
+  changeContactInfo,
+  addSocialMedia,
+  deleteSocialMedia,
+  addLike,
+  deleteLike,
+  addDislike,
+  deleteDislike,
+  addFavoritedUser,
+  deleteFavoritedUser
+} from "./helper";
 import "./profile.css";
 
 const Profile = () => {
@@ -50,10 +56,19 @@ const Profile = () => {
   // if params.id is the same as the current user's id, then this is the current user's profile
   if (params.id === currentUser?.uid && user !== undefined) {
     return (
-      // Check w/ Michael about what forms we need to have here -Sydney
       <PageLayout header="Profile">
         {/* Form to edit Username */}
-        <form>
+        <form onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const username = formData.get("username");
+            if (username !== null && typeof username === "string") {
+              changeUsername(currentUser?.uid, username);
+            }
+          }
+        }>
           <label>
             Username:
             <input type="text" name="username" defaultValue={user.username} />
@@ -62,7 +77,17 @@ const Profile = () => {
         </form>
 
         {/* Form to edit First Name */}
-        <form>
+        <form onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const firstName = formData.get("firstName");
+            if (firstName !== null && typeof firstName === "string") {
+              changeFirstName(currentUser?.uid, firstName);
+            }
+          }
+        }>
           <label>
             First Name:
             <input type="text" name="firstName" defaultValue={user.firstName} />
@@ -71,7 +96,17 @@ const Profile = () => {
         </form>
 
         {/* Form to edit Last Name */}
-        <form>
+        <form onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const lastName = formData.get("lastName");
+            if (lastName !== null && typeof lastName === "string") {
+              changeLastName(currentUser?.uid, lastName);
+            }
+          }
+        }>
           <label>
             Last Name:
             <input type="text" name="lastName" defaultValue={user.lastName} />
@@ -80,7 +115,17 @@ const Profile = () => {
         </form>
 
         {/* Form to Edit Profile Image URL */}
-        <form>
+        <form onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const profileImageURL = formData.get("profileImageURL");
+            if (profileImageURL !== null && typeof profileImageURL === "string") {
+              changeProfilePicture(currentUser?.uid, profileImageURL);
+            }
+          }
+        }>
           <label>
             Profile Image URL:
             <input
@@ -93,7 +138,48 @@ const Profile = () => {
         </form>
 
         {/* Form to Edit Contact Info (phone number, email, website, current role) */}
-        <form>
+        <form onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            // phone number equals string of formData
+            let phoneNumber = formData.get("phoneNumber");
+            let email = formData.get("email");
+            let website = formData.get("website");
+            let currentRole = formData.get("currentRole");
+            if (phoneNumber === null && user.contactInfo.phoneNumber === undefined) {
+              phoneNumber = "";
+            }
+            else if (phoneNumber === null) {
+              phoneNumber = user.contactInfo.phoneNumber;
+            }
+            if (email === null && user.contactInfo.email === undefined) {
+              email = "";
+            }
+            else if (email === null) {
+              email = user.contactInfo.email;
+            }
+            if (website === null && user.contactInfo.website === undefined) {
+              website = "";
+            }
+            else if (website === null && user.contactInfo.website !== undefined) {
+              website = user.contactInfo.website;
+            }
+            if (currentRole === null && user.contactInfo.occupation === undefined) {
+              currentRole = "";
+            }
+            else if (currentRole === null && user.contactInfo.occupation !== undefined) {
+              currentRole = user.contactInfo.occupation;
+            }
+            if (phoneNumber !== null && typeof phoneNumber === "string"
+              && email !== null && typeof email === "string"
+              && website !== null && typeof website === "string"
+              && currentRole !== null && typeof currentRole === "string") {
+              changeContactInfo(currentUser?.uid, phoneNumber, email, website, currentRole);
+            }
+          }
+        }>
           <label>
             Phone Number:
             <input
@@ -138,7 +224,7 @@ const Profile = () => {
                 </p>
                 <button
                   onClick={() => {
-                    deleteUserSocialMedia(socialMedia.id);
+                    deleteSocialMedia(currentUser?.uid, socialMedia.id)
                   }}
                 >
                   Delete
@@ -155,7 +241,7 @@ const Profile = () => {
             const formData = new FormData(form);
             const socialMediaURL = formData.get("socialMediaURL");
             if (socialMediaURL !== null && typeof socialMediaURL === "string") {
-              addUserSocialMedia(socialMediaURL);
+              addSocialMedia(currentUser?.uid, socialMediaURL);
             }
           }}
         >
@@ -177,7 +263,7 @@ const Profile = () => {
                 <p>{like.name}</p>
                 <button
                   onClick={() => {
-                    deleteUserLike(like.id);
+                    deleteLike(currentUser?.uid, like.id);
                   }}
                 >
                   Delete
@@ -194,7 +280,7 @@ const Profile = () => {
             const formData = new FormData(form);
             const like = formData.get("like");
             if (like !== null && typeof like === "string") {
-              addUserLike(like);
+              addLike(currentUser?.uid, like);
             }
           }}
         >
@@ -212,7 +298,7 @@ const Profile = () => {
                 <p>{dislike.name}</p>
                 <button
                   onClick={() => {
-                    deleteUserDislike(dislike.id);
+                    deleteDislike(currentUser?.uid, dislike.id);
                   }}
                 >
                   Delete
@@ -229,7 +315,7 @@ const Profile = () => {
             const formData = new FormData(form);
             const dislike = formData.get("dislike");
             if (dislike !== null && typeof dislike === "string") {
-              addUserDislike(dislike);
+              addDislike(currentUser?.uid, dislike);
             }
           }}
         >
@@ -247,7 +333,7 @@ const Profile = () => {
                 <p>{favorite.id}</p>
                 <button
                   onClick={() => {
-                    toggleUserFavorite(favorite.id);
+                    deleteFavoritedUser(currentUser?.uid, favorite.id);
                   }}
                 >
                   Delete
@@ -342,7 +428,7 @@ const Profile = () => {
           // toggleUserFavorite(user.id)
           <button
             onClick={() => {
-              toggleUserFavorite(user.id);
+              deleteFavoritedUser(currentUser?.uid, user.id);
               setisFavorited(false);
             }}
           >
@@ -351,7 +437,7 @@ const Profile = () => {
         ) : (
           <button
             onClick={() => {
-              toggleUserFavorite(user.id);
+              addFavoritedUser(currentUser?.uid, user.id);
               setisFavorited(true);
             }}
           >
