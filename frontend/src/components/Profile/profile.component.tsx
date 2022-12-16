@@ -10,7 +10,10 @@ import {
   changeFirstName,
   changeLastName,
   changeProfilePicture,
-  changeContactInfo,
+  changePhoneNumber,
+  changeEmail,
+  changeWebsite,
+  changeOccupation,
   addSocialMedia,
   deleteSocialMedia,
   addLike,
@@ -58,7 +61,8 @@ const Profile = () => {
     return (
       <PageLayout header="Profile">
         {/* Form to edit Username */}
-        <form onSubmit={
+        <form className='profileForm'
+        onSubmit={
           event => {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
@@ -71,13 +75,14 @@ const Profile = () => {
         }>
           <label>
             Username:
-            <input type="text" name="username" defaultValue={user.username} />
+            <input className='profileInput' type="text" name="username" defaultValue={user.username} />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
         {/* Form to edit First Name */}
-        <form onSubmit={
+        <form className='profileForm'
+        onSubmit={
           event => {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
@@ -90,13 +95,14 @@ const Profile = () => {
         }>
           <label>
             First Name:
-            <input type="text" name="firstName" defaultValue={user.firstName} />
+            <input className='profileInput' type="text" name="firstName" defaultValue={user.firstName} />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
         {/* Form to edit Last Name */}
-        <form onSubmit={
+        <form className='profileForm'
+        onSubmit={
           event => {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
@@ -109,13 +115,14 @@ const Profile = () => {
         }>
           <label>
             Last Name:
-            <input type="text" name="lastName" defaultValue={user.lastName} />
+            <input className='profileInput' type="text" name="lastName" defaultValue={user.lastName} />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
         {/* Form to Edit Profile Image URL */}
-        <form onSubmit={
+        <form className='profileForm'
+        onSubmit={
           event => {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
@@ -129,91 +136,116 @@ const Profile = () => {
           <label>
             Profile Image URL:
             <input
+              className='profileInput'
               type="text"
               name="profileImageURL"
               defaultValue={user.profileImage}
             />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
-        {/* Form to Edit Contact Info (phone number, email, website, current role) */}
-        <form onSubmit={
+        {/* Form to Edit Phone Number (phone number, email, website, current role) */}
+        <form className='profileForm'
+        onSubmit={
           event => {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
             const formData = new FormData(form);
-            // phone number equals string of formData
-            let phoneNumber = formData.get("phoneNumber");
-            let email = formData.get("email");
-            let website = formData.get("website");
-            let currentRole = formData.get("currentRole");
-            if (phoneNumber === null && user.contactInfo.phoneNumber === undefined) {
-              phoneNumber = "";
-            }
-            else if (phoneNumber === null) {
-              phoneNumber = user.contactInfo.phoneNumber;
-            }
-            if (email === null && user.contactInfo.email === undefined) {
-              email = "";
-            }
-            else if (email === null) {
-              email = user.contactInfo.email;
-            }
-            if (website === null && user.contactInfo.website === undefined) {
-              website = "";
-            }
-            else if (website === null && user.contactInfo.website !== undefined) {
-              website = user.contactInfo.website;
-            }
-            if (currentRole === null && user.contactInfo.occupation === undefined) {
-              currentRole = "";
-            }
-            else if (currentRole === null && user.contactInfo.occupation !== undefined) {
-              currentRole = user.contactInfo.occupation;
-            }
-            if (phoneNumber !== null && typeof phoneNumber === "string"
-              && email !== null && typeof email === "string"
-              && website !== null && typeof website === "string"
-              && currentRole !== null && typeof currentRole === "string") {
-              changeContactInfo(currentUser?.uid, phoneNumber, email, website, currentRole);
+            const phoneNumber = formData.get("phoneNumber");
+            if (phoneNumber !== null && typeof phoneNumber === "string") {
+              changePhoneNumber(currentUser?.uid, phoneNumber);
             }
           }
         }>
           <label>
             Phone Number:
             <input
+              className='profileInput'
               type="text"
               name="phoneNumber"
               defaultValue={user.contactInfo.phoneNumber}
             />
           </label>
+          <input className='profileSubmit' type="submit" value="Submit" />
+        </form>
+
+        {/* Form to Edit Email */}
+        <form className='profileForm'
+        onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const email = formData.get("email");
+            if (email !== null && typeof email === "string") {
+              changeEmail(currentUser?.uid, email);
+            }
+          }
+        }>
           <label>
             Email:
             <input
+              className='profileInput'
               type="text"
               name="email"
               defaultValue={user.contactInfo.email}
             />
           </label>
+          <input className='profileSubmit' type="submit" value="Submit" />
+        </form>
+
+        {/* Form to Edit Website */}
+        <form className='profileForm'
+        onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const website = formData.get("website");
+            if (website !== null && typeof website === "string") {
+              changeWebsite(currentUser?.uid, website);
+            }
+          }
+        }>
           <label>
             Website:
             <input
+              className='profileInput'
               type="text"
               name="website"
               defaultValue={user.contactInfo.website}
             />
           </label>
+          <input className='profileSubmit' type="submit" value="Submit" />
+        </form>
+
+        {/* Form to Edit Current Role */}
+        <form className='profileForm'
+        onSubmit={
+          event => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const currentRole = formData.get("currentRole");
+            if (currentRole !== null && typeof currentRole === "string") {
+              changeOccupation(currentUser?.uid, currentRole);
+            }
+          }
+        }>
           <label>
             Current Role:
             <input
+              className='profileInput'
               type="text"
               name="currentRole"
               defaultValue={user.contactInfo.occupation}
             />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
+
+        {/* Form to Edit Current Company */}
 
         {/* Delete Social Media */}
         {user.socialMedia
@@ -223,6 +255,7 @@ const Profile = () => {
                   <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
                 </p>
                 <button
+                  className='profileButton'
                   onClick={() => {
                     deleteSocialMedia(currentUser?.uid, socialMedia.id)
                   }}
@@ -248,12 +281,13 @@ const Profile = () => {
           <label>
             Social Media URL:
             <input
+              className='profileInput'
               type="text"
               name="socialMediaURL"
               defaultValue="google.com"
             />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
         {/* Delete User Like */}
@@ -262,6 +296,7 @@ const Profile = () => {
               <div key={like.id}>
                 <p>{like.name}</p>
                 <button
+                  className='profileButton'
                   onClick={() => {
                     deleteLike(currentUser?.uid, like.id);
                   }}
@@ -286,9 +321,9 @@ const Profile = () => {
         >
           <label>
             Like:
-            <input type="text" name="like" defaultValue="like" />
+            <input className='profileInput' type="text" name="like" defaultValue="like" />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
         {/* Delete Dislike */}
@@ -297,6 +332,7 @@ const Profile = () => {
               <div key={dislike.id}>
                 <p>{dislike.name}</p>
                 <button
+                  className='profileButton'
                   onClick={() => {
                     deleteDislike(currentUser?.uid, dislike.id);
                   }}
@@ -308,7 +344,7 @@ const Profile = () => {
           : null}
 
         {/* Add Dislike */}
-        <form
+        <form className='profileForm'
           onSubmit={event => {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
@@ -321,9 +357,9 @@ const Profile = () => {
         >
           <label>
             Dislike:
-            <input type="text" name="dislike" defaultValue="dislike" />
+            <input className='profileInput' type="text" name="dislike" defaultValue="dislike" />
           </label>
-          <input type="submit" value="Submit" />
+          <input className='profileSubmit' type="submit" value="Submit" />
         </form>
 
         {/* Form to delete a favorited user */}
@@ -332,6 +368,7 @@ const Profile = () => {
               <div key={favorite.id}>
                 <p>{favorite.id}</p>
                 <button
+                  className='profileButton'
                   onClick={() => {
                     deleteFavoritedUser(currentUser?.uid, favorite.id);
                   }}
@@ -427,6 +464,7 @@ const Profile = () => {
         {isFavorited ? (
           // toggleUserFavorite(user.id)
           <button
+            className='profileButton'
             onClick={() => {
               deleteFavoritedUser(currentUser?.uid, user.id);
               setisFavorited(false);
@@ -436,6 +474,7 @@ const Profile = () => {
           </button>
         ) : (
           <button
+            className='profileButton'
             onClick={() => {
               addFavoritedUser(currentUser?.uid, user.id);
               setisFavorited(true);

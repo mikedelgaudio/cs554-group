@@ -48,16 +48,49 @@ export const changeProfilePicture = async (id: any, newProfilePicture: string) =
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
 }
 
-// Function to change Contact Info in API
-export const changeContactInfo = async (id: any, phonenumber: any, email: string, website: string, occupation: string) => {
+// Function to change Phone Number in API
+export const changePhoneNumber = async (id: any, newPhoneNumber: string) => {
     // find user in api by id
     // Change url to 3001 when using backend -Sydney
     const user = await axios.get(`http://localhost:3000/users/${id}`);
-    // change contact info
-    user.data.contactInfo.phoneNumber = phonenumber;
-    user.data.contactInfo.email = email;
-    user.data.contactInfo.website = website;
-    user.data.contactInfo.occupation = occupation;
+    // change phone number
+    user.data.contactInfo.phoneNumber = newPhoneNumber;
+    // update user in api
+    // Change url to 3001 when using backend -Sydney
+    await axios.put(`http://localhost:3000/users/${id}`, user.data);
+}
+
+// Function to change Email in API
+export const changeEmail = async (id: any, newEmail: string) => {
+    // find user in api by id
+    // Change url to 3001 when using backend -Sydney
+    const user = await axios.get(`http://localhost:3000/users/${id}`);
+    // change email
+    user.data.contactInfo.email = newEmail;
+    // update user in api
+    // Change url to 3001 when using backend -Sydney
+    await axios.put(`http://localhost:3000/users/${id}`, user.data);
+}
+
+// Function to change Website in API
+export const changeWebsite = async (id: any, newWebsite: string) => {
+    // find user in api by id
+    // Change url to 3001 when using backend -Sydney
+    const user = await axios.get(`http://localhost:3000/users/${id}`);
+    // change website
+    user.data.contactInfo.website = newWebsite;
+    // update user in api
+    // Change url to 3001 when using backend -Sydney
+    await axios.put(`http://localhost:3000/users/${id}`, user.data);
+}
+
+// Function to change Occupation in API
+export const changeOccupation = async (id: any, newOccupation: string) => {
+    // find user in api by id
+    // Change url to 3001 when using backend -Sydney
+    const user = await axios.get(`http://localhost:3000/users/${id}`);
+    // change occupation
+    user.data.occupation = newOccupation;
     // update user in api
     // Change url to 3001 when using backend -Sydney
     await axios.put(`http://localhost:3000/users/${id}`, user.data);
@@ -158,4 +191,3 @@ export const deleteFavoritedUser = async (profileID: any, favoritedUserID: any) 
     // Change url to 3001 when using backend -Sydney
     await axios.put(`http://localhost:3000/users/${profileID}`, user.data);
 }
-
