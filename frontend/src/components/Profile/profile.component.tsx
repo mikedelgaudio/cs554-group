@@ -5,6 +5,7 @@ import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.model";
 import { PageLayout } from "../Shared/PageLayout.component";
+import { TOAST_SERVICE } from "../../utils/toast.util";
 import {
   changeUsername,
   changeFirstName,
@@ -31,6 +32,7 @@ const Profile = () => {
   const [user, setUser] = React.useState<User>();
   const [isFavorited, setisFavorited] = React.useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
+  const TOAST_ID = "ERROR_UPDATING_PROFILE";
   // Chage url to 'http://localhost:3001/users/${params.id}' when FE is done -Sydney
   const url = `http://localhost:3000/users/${params.id}`;
   // Chage url2 to 'http://localhost:3001/users/${currentUser?.uid}' when FE is done -Sydney
@@ -68,8 +70,11 @@ const Profile = () => {
             const form = event.target as HTMLFormElement;
             const formData = new FormData(form);
             const username = formData.get("username");
-            if (username !== null && typeof username === "string") {
+            if (username !== null && typeof username === "string" && username !== "") {
               changeUsername(currentUser?.uid, username);
+            }
+            else {
+              TOAST_SERVICE.error(TOAST_ID, `Username cannot be empty`, true);
             }
           }
         }>
@@ -91,6 +96,9 @@ const Profile = () => {
             if (firstName !== null && typeof firstName === "string") {
               changeFirstName(currentUser?.uid, firstName);
             }
+            else {
+              TOAST_SERVICE.error(TOAST_ID, `First Name cannot be empty`, true);
+            }
           }
         }>
           <label>
@@ -110,6 +118,9 @@ const Profile = () => {
             const lastName = formData.get("lastName");
             if (lastName !== null && typeof lastName === "string") {
               changeLastName(currentUser?.uid, lastName);
+            }
+            else {
+              TOAST_SERVICE.error(TOAST_ID, `Last Name cannot be empty`, true);
             }
           }
         }>
@@ -131,16 +142,14 @@ const Profile = () => {
             if (profileImageURL !== null && typeof profileImageURL === "string") {
               changeProfilePicture(currentUser?.uid, profileImageURL);
             }
+            else {
+              TOAST_SERVICE.error(TOAST_ID, `Profile Image URL cannot be empty`, true);
+            }
           }
         }>
           <label>
             Profile Image URL:
-            <input
-              className='profileInput'
-              type="text"
-              name="profileImageURL"
-              defaultValue={user.profileImage}
-            />
+            <input className='profileInput' type="text" name="profileImageURL" defaultValue={user.profileImage}/>
           </label>
           <input className='profileSubmit' type="submit" value="Submit" />
         </form>
@@ -156,16 +165,14 @@ const Profile = () => {
             if (phoneNumber !== null && typeof phoneNumber === "string") {
               changePhoneNumber(currentUser?.uid, phoneNumber);
             }
+            else {
+              TOAST_SERVICE.error(TOAST_ID, `Phone Number cannot be empty`, true);
+            }
           }
         }>
           <label>
             Phone Number:
-            <input
-              className='profileInput'
-              type="text"
-              name="phoneNumber"
-              defaultValue={user.contactInfo.phoneNumber}
-            />
+            <input className='profileInput' type="text" name="phoneNumber" defaultValue={user.contactInfo.phoneNumber}/>
           </label>
           <input className='profileSubmit' type="submit" value="Submit" />
         </form>
@@ -181,16 +188,14 @@ const Profile = () => {
             if (email !== null && typeof email === "string") {
               changeEmail(currentUser?.uid, email);
             }
+            else {
+              TOAST_SERVICE.error(TOAST_ID, `Email cannot be empty`, true);
+            }
           }
         }>
           <label>
             Email:
-            <input
-              className='profileInput'
-              type="text"
-              name="email"
-              defaultValue={user.contactInfo.email}
-            />
+            <input className='profileInput' type="text" name="email" defaultValue={user.contactInfo.email}/>
           </label>
           <input className='profileSubmit' type="submit" value="Submit" />
         </form>
@@ -205,6 +210,13 @@ const Profile = () => {
             const website = formData.get("website");
             if (website !== null && typeof website === "string") {
               changeWebsite(currentUser?.uid, website);
+            }
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                `Website cannot be empty`,
+                true,
+              );
             }
           }
         }>
@@ -231,6 +243,13 @@ const Profile = () => {
             if (currentRole !== null && typeof currentRole === "string") {
               changeOccupation(currentUser?.uid, currentRole);
             }
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                `Current Role cannot be empty`,
+                true,
+              );
+            }
           }
         }>
           <label>
@@ -244,8 +263,6 @@ const Profile = () => {
           </label>
           <input className='profileSubmit' type="submit" value="Submit" />
         </form>
-
-        {/* Form to Edit Current Company */}
 
         {/* Delete Social Media */}
         {user.socialMedia
@@ -275,6 +292,13 @@ const Profile = () => {
             const socialMediaURL = formData.get("socialMediaURL");
             if (socialMediaURL !== null && typeof socialMediaURL === "string") {
               addSocialMedia(currentUser?.uid, socialMediaURL);
+            }
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                `Social Media URL cannot be empty`,
+                true,
+              );
             }
           }}
         >
@@ -317,6 +341,13 @@ const Profile = () => {
             if (like !== null && typeof like === "string") {
               addLike(currentUser?.uid, like);
             }
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                `Like cannot be empty`,
+                true,
+              );
+            }
           }}
         >
           <label>
@@ -352,6 +383,13 @@ const Profile = () => {
             const dislike = formData.get("dislike");
             if (dislike !== null && typeof dislike === "string") {
               addDislike(currentUser?.uid, dislike);
+            }
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                `Dislike cannot be empty`,
+                true,
+              );
             }
           }}
         >
