@@ -43,6 +43,7 @@ usersRouter.get("/favorited/:id", async (req: Request, res: Response) => {
     let favorites;
     try {
         favorites = await data.getFavoritedUsers(id);
+        console.log(favorites);
         res.json(favorites);
     }
     catch (e) {

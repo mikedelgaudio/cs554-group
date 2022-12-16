@@ -9,19 +9,15 @@ const saltRounds = 16;
 
 module.exports = {
 async createUser(username:string, password:string, email:string) {
-    console.log(username, email, password);
     username = username.toLowerCase();
     if(!username || !password || !email) {
       throw new Error("bad inputs");
     }
-    console.log("1");
     let userCollection = await users();
-    console.log("2")
     const userList = await userCollection.find({'username': username}).toArray();
     if (userList.length > 0) {
       throw new Error("that username is already in use")
     }
-    console.log("3");
     let newPassword = await bcrypt.hash(password, saltRounds);
     let newUser: user = {
       username: username,
@@ -58,9 +54,7 @@ async createUser(username:string, password:string, email:string) {
 
   async getOneUser(id: string) {
     try{
-    console.log(id);
     let userCollection = await users();
-    console.log(id);
     id = ObjectId(id);
     let userList = await userCollection.find({"_id":id }).toArray();
     return userList;
@@ -71,14 +65,13 @@ async createUser(username:string, password:string, email:string) {
   },
 
   async getFavoritedUsers(id: string){
-    console.log("here")
     let answer = [];
     try{
-      let userCollection = await users();
       let userList = await this.getOneUser(id);
-      userList = userList[0].favoritedUsers
-      for (let i = 0; i < userList.length; i++) {
-        answer.push(this.getOneUser(userList[i]))
+      let fav = userList[0].favoritedUsers;
+      for (let i = 0; i < fav.length; i++) {
+        let temp = await this.getOneUser(fav[i]);
+        answer.push(temp[0]);
       }
       return answer;
     }catch(e){
