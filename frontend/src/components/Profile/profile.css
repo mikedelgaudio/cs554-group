@@ -1,4 +1,4 @@
-form {
+.profileForm {
     border-color: black;
     border-style: solid;
     border-width: 1px;
@@ -10,19 +10,34 @@ form {
     margin-right: 25%;
 }
 
-input {
+.profileInput {
     border-color: black;
     border-style: solid;
     border-width: 1px;
     border-radius: 5px;
 }
 
-button {
+.profileSubmit {
     border-color: black;
     border-style: solid;
     border-width: 1px;
     border-radius: 5px;
     color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.profileButton {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    color: black;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;

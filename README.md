@@ -1,11 +1,6 @@
-# cs554-group
+# DuckedIn
 
-## Technical stack:
-
-- React
-- Typescript
-- MongoDB
-- Redis
+The friendly Stevens way to view individuals.
 
 ## Run Docker Stack
 
@@ -17,6 +12,8 @@ For security, redis and mongodb sit on an internal docker network and not expose
 docker network create external-proxy
 docker-compose up
 ```
+
+If you'd like to run the apps individually:
 
 ## Development Frontend
 
