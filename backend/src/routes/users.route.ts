@@ -65,8 +65,66 @@ usersRouter.post('/:id/editUser', async (req: Request, res: Response) => {
 
     try {
         let id = req.params.id;
+
         //console.log(username, email, password);
-        let userBody:user = req.body;
+
+        let userBody = {};
+        if(req.body.username){
+        if (typeof req.body.username != "string" || !req.body.username) {
+            res.status(400).json({error:"Updated username must be a valid string"});
+        }else{
+            userBody.username = req.body.username;
+        }
+    }
+    if(req.body.username){
+        if (typeof req.body.username != "string" || !req.body.username) {
+            res.status(400).json({error:"Updated username must be a valid string"});
+        }
+    }
+    if(req.body.firstName){
+        if (typeof req.body.firstName != "string" || !req.body.firstName) {
+            res.status(400).json({error:"Updated first name must be a valid string"});
+        }
+    }
+    if(req.body.lastName){
+        if (typeof req.body.lastName != "string" || !req.body.lastName) {
+            res.status(400).json({error:"Updated last name must be a valid string"});
+        }
+    }
+    if(req.body.profileImage){
+        if (typeof req.body.profileImage != "string" || !req.body.profileImage) {
+            res.status(400).json({error:"Updated profile image must be a valid string"});
+        }
+    }
+    if(req.body.contactInfo){
+        let contactFields = ["phoneNumber", "email", "personalWebsite","currentRole"]
+       
+        for (const [k, v] of Object.entries(req.body.contactInfo)) {
+            if (!contactFields.includes(k)){
+                res.status(400).json({error: "Contact Field must be either phone number, email, personal website, or current role"})
+            }
+            if(typeof(v) != "string"){
+                res.status(400).json({error: "Contact Info must be string"})
+            }
+    }
+}
+    if(req.body.socialMedias){
+        if (Array.isArray(req.body.socialMedias)) {
+            res.status(400).json({error:"Updated social medias must be a valid array"});
+        }
+    }
+    if(req.body.likes){
+        if (Array.isArray(req.body.likes) || !req.body.likes) {
+            res.status(400).json({error:"Updated social medias must be a valid string"});
+        }
+    }
+    if(req.body.dislikes){
+        if (Array.isArray(req.body.dislikes) || !req.body.dislikes) {
+            res.status(400).json({error:"Updated social medias must be a valid string"});
+        }
+    }
+
+    
         let answer = await data.patchUser(userBody, id);
         res.json(answer);
       }
