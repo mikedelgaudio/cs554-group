@@ -21,6 +21,7 @@ export interface dislike {
 
 
 export interface user {
+    _id: any,
     username: string;
     password: string;
     firstName: string;

@@ -4,6 +4,8 @@ const users = mongoCollections.users;
 const {ObjectId} = require('mongodb');
 const bcrypt = require('bcrypt');
 const { json } = require('express');
+const redis = require("redis");
+import { redisClient } from "../config/redisClient";
 const saltRounds = 16;
 
 
@@ -18,8 +20,10 @@ async createUser(username:string, password:string, email:string) {
     if (userList.length > 0) {
       throw new Error("that username is already in use")
     }
+    let id = new ObjectId()
     let newPassword = await bcrypt.hash(password, saltRounds);
     let newUser: user = {
+      _id: id,
       username: username,
       password: newPassword,
       firstName: "",
@@ -38,8 +42,12 @@ async createUser(username:string, password:string, email:string) {
       throw new Error("this didn't work");
     }
     else {
+      
+      let hashing = JSON.stringify(newUser);
+      console.log("made it here");
+      await redisClient.set("User" + newUser._id.toString(), hashing);
+      console.log("passed cache")
       return newUser;
-
     }
   },
   async getAllUsers() {
@@ -82,6 +90,11 @@ async createUser(username:string, password:string, email:string) {
 
   async getFavoritedUsers(id: string){
     let answer = [];
+      let cached = await redisClient.get("favorite" + id.toString());
+      console.log("passed cache");
+      if (cached) {
+        return JSON.parse(cached);
+      }
     try{
       let userList = await this.getOneUser(id);
       let fav = userList[0].favoritedUsers;
@@ -89,6 +102,8 @@ async createUser(username:string, password:string, email:string) {
         let temp = await this.getOneUser(fav[i]);
         answer.push(temp[0]);
       }
+      let flattened = JSON.stringify(answer);
+      await redisClient.set("favorite" + id.toString(), flattened);
       return answer;
     }catch(e){
       throw new Error("Could not get favorited users.")
