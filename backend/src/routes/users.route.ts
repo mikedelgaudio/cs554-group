@@ -2,6 +2,7 @@ const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 import express, { Request, Response, Router } from "express";
 let data = require("../data/users");
+import {contactInfo, socialMedia, like, dislike, user, usersI } from "../data/interfaces";
 
 export const usersRouter: Router = express.Router();
 
@@ -60,15 +61,13 @@ usersRouter.get("/favorited/:id", async (req: Request, res: Response) => {
         res.status(404).json({error:e});
     }
 });
-usersRouter.post('/:username/editUser', async (req: Request, res: Response) => {
+usersRouter.post('/:id/editUser', async (req: Request, res: Response) => {
 
     try {
-        let {username, email, password} = req.body;
-
+        let id = req.params.id;
         //console.log(username, email, password);
-        
-        let answer = await data.createUser(username, email, password);
-        //console.log(answer.username);
+        let userBody:user = req.body;
+        let answer = await data.patchUser(userBody, id);
         res.json(answer);
       }
       catch (e) {

@@ -130,10 +130,9 @@ async createUser(username:string, password:string, email:string) {
     }
   
     let userCollection = await users();
-    const userList = await userCollection.find({'_id': id}).toArray();
 
     const updateUser = await userCollection.updateOne({ _id: id }, { $set: userObj })
-    return userObj;
+    return this.getOneUser(id);
 
   }
   }
