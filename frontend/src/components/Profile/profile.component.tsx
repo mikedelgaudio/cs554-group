@@ -34,8 +34,8 @@ const Profile = () => {
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   // const url = 'http://localhost:3001/profile/${params.id}';
+  // const url2 = 'http://localhost:3001/profile/${currentUser?.uid}';
   const url = `http://localhost:3000/users/${params.id}`;
-  // const url = 'http://localhost:3001/profile/${currentUser?.uid}';
   const url2 = `http://localhost:3000/users/1`;
   useEffect(() => {
     console.log("useEffect fired");
@@ -60,25 +60,7 @@ const Profile = () => {
   }, [url]);
 
   const handleFavoriteToggle = async () => {
-    // TODO Trigger API Call
-
     try {
-      // TODO
-      // Update logged in user?'s favorite list
-      // await axios.post(
-      //   `http://localhost:3000/users/${2}`,
-      //   {
-      //     favoritedUsers: {
-      //       id,
-      //     },
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   },
-      // );
-
       setFavorited(prev => (prev = !prev));
     } catch (e) {
       TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
@@ -246,6 +228,7 @@ const Profile = () => {
       >
         <label>
           Website:
+          {/* <input className='profileInput' type='text' name='website' defaultValue={user?.contactInfo.personalWebsite}/> */}
           <input className="profileInput" type="text" name="website" defaultValue={user?.contactInfo.website}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
@@ -269,13 +252,16 @@ const Profile = () => {
       >
         <label>
           Current Role:
+          {/* <input className='profileInput' type='text' name='currentRole' defaultValue={user?.contactInfo.currentRole}/> */}
           <input className="profileInput" type="text" name="currentRole" defaultValue={user?.contactInfo.occupation}/>
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
 
       {/* Delete Social Media */}
+      {/* {user?.socialMedias */}
       {user?.socialMedia
+        // ? user?.socialMedias.map(socialMedia => (
         ? user?.socialMedia.map(socialMedia => (
             <div key={socialMedia.id}>
               <p>
@@ -315,7 +301,7 @@ const Profile = () => {
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
 
-      {/* Delete user? Like */}
+      {/* Delete Likes */}
       {user?.likes
         ? user?.likes.map(like => (
             <div key={like.id}>
