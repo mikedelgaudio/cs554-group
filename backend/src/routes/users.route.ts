@@ -1,5 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
+import { checkAuth } from "../middleware/token.middleware";
 import express, { Request, Response, Router } from "express";
 import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "../data/interfaces";
 let data = require("../data/users");
@@ -58,6 +59,7 @@ usersRouter.get(
 
 usersRouter.get(
   "/favorited/:firebaseUid",
+  checkAuth,
   async (req: Request, res: Response) => {
     let firebaseUid = req.params.firebaseUid;
     let favorites;
@@ -73,6 +75,7 @@ usersRouter.get(
 
 usersRouter.post(
   "/:firebaseUid/editUser",
+  checkAuth,
   async (req: Request, res: Response) => {
     try {
       let firebaseUid = req.params.firebaseUid;

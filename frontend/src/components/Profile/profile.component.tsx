@@ -35,18 +35,17 @@ const Profile = () => {
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   // const url = 'http://localhost:3001/profile/${params.id}';
   // const url2 = 'http://localhost:3001/profile/${currentUser?.uid}';
-  const url = `http://localhost:3001/users/${params.id}`;
+  const url = `http://localhost:3001/users/profile/${params.id}`;
   const url2 = `http://localhost:3001/users/1`;
   useEffect(() => {
-    console.log("useEffect fired");
     async function getUser() {
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
-        const { data: currentUserData } = await axios.get(url2);
+
         setUser(userData);
         if (
-          currentUserData.favoritedUsers.find(
+          userData.favoritedUsers.find(
             (favoritedUser: { id: any }) => favoritedUser.id === userData.id,
           )
         ) {
