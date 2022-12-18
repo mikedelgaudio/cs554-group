@@ -34,19 +34,18 @@ const Profile = () => {
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   // const url = 'http://localhost:3001/profile/${params.id}';
-  const url = `http://localhost:3000/users/${params.id}`;
-  // const url = 'http://localhost:3001/profile/${currentUser?.uid}';
-  const url2 = `http://localhost:3000/users/1`;
+  // const url2 = 'http://localhost:3001/profile/${currentUser?.uid}';
+  const url = `http://localhost:3001/users/profile/${params.id}`;
+  const url2 = `http://localhost:3001/users/1`;
   useEffect(() => {
-    console.log("useEffect fired");
     async function getUser() {
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
-        const { data: currentUserData } = await axios.get(url2);
+
         setUser(userData);
         if (
-          currentUserData.favoritedUsers.find(
+          userData.favoritedUsers.find(
             (favoritedUser: { id: any }) => favoritedUser.id === userData.id,
           )
         ) {
@@ -60,25 +59,8 @@ const Profile = () => {
   }, [url]);
 
   const handleFavoriteToggle = async () => {
-    // TODO Trigger API Call
-
     try {
-      // TODO
-      // Update logged in user?'s favorite list
-      // await axios.post(
-      //   `http://localhost:3000/users/${2}`,
-      //   {
-      //     favoritedUsers: {
-      //       id,
-      //     },
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   },
-      // );
-
+      // TODO Handle API Call to Toggle Favoriting
       setFavorited(prev => (prev = !prev));
     } catch (e) {
       TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
@@ -100,15 +82,19 @@ const Profile = () => {
           const username = formData.get("username");
           if (username !== null && typeof username === "string") {
             changeUsername(currentUser?.uid, username);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
           }
         }}
       >
         <label>
           Username:
-          <input className="profileInput" type="text" name="username" defaultValue={user?.username}/>
+          <input
+            className="profileInput"
+            type="text"
+            name="username"
+            defaultValue={user?.username}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -123,15 +109,19 @@ const Profile = () => {
           const firstName = formData.get("firstName");
           if (firstName !== null && typeof firstName === "string") {
             changeFirstName(currentUser?.uid, firstName);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
           }
         }}
       >
         <label>
           First Name:
-          <input className="profileInput" type="text" name="firstName" defaultValue={user?.firstName}/>
+          <input
+            className="profileInput"
+            type="text"
+            name="firstName"
+            defaultValue={user?.firstName}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -146,15 +136,19 @@ const Profile = () => {
           const lastName = formData.get("lastName");
           if (lastName !== null && typeof lastName === "string") {
             changeLastName(currentUser?.uid, lastName);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
           }
         }}
       >
         <label>
           Last Name:
-          <input className="profileInput" type="text" name="lastName" defaultValue={user?.lastName}/>
+          <input
+            className="profileInput"
+            type="text"
+            name="lastName"
+            defaultValue={user?.lastName}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -169,15 +163,23 @@ const Profile = () => {
           const profileImageURL = formData.get("profileImageURL");
           if (profileImageURL !== null && typeof profileImageURL === "string") {
             changeProfilePicture(currentUser?.uid, profileImageURL);
-          }
-          else {
-            TOAST_SERVICE.error(TOAST_ID, "Profile Image URL cannot be blank", true);
+          } else {
+            TOAST_SERVICE.error(
+              TOAST_ID,
+              "Profile Image URL cannot be blank",
+              true,
+            );
           }
         }}
       >
         <label>
           Profile Image URL:
-          <input className="profileInput" type="text" name="profileImageURL" defaultValue={user?.profileImage}/>
+          <input
+            className="profileInput"
+            type="text"
+            name="profileImageURL"
+            defaultValue={user?.profileImage}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -192,15 +194,19 @@ const Profile = () => {
           const phoneNumber = formData.get("phoneNumber");
           if (phoneNumber !== null && typeof phoneNumber === "string") {
             changePhoneNumber(currentUser?.uid, phoneNumber);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
           }
         }}
       >
         <label>
           Phone Number:
-          <input className="profileInput" type="text" name="phoneNumber" defaultValue={user?.contactInfo.phoneNumber}/>
+          <input
+            className="profileInput"
+            type="text"
+            name="phoneNumber"
+            defaultValue={user?.contactInfo.phoneNumber}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -215,15 +221,19 @@ const Profile = () => {
           const email = formData.get("email");
           if (email !== null && typeof email === "string") {
             changeEmail(currentUser?.uid, email);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
           }
         }}
       >
         <label>
           Email:
-          <input className="profileInput" type="text" name="email" defaultValue={user?.contactInfo.email}/>
+          <input
+            className="profileInput"
+            type="text"
+            name="email"
+            defaultValue={user?.contactInfo.email}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -238,15 +248,20 @@ const Profile = () => {
           const website = formData.get("website");
           if (website !== null && typeof website === "string") {
             changeWebsite(currentUser?.uid, website);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
           }
         }}
       >
         <label>
           Website:
-          <input className="profileInput" type="text" name="website" defaultValue={user?.contactInfo.website}/>
+          {/* <input className='profileInput' type='text' name='website' defaultValue={user?.contactInfo.personalWebsite}/> */}
+          <input
+            className="profileInput"
+            type="text"
+            name="website"
+            defaultValue={user?.contactInfo.website}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -261,22 +276,29 @@ const Profile = () => {
           const currentRole = formData.get("currentRole");
           if (currentRole !== null && typeof currentRole === "string") {
             changeOccupation(currentUser?.uid, currentRole);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
           }
         }}
       >
         <label>
           Current Role:
-          <input className="profileInput" type="text" name="currentRole" defaultValue={user?.contactInfo.occupation}/>
+          {/* <input className='profileInput' type='text' name='currentRole' defaultValue={user?.contactInfo.currentRole}/> */}
+          <input
+            className="profileInput"
+            type="text"
+            name="currentRole"
+            defaultValue={user?.contactInfo.occupation}
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
 
       {/* Delete Social Media */}
+      {/* {user?.socialMedias */}
       {user?.socialMedia
-        ? user?.socialMedia.map(socialMedia => (
+        ? // ? user?.socialMedias.map(socialMedia => (
+          user?.socialMedia.map(socialMedia => (
             <div key={socialMedia.id}>
               <p>
                 <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
@@ -302,20 +324,28 @@ const Profile = () => {
           const socialMediaURL = formData.get("socialMediaURL");
           if (socialMediaURL !== null && typeof socialMediaURL === "string") {
             addSocialMedia(currentUser?.uid, socialMediaURL);
-          }
-          else {
-            TOAST_SERVICE.error(TOAST_ID, "Social Media URL cannot be blank", true);
+          } else {
+            TOAST_SERVICE.error(
+              TOAST_ID,
+              "Social Media URL cannot be blank",
+              true,
+            );
           }
         }}
       >
         <label>
           Social Media URL:
-          <input className="profileInput" type="text" name="socialMediaURL" defaultValue="google.com"/>
+          <input
+            className="profileInput"
+            type="text"
+            name="socialMediaURL"
+            defaultValue="google.com"
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
 
-      {/* Delete user? Like */}
+      {/* Delete Likes */}
       {user?.likes
         ? user?.likes.map(like => (
             <div key={like.id}>
@@ -341,15 +371,19 @@ const Profile = () => {
           const like = formData.get("like");
           if (like !== null && typeof like === "string") {
             addLike(currentUser?.uid, like);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
         }}
       >
         <label>
           Like:
-          <input className="profileInput" type="text" name="like" defaultValue="like"/>
+          <input
+            className="profileInput"
+            type="text"
+            name="like"
+            defaultValue="like"
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
@@ -381,27 +415,32 @@ const Profile = () => {
           const dislike = formData.get("dislike");
           if (dislike !== null && typeof dislike === "string") {
             addDislike(currentUser?.uid, dislike);
-          }
-          else {
+          } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
         }}
       >
         <label>
           Dislike:
-          <input className="profileInput" type="text" name="dislike" defaultValue="dislike"/>
+          <input
+            className="profileInput"
+            type="text"
+            name="dislike"
+            defaultValue="dislike"
+          />
         </label>
         <input className="profileSubmit" type="submit" value="Submit" />
       </form>
 
       {/* Form to delete a favorited user? */}
       {user?.favoritedUsers
-        ? user?.favoritedUsers.map(favorite => (
-            <div key={favorite.id}>
-              <p>{favorite.id}</p>
-              <button className="profileButton"
+        ? user?.favoritedUsers.map(favoriteId => (
+            <div key={favoriteId}>
+              <p>{favoriteId}</p>
+              <button
+                className="profileButton"
                 onClick={() => {
-                  deleteFavoritedUser(currentUser?.uid, favorite.id);
+                  deleteFavoritedUser(currentUser?.uid, favoriteId);
                 }}
               >
                 Delete
@@ -477,9 +516,9 @@ const Profile = () => {
       {/* Favorited Users */}
       <p>Favorited Users: </p>
       {user?.favoritedUsers ? (
-        user?.favoritedUsers.map(favoritedUser => (
-          <div key={favoritedUser.id}>
-            <p>{favoritedUser.id}</p>
+        user?.favoritedUsers.map(favoriteId => (
+          <div key={favoriteId}>
+            <p>{favoriteId}</p>
           </div>
         ))
       ) : (

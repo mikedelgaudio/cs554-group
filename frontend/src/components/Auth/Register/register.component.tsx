@@ -1,3 +1,4 @@
+import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
@@ -14,6 +15,7 @@ const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,8 +37,25 @@ const Register = () => {
 
     try {
       setLoading(true);
-      if (register) await register(email, password);
+
+      // If firebase or mongo fails could be data sync issue
+
+      let userId = "";
+      if (register) {
+        const creds = await register(email, password);
+        userId = creds.user.uid;
+      }
+
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
+
+      const url = "http://localhost:3001/users/register";
+      await axios.post(url, {
+        username,
+        firebaseUid: userId,
+        email,
+        firstName,
+        lastName,
+      });
 
       navigate("/");
     } catch (e) {
@@ -53,6 +72,7 @@ const Register = () => {
     setLastName("");
     setEmail("");
     setPassword("");
+    setUsername("");
     setLoading(false);
   };
 
@@ -85,6 +105,17 @@ const Register = () => {
             required={true}
             placeholder="Blow"
             onChange={e => setLastName(e.target.value)}
+          />
+          <label className="required" htmlFor="username">
+            Username
+          </label>
+          <input
+            className="border border-slate-400 p-2 rounded-md"
+            id="username"
+            type={"text"}
+            required={true}
+            placeholder="hello123"
+            onChange={e => setUsername(e.target.value)}
           />
         </div>
 

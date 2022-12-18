@@ -2,35 +2,34 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import noImg from "../../assets/noImg.jpg";
 import {
-  SocialMediaItem,
-  User,
-  UserDislikeItem,
-  UserLikeItem,
-} from "../../models/user.model";
+  dislike,
+  like,
+  socialMedia,
+  user,
+} from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
 
 const UserProfileCard = ({
   id,
-  wasFavorited,
+  isFavorited,
 }: {
   id: string;
-  wasFavorited: boolean;
+  isFavorited: boolean;
 }) => {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<user>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [favorited, setFavorited] = useState<boolean>(wasFavorited);
+  const [favorited, setFavorited] = useState<boolean>(isFavorited);
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
         // TODO Update with actual backend URL
-        const { data } = await axios.get(`http://localhost:3000/users/${id}`);
+        const { data } = await axios.get(
+          `http://localhost:3001/users/profile/${id}`,
+        );
         setUser(data);
-
-        // Get current user's favorite user
-        // Determine if favorited
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILE_CARD";
 
@@ -55,17 +54,31 @@ const UserProfileCard = ({
   }, []);
 
   const handleFavoriteToggle = async () => {
-    // TODO Trigger API Call
-
     try {
-      // TODO
-      // Update logged in user's favorite list
+      // TODO Update URL to Favorited Users
+      const { data } = await axios.get("http://localhost:3001/users/");
+      const loggedInUsersFavorited = data?.favoritedUsers;
+      const userFavorited = loggedInUsersFavorited.find(
+        (fId: string) => fId === id,
+      );
+
+      let updatedFavoriteList = [];
+
+      if (userFavorited) {
+        // Filter
+        updatedFavoriteList = loggedInUsersFavorited.filter(
+          (fId: string) => fId !== id,
+        );
+      } else {
+        // Append
+        updatedFavoriteList = [...loggedInUsersFavorited, id];
+      }
+
+      // TODO Update correct URL
       // await axios.post(
-      //   `http://localhost:3000/users/${2}`,
+      //   `http://localhost:3001/users/${2}/editUser`,
       //   {
-      //     favoritedUsers: {
-      //       id,
-      //     },
+      //     favoritedUsers: updatedFavoriteList,
       //   },
       //   {
       //     headers: {
@@ -92,7 +105,7 @@ const UserProfileCard = ({
             height={256}
             width={256}
             loading="lazy"
-            src={user?.profileImage ?? noImg}
+            src={user?.profileImage || noImg}
             alt={`${user?.firstName ?? "N/A"}'s profile`}
           />
 
@@ -103,7 +116,7 @@ const UserProfileCard = ({
                 <h2 className="text-2xl font-bold text-slate-900">
                   {user?.firstName ?? "N/A"} {user?.lastName ?? "N/A"}
                 </h2>
-                <p>{user?.contactInfo?.occupation ?? "No occupation"}</p>
+                <p>{user?.contactInfo?.currentRole ?? "No occupation"}</p>
               </div>
 
               {/* Heart Icon */}
@@ -142,24 +155,24 @@ const UserProfileCard = ({
               <div>
                 <h3 className="font-semibold text-lg">Social Media</h3>
                 <ul>
-                  {user?.socialMedia?.map((item: SocialMediaItem) => {
-                    return <li key={item?.id}>{item?.profileURL}</li>;
+                  {user?.socialMedias?.map((item: socialMedia) => {
+                    return <li key={item?._id}>{item?.profileUrl}</li>;
                   })}
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Likes</h3>
                 <ul>
-                  {user?.likes?.map((item: UserLikeItem) => {
-                    return <li key={item?.id}>{item?.name}</li>;
+                  {user?.likes?.map((item: like) => {
+                    return <li key={item?._id}>{item?.like}</li>;
                   })}
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Dislikes</h3>
                 <ul>
-                  {user?.dislikes?.map((item: UserDislikeItem) => {
-                    return <li key={item?.id}>{item?.name}</li>;
+                  {user?.dislikes?.map((item: dislike) => {
+                    return <li key={item?._id}>{item?.dislike}</li>;
                   })}
                 </ul>
               </div>

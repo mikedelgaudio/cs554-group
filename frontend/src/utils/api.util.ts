@@ -1,19 +1,25 @@
 import axios from "axios";
-import { getIdToken, User } from "firebase/auth";
+import { User } from "firebase/auth";
 
-export const getRequest = async (url: string, user: User) => {
+export const getRequest = async (url: string, user?: User) => {
   if (!url) throw "No URL was provided";
 
   try {
     if (!user) {
-      throw "No user is currently signed in";
+      // If we're not signed in, assume just browsing...
+      const { data } = await axios.get(url);
+      return data;
     }
 
     const userToken = await user.getIdToken();
 
+    if (!userToken) {
+      throw "Failed to retrieve user token.";
+    }
+
     const { data } = await axios.get(url, {
       headers: {
-        AuthToken: userToken,
+        token: userToken,
       },
     });
 
