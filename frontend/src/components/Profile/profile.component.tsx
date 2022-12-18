@@ -435,13 +435,13 @@ const Profile = () => {
 
       {/* Form to delete a favorited user? */}
       {user?.favoritedUsers
-        ? user?.favoritedUsers.map(favorite => (
-            <div key={favorite.id}>
-              <p>{favorite.id}</p>
+        ? user?.favoritedUsers.map(favoriteId => (
+            <div key={favoriteId}>
+              <p>{favoriteId}</p>
               <button
                 className="profileButton"
                 onClick={() => {
-                  deleteFavoritedUser(currentUser?.uid, favorite.id);
+                  deleteFavoritedUser(currentUser?.uid, favoriteId);
                 }}
               >
                 Delete
@@ -517,9 +517,9 @@ const Profile = () => {
       {/* Favorited Users */}
       <p>Favorited Users: </p>
       {user?.favoritedUsers ? (
-        user?.favoritedUsers.map(favoritedUser => (
-          <div key={favoritedUser.id}>
-            <p>{favoritedUser.id}</p>
+        user?.favoritedUsers.map(favoriteId => (
+          <div key={favoriteId}>
+            <p>{favoriteId}</p>
           </div>
         ))
       ) : (
