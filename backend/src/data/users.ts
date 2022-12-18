@@ -107,9 +107,8 @@ module.exports = {
     }
   },
 
-  async patchUser(user: user, id: string) {
+  async patchUser(user: user, firebaseUid: string) {
     const userObj = {} as user;
-    id = ObjectId(id);
 
     if (user.username) {
       userObj.username = user.username;
@@ -144,9 +143,9 @@ module.exports = {
     let userCollection = await users();
 
     const updateUser = await userCollection.updateOne(
-      { _id: id },
+      { firebaseUid: firebaseUid },
       { $set: userObj }
     );
-    return this.getOneUser(id);
+    return this.getOneUser(firebaseUid);
   },
 };

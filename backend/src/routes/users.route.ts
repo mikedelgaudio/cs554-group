@@ -61,104 +61,112 @@ usersRouter.get(
   }
 );
 
-usersRouter.post("/:id/editUser", async (req: Request, res: Response) => {
-  try {
-    let id = req.params.id;
+usersRouter.post(
+  "/:firebaseUid/editUser",
+  async (req: Request, res: Response) => {
+    try {
+      let firebaseUid = req.params.firebaseUid;
 
-    //console.log(username, email, password);
+      //console.log(username, email, password);
 
-    let userObj = {} as user;
+      let userObj = {} as user;
 
-    if (req.body.username) {
-      if (typeof req.body.username != "string" || !req.body.username) {
-        return res
-          .status(400)
-          .json({ error: "Updated username must be a valid string" });
-      } else {
-        userObj.username = req.body.username;
-      }
-    }
-    if (req.body.firstName) {
-      if (typeof req.body.firstName != "string" || !req.body.firstName) {
-        return res
-          .status(400)
-          .json({ error: "Updated first name must be a valid string" });
-      } else {
-        userObj.firstName = req.body.firstName;
-      }
-    }
-    if (req.body.lastName) {
-      if (typeof req.body.lastName != "string" || !req.body.lastName) {
-        return res
-          .status(400)
-          .json({ error: "Updated last name must be a valid string" });
-      } else {
-        userObj.lastName = req.body.lastName;
-      }
-    }
-    if (req.body.profileImage) {
-      if (typeof req.body.profileImage != "string" || !req.body.profileImage) {
-        return res
-          .status(400)
-          .json({ error: "Updated profile image must be a valid string" });
-      } else {
-        userObj.profileImage = req.body.profileImage;
-      }
-    }
-    if (req.body.contactInfo) {
-      let contactFields = [
-        "phoneNumber",
-        "email",
-        "personalWebsite",
-        "currentRole",
-      ];
-
-      for (const [k, v] of Object.entries(req.body.contactInfo)) {
-        if (!contactFields.includes(k)) {
-          return res.status(400).json({
-            error:
-              "Contact Field must be either phone number, email, personal website, or current role",
-          });
-        }
-        if (typeof v != "string") {
-          return res.status(400).json({ error: "Contact Info must be string" });
+      if (req.body.username) {
+        if (typeof req.body.username != "string" || !req.body.username) {
+          return res
+            .status(400)
+            .json({ error: "Updated username must be a valid string" });
+        } else {
+          userObj.username = req.body.username;
         }
       }
-      userObj.contactInfo = req.body.contactInfo;
-    }
-    if (req.body.socialMedias) {
-      if (Array.isArray(req.body.socialMedias)) {
-        return res
-          .status(400)
-          .json({ error: "Updated social medias must be a valid array" });
-      } else {
-        userObj.socialMedias = req.body.socialMedias;
+      if (req.body.firstName) {
+        if (typeof req.body.firstName != "string" || !req.body.firstName) {
+          return res
+            .status(400)
+            .json({ error: "Updated first name must be a valid string" });
+        } else {
+          userObj.firstName = req.body.firstName;
+        }
       }
-    }
-    if (req.body.likes) {
-      if (Array.isArray(req.body.likes) || !req.body.likes) {
-        return res
-          .status(400)
-          .json({ error: "Updated likes must be a valid array" });
-      } else {
-        userObj.likes = req.body.likes;
+      if (req.body.lastName) {
+        if (typeof req.body.lastName != "string" || !req.body.lastName) {
+          return res
+            .status(400)
+            .json({ error: "Updated last name must be a valid string" });
+        } else {
+          userObj.lastName = req.body.lastName;
+        }
       }
-    }
-    if (req.body.dislikes) {
-      if (Array.isArray(req.body.dislikes) || !req.body.dislikes) {
-        return res
-          .status(400)
-          .json({ error: "Updated dislikes must be a valid array" });
-      } else {
-        userObj.dislikes = req.body.dislikes;
+      if (req.body.profileImage) {
+        if (
+          typeof req.body.profileImage != "string" ||
+          !req.body.profileImage
+        ) {
+          return res
+            .status(400)
+            .json({ error: "Updated profile image must be a valid string" });
+        } else {
+          userObj.profileImage = req.body.profileImage;
+        }
       }
+      if (req.body.contactInfo) {
+        let contactFields = [
+          "phoneNumber",
+          "email",
+          "personalWebsite",
+          "currentRole",
+        ];
+
+        for (const [k, v] of Object.entries(req.body.contactInfo)) {
+          if (!contactFields.includes(k)) {
+            return res.status(400).json({
+              error:
+                "Contact Field must be either phone number, email, personal website, or current role",
+            });
+          }
+          if (typeof v != "string") {
+            return res
+              .status(400)
+              .json({ error: "Contact Info must be string" });
+          }
+        }
+        userObj.contactInfo = req.body.contactInfo;
+      }
+      if (req.body.socialMedias) {
+        if (Array.isArray(req.body.socialMedias)) {
+          return res
+            .status(400)
+            .json({ error: "Updated social medias must be a valid array" });
+        } else {
+          userObj.socialMedias = req.body.socialMedias;
+        }
+      }
+      if (req.body.likes) {
+        if (Array.isArray(req.body.likes) || !req.body.likes) {
+          return res
+            .status(400)
+            .json({ error: "Updated likes must be a valid array" });
+        } else {
+          userObj.likes = req.body.likes;
+        }
+      }
+      if (req.body.dislikes) {
+        if (Array.isArray(req.body.dislikes) || !req.body.dislikes) {
+          return res
+            .status(400)
+            .json({ error: "Updated dislikes must be a valid array" });
+        } else {
+          userObj.dislikes = req.body.dislikes;
+        }
+      }
+      let answer = await data.patchUser(userObj, firebaseUid);
+      return res.json(answer);
+    } catch (e) {
+      return res.status(404).json({ error: e });
     }
-    let answer = await data.patchUser(userObj, id);
-    return res.json(answer);
-  } catch (e) {
-    return res.status(404).json({ error: e });
   }
-});
+);
 
 usersRouter.get("/", async (req: Request, res: Response) => {
   try {
