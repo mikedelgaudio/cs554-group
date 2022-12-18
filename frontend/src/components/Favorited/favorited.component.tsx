@@ -1,13 +1,12 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.backend.model";
+import { getRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "../Shared/Loading.component";
 import { PageLayout } from "../Shared/PageLayout.component";
 import { UserProfileCard } from "../Shared/UserProfileCard.component";
-import { getRequest } from "../../utils/api.util";
 
 const Favorited = () => {
   useTitle("Favorited - DuckedIn");
@@ -26,9 +25,10 @@ const Favorited = () => {
         );
 
         // Filter current user
-        const filteredUsers = allUsersData.data.filter(
-          (user: User) => user.firebaseUid !== currentUser?.uid,
-        );
+        const filteredUsers =
+          allUsersData.data?.filter(
+            (user: User) => user.firebaseUid !== currentUser?.uid,
+          ) ?? [];
 
         setUsers(filteredUsers);
       } catch (e: any) {
@@ -42,23 +42,29 @@ const Favorited = () => {
     fetchData();
   }, []);
 
+  const layout = () => {
+    if (loading) {
+      <Loading />;
+    } else {
+      if (users?.length === 0) {
+        return <p>No favorited users are found...</p>;
+      } else {
+        users?.map((user: User) => {
+          return (
+            <UserProfileCard
+              key={user?._id}
+              id={user?.firebaseUid}
+              isFavorited={true}
+            />
+          );
+        });
+      }
+    }
+  };
+
   return (
     <PageLayout header="Favorited">
-      <div className="flex flex-col gap-6">
-        {loading ? (
-          <Loading />
-        ) : (
-          users?.map((user: User) => {
-            return (
-              <UserProfileCard
-                key={user?._id}
-                id={user?.firebaseUid}
-                isFavorited={true}
-              />
-            );
-          })
-        )}
-      </div>
+      <div className="flex flex-col gap-6">{layout()}</div>
     </PageLayout>
   );
 };
