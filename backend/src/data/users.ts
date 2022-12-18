@@ -13,7 +13,7 @@ module.exports = {
     firebaseUid: string
   ) {
     username = username.toLowerCase();
-    if (!username || !email) {
+    if (!username || !email || !firstName || !lastName || !firebaseUid) {
       throw new Error("bad inputs");
     }
     let userCollection = await users();
@@ -87,17 +87,15 @@ module.exports = {
   async getFavoritedUsers(firebaseUid: string) {
     let answer = [];
     let cached = await redisClient.get("favorite" + firebaseUid.toString());
-    console.log("passed cache");
     if (cached) {
       return JSON.parse(cached);
     }
     try {
       let userList = await this.getOneUser(firebaseUid);
-      console.log("userList", userList);
-      let fav = userList[0].favoritedUsers;
+      let fav = userList.favoritedUsers;
       for (let i = 0; i < fav.length; i++) {
         let temp = await this.getOneUser(fav[i]);
-        answer.push(temp[0]);
+        answer.push(temp);
       }
       let flattened = JSON.stringify(answer);
       await redisClient.set("favorite" + firebaseUid.toString(), flattened);

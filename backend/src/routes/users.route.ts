@@ -56,7 +56,8 @@ usersRouter.get(
       favorites = await data.getFavoritedUsers(firebaseUid);
       res.json(favorites);
     } catch (e) {
-      res.status(404).json({ error: e });
+      console.log(e);
+      res.status(400).json({ error: e });
     }
   }
 );
