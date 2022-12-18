@@ -8,12 +8,13 @@ export const usersRouter: Router = express.Router();
 
 usersRouter.post("/register", async (req: Request, res: Response) => {
   try {
-    const { username, email, firstName, lastName } = req.body;
+    const { username, email, firstName, lastName, firebaseUid } = req.body;
     const response = await data.createUser(
       username,
       email,
       firstName,
-      lastName
+      lastName,
+      firebaseUid
     );
     res.json(response);
   } catch (e) {
@@ -21,39 +22,44 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-usersRouter.get("/profile/:id", async (req: Request, res: Response) => {
-  let id = req.params.id;
-  console.log("getUser route");
-  try {
-    let users = await data.getOneUser(id);
-    res.json(users);
-  } catch (e) {
-    res.status(404).json({ error: e });
+usersRouter.get(
+  "/profile/:firebaseUid",
+  async (req: Request, res: Response) => {
+    const firebaseUid = req.params.firebaseUid;
+    try {
+      let users = await data.getOneUser(firebaseUid);
+      res.json(users);
+    } catch (e) {
+      res.status(404).json({ error: e });
+    }
   }
-});
+);
 
-usersRouter.delete("/profile/:id", async (req: Request, res: Response) => {
-  let id = req.params.id;
-  console.log("getUser route");
-  try {
-    let users = await data.deleteOneUser(id);
-    res.json(users);
-  } catch (e) {
-    res.status(404).json({ error: e });
-  }
-});
+// No plans for this
+// usersRouter.delete("/profile/:id", async (req: Request, res: Response) => {
+//   let id = req.params.id;
+//   console.log("getUser route");
+//   try {
+//     let users = await data.deleteOneUser(id);
+//     res.json(users);
+//   } catch (e) {
+//     res.status(404).json({ error: e });
+//   }
+// });
 
-usersRouter.get("/favorited/:id", async (req: Request, res: Response) => {
-  let id = req.params.id;
-  let favorites;
-  try {
-    favorites = await data.getFavoritedUsers(id);
-    console.log(favorites);
-    res.json(favorites);
-  } catch (e) {
-    res.status(404).json({ error: e });
+usersRouter.get(
+  "/favorited/:firebaseUid",
+  async (req: Request, res: Response) => {
+    let firebaseUid = req.params.firebaseUid;
+    let favorites;
+    try {
+      favorites = await data.getFavoritedUsers(firebaseUid);
+      res.json(favorites);
+    } catch (e) {
+      res.status(404).json({ error: e });
+    }
   }
-});
+);
 
 usersRouter.post("/:id/editUser", async (req: Request, res: Response) => {
   try {

@@ -20,6 +20,7 @@ export interface dislike {
 
 export interface user {
   _id: any;
+  firebaseUid: string;
   username: string;
   firstName: string;
   lastName: string;

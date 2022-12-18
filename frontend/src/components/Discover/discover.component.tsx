@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
@@ -9,7 +10,7 @@ import { UserProfileCard } from "../Shared/UserProfileCard.component";
 
 const Discover = () => {
   useTitle("Discover - DuckedIn");
-
+  const { currentUser } = useFirebaseAuth();
   const [users, setUsers] = useState<User[]>();
   const [loggedInUser, setLoggedInUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -18,14 +19,13 @@ const Discover = () => {
     async function fetchData() {
       setLoading(true);
       try {
-        // TODO Update with actual backend URL
-        const allUsersData = await axios.get("http://localhost:3000/users");
+        const allUsersData = await axios.get("http://localhost:3001/users");
         setUsers(allUsersData.data);
 
-        // const loggedInUserData = await axios.get(`http://localhost:3000/users/${currentUser?.uid}`);
         const loggedInUserData = await axios.get(
-          "http://localhost:3000/users/2",
+          `http://localhost:3001/users/profile/${currentUser?.uid}`,
         );
+
         setLoggedInUser(loggedInUserData.data);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILES";

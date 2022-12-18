@@ -9,7 +9,8 @@ module.exports = {
     username: string,
     email: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    firebaseUid: string
   ) {
     username = username.toLowerCase();
     if (!username || !email) {
@@ -25,6 +26,7 @@ module.exports = {
 
     let newUser: user = {
       _id: new ObjectId(),
+      firebaseUid,
       username,
       firstName,
       lastName,
@@ -56,48 +58,51 @@ module.exports = {
     }
   },
 
-  async getOneUser(id: string) {
+  async getOneUser(firebaseUid: string) {
     try {
       let userCollection = await users();
-      id = ObjectId(id);
-      let userList = await userCollection.find({ _id: id }).toArray();
+      let userList = await userCollection
+        .find({ firebaseUid: firebaseUid })
+        .toArray();
       return userList;
     } catch (e) {
       throw new Error("Could not get user.");
     }
   },
 
-  async deleteOneUser(id: string) {
-    try {
-      let userCollection = await users();
-      id = ObjectId(id);
-      let deletedUser = await userCollection.deleteOne({ _id: id });
-      if (deletedUser.deletedCount != 1) {
-        throw new Error("could not delete user");
-      } else {
-        return true;
-      }
-    } catch (e) {
-      throw new Error("Could not get user.");
-    }
-  },
+  // No plans for this
+  // async deleteOneUser(id: string) {
+  //   try {
+  //     let userCollection = await users();
+  //     id = ObjectId(id);
+  //     let deletedUser = await userCollection.deleteOne({ _id: id });
+  //     if (deletedUser.deletedCount != 1) {
+  //       throw new Error("could not delete user");
+  //     } else {
+  //       return true;
+  //     }
+  //   } catch (e) {
+  //     throw new Error("Could not get user.");
+  //   }
+  // },
 
-  async getFavoritedUsers(id: string) {
+  async getFavoritedUsers(firebaseUid: string) {
     let answer = [];
-    let cached = await redisClient.get("favorite" + id.toString());
+    let cached = await redisClient.get("favorite" + firebaseUid.toString());
     console.log("passed cache");
     if (cached) {
       return JSON.parse(cached);
     }
     try {
-      let userList = await this.getOneUser(id);
+      let userList = await this.getOneUser(firebaseUid);
+      console.log("userList", userList);
       let fav = userList[0].favoritedUsers;
       for (let i = 0; i < fav.length; i++) {
         let temp = await this.getOneUser(fav[i]);
         answer.push(temp[0]);
       }
       let flattened = JSON.stringify(answer);
-      await redisClient.set("favorite" + id.toString(), flattened);
+      await redisClient.set("favorite" + firebaseUid.toString(), flattened);
       return answer;
     } catch (e) {
       throw new Error("Could not get favorited users.");
