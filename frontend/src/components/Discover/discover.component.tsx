@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useTitle } from "../../hooks/useTitle.hook";
-import { FavoritedUser, User } from "../../models/user.model";
+import { User } from "../../models/user.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "../Shared/Loading.component";
 import { PageLayout } from "../Shared/PageLayout.component";
@@ -46,13 +46,13 @@ const Discover = () => {
         ) : (
           users?.map((user: User) => {
             const favorited = loggedInUser?.favoritedUsers?.find(
-              (fUser: FavoritedUser) => fUser.id === user?.id,
+              (favId: string) => favId === user?.id,
             );
             return (
               <UserProfileCard
                 key={user?.id}
                 id={user?.id}
-                wasFavorited={!!favorited ?? false}
+                isFavorited={!!favorited ?? false}
               />
             );
           })

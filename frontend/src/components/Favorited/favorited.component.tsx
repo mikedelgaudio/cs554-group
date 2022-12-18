@@ -41,7 +41,7 @@ const Favorited = () => {
               <UserProfileCard
                 key={user?.id}
                 id={user?.id}
-                wasFavorited={true}
+                isFavorited={true}
               />
             );
           })

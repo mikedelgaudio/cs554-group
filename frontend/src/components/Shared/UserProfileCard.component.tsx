@@ -12,14 +12,14 @@ import { Loading } from "./Loading.component";
 
 const UserProfileCard = ({
   id,
-  wasFavorited,
+  isFavorited,
 }: {
   id: string;
-  wasFavorited: boolean;
+  isFavorited: boolean;
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [favorited, setFavorited] = useState<boolean>(wasFavorited);
+  const [favorited, setFavorited] = useState<boolean>(isFavorited);
 
   useEffect(() => {
     async function fetchData() {
@@ -28,9 +28,6 @@ const UserProfileCard = ({
         // TODO Update with actual backend URL
         const { data } = await axios.get(`http://localhost:3000/users/${id}`);
         setUser(data);
-
-        // Get current user's favorite user
-        // Determine if favorited
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILE_CARD";
 
@@ -55,17 +52,31 @@ const UserProfileCard = ({
   }, []);
 
   const handleFavoriteToggle = async () => {
-    // TODO Trigger API Call
-
     try {
-      // TODO
-      // Update logged in user's favorite list
+      // TODO Update URL to Favorited Users
+      const { data } = await axios.get("http://localhost:3000/users/2");
+      const loggedInUsersFavorited = data?.favoritedUsers;
+      const userFavorited = loggedInUsersFavorited.find(
+        (fId: string) => fId === id,
+      );
+
+      let updatedFavoriteList = [];
+
+      if (userFavorited) {
+        // Filter
+        updatedFavoriteList = loggedInUsersFavorited.filter(
+          (fId: string) => fId !== id,
+        );
+      } else {
+        // Append
+        updatedFavoriteList = [...loggedInUsersFavorited, id];
+      }
+
+      // TODO Update correct URL
       // await axios.post(
-      //   `http://localhost:3000/users/${2}`,
+      //   `http://localhost:3001/users/${2}/editUser`,
       //   {
-      //     favoritedUsers: {
-      //       id,
-      //     },
+      //     favoritedUsers: updatedFavoriteList,
       //   },
       //   {
       //     headers: {

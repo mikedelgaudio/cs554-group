@@ -13,10 +13,6 @@ export interface UserDislikeItem {
   name: string;
 }
 
-export interface FavoritedUser {
-  id: string;
-}
-
 export interface User {
   id: string;
   username: string;
@@ -32,5 +28,5 @@ export interface User {
   socialMedia?: SocialMediaItem[];
   likes?: UserLikeItem[];
   dislikes?: UserDislikeItem[];
-  favoritedUsers?: FavoritedUser[];
+  favoritedUsers?: string[];
 }
