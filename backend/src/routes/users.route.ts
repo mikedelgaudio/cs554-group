@@ -78,7 +78,6 @@ usersRouter.post(
       let firebaseUid = req.params.firebaseUid;
 
       //console.log(username, email, password);
-
       let userObj = {} as User;
 
       if (req.body.username) {
@@ -191,6 +190,7 @@ usersRouter.post(
         }
       }
       let answer = await data.patchUser(userObj, firebaseUid);
+  
       return res.json(answer);
     } catch (e) {
       return res.status(404).json({ error: e });

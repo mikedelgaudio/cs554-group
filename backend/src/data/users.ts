@@ -26,11 +26,9 @@ module.exports = {
     firebaseUid: string
   ) {
     username = username.toLowerCase();
-    console.log("Check ME")
     if (!username || !email || !firstName || !lastName || !firebaseUid) {
       throw new Error("bad inputs");
     }
-    console.log("Check ME2")
     let userCollection = await users();
     const userList = await userCollection
       .find({ username: username })
@@ -38,7 +36,6 @@ module.exports = {
     if (userList.length > 0) {
       throw new Error("that username is already in use");
     }
-    console.log("HO")
     let newUser: User = {
       _id: new ObjectId(),
       firebaseUid,
@@ -58,7 +55,6 @@ module.exports = {
       throw new Error("this didn't work");
     } else {
       let hashing = JSON.stringify(newUser);
-      console.log("Moop");
       await redisClient.set("User" + newUser._id.toString(), hashing);
       return newUser;
     }
@@ -125,7 +121,7 @@ module.exports = {
     const userObj = {} as User;
 
     if (user.username) {
-      userObj.username = user.username;
+        userObj.username = user.username;
     }
 
     if (user.firstName) {
@@ -141,11 +137,10 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
+    if(user.socialMedia){
     if (Array.isArray(user.socialMedia)) {
       for(let i = 0; i<user.socialMedia.length; i++){
-        console.log("HOE")
         if(!isASocialMediaItem(user.socialMedia[i])){
-          console.log("NO")
           throw new Error("Not a valid Social Media Item");
         }
       }
@@ -153,8 +148,9 @@ module.exports = {
     }else{
         throw new Error("Must be Social Media Array");
       }
+    }
 
-
+    if(user.likes){
     if (Array.isArray(user.likes)) {
       for(let i = 0; i<user.likes.length; i++){
         if(!isAUserLikeItem(user.likes[i])){
@@ -165,6 +161,9 @@ module.exports = {
     }else{
         throw new Error("Must be Likes Array");
       }
+
+    }
+    if(user.dislikes){
       if (Array.isArray(user.dislikes)) {
         for(let i = 0; i<user.dislikes.length; i++){
           if(!isAUserDislikeItem(user.dislikes[i])){
@@ -175,6 +174,7 @@ module.exports = {
       }else{
           throw new Error("Must be Likes Array");
         }
+      }
         
     if (user.favoritedUsers) {
       userObj.favoritedUsers = user.favoritedUsers;
