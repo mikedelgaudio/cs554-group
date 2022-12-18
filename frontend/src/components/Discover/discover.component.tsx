@@ -26,8 +26,6 @@ const Discover = () => {
           (user: user) => user.firebaseUid !== currentUser?.uid,
         );
 
-        console.log(filteredUsers, "fil");
-
         setUsers(filteredUsers);
 
         const loggedInUserData = await axios.get(
@@ -35,8 +33,6 @@ const Discover = () => {
         );
 
         setLoggedInUser(loggedInUserData.data);
-
-        console.log(allUsersData, loggedInUserData);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILES";
 
