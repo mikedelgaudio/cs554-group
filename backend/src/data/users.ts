@@ -1,10 +1,23 @@
 import { redisClient } from "../config/redisClient";
-import { contactInfo, user } from "./interfaces";
+import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "./interfaces";
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
 
+function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
+  return 'id' in obj && 'name' in obj;
+}
+function isAUserLikeItem(obj: any): obj is UserLikeItem {
+  return 'id' in obj && 'name' in obj;
+}
+function isASocialMediaItem(obj: any): obj is SocialMediaItem {
+  return 'profileURL' in obj && 'id' in obj;
+}
 module.exports = {
+  isASocialMediaItem,
+  isAUserDislikeItem,
+  isAUserLikeItem,
+
   async createUser(
     username: string,
     email: string,
@@ -23,21 +36,20 @@ module.exports = {
     if (userList.length > 0) {
       throw new Error("that username is already in use");
     }
-
-    let newUser: user = {
+    let newUser: User = {
       _id: new ObjectId(),
       firebaseUid,
       username,
       firstName,
       lastName,
       profileImage: "",
-      contactInfo: { email: email } as contactInfo,
-      socialMedias: [],
+      contactInfo: { email: email },
+      socialMedia: [],
       likes: [],
       dislikes: [],
       favoritedUsers: [],
     };
-
+    console.log(newUser);
     let newInsertInformation = await userCollection.insertOne(newUser);
     if (newInsertInformation.insertedCount == 0) {
       throw new Error("this didn't work");
@@ -105,11 +117,11 @@ module.exports = {
     }
   },
 
-  async patchUser(user: user, firebaseUid: string) {
-    const userObj = {} as user;
+  async patchUser(user: User, firebaseUid: string) {
+    const userObj = {} as User;
 
     if (user.username) {
-      userObj.username = user.username;
+        userObj.username = user.username;
     }
 
     if (user.firstName) {
@@ -125,15 +137,45 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
-    if (user.socialMedias) {
-      userObj.socialMedias = user.socialMedias;
+    if(user.socialMedia){
+    if (Array.isArray(user.socialMedia)) {
+      for(let i = 0; i<user.socialMedia.length; i++){
+        if(!isASocialMediaItem(user.socialMedia[i])){
+          throw new Error("Not a valid Social Media Item");
+        }
+      }
+      userObj.socialMedia = user.socialMedia;
+    }else{
+        throw new Error("Must be Social Media Array");
+      }
     }
-    if (user.likes) {
+
+    if(user.likes){
+    if (Array.isArray(user.likes)) {
+      for(let i = 0; i<user.likes.length; i++){
+        if(!isAUserLikeItem(user.likes[i])){
+          throw new Error("Not a valid Like Item");
+        }
+      }
       userObj.likes = user.likes;
+    }else{
+        throw new Error("Must be Likes Array");
+      }
+
     }
-    if (user.dislikes) {
-      userObj.dislikes = user.dislikes;
-    }
+    if(user.dislikes){
+      if (Array.isArray(user.dislikes)) {
+        for(let i = 0; i<user.dislikes.length; i++){
+          if(!isAUserDislikeItem(user.dislikes[i])){
+            throw new Error("Not a valid DislikeItem");
+          }
+        }
+        userObj.dislikes = user.dislikes;
+      }else{
+          throw new Error("Must be Likes Array");
+        }
+      }
+        
     if (user.favoritedUsers) {
       userObj.favoritedUsers = user.favoritedUsers;
     }
