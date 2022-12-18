@@ -24,7 +24,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)()); // Must allow-list only the FE / domain
 app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
-const PORT = (_b = (_a = process.env) === null || _a === void 0 ? void 0 : _a.PORT) !== null && _b !== void 0 ? _b : 3001;
+const PORT = (_b = (_a = process.env) === null || _a === void 0 ? void 0 : _a.PORT) !== null && _b !== void 0 ? _b : 3000;
 (0, routes_1.configRoutes)(app);
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     // Test connection to MongoDB and Redis

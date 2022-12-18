@@ -10,13 +10,13 @@ export const checkAuth = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.headers.token) return;
   try {
+    if (!req.headers.token) throw "Unauthorized";
     const token = req.headers.token;
     const { decodedToken } = await admin.auth().verifyIdToken(token);
     console.log(decodedToken.uid);
     next();
   } catch (e) {
-    res.status(403).json("Unauthorized");
+    res.status(403).json(e);
   }
 };

@@ -11,7 +11,7 @@ const app: Express = express();
 app.use(cors()); // Must allow-list only the FE / domain
 app.use(express.json());
 app.use(helmet());
-const PORT = process.env?.PORT ?? 3001;
+const PORT = process.env?.PORT ?? 3000;
 
 configRoutes(app);
 
