@@ -17,7 +17,7 @@ const Favorited = () => {
       setLoading(true);
       try {
         // TODO Update with actual backend URL /users/favorited
-        const allUsersData = await axios.get("http://localhost:3000/users");
+        const allUsersData = await axios.get("http://localhost:3001/users");
         setUsers(allUsersData.data);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILES";

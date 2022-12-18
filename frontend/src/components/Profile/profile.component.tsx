@@ -35,8 +35,8 @@ const Profile = () => {
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   // const url = 'http://localhost:3001/profile/${params.id}';
   // const url2 = 'http://localhost:3001/profile/${currentUser?.uid}';
-  const url = `http://localhost:3000/users/${params.id}`;
-  const url2 = `http://localhost:3000/users/1`;
+  const url = `http://localhost:3001/users/${params.id}`;
+  const url2 = `http://localhost:3001/users/1`;
   useEffect(() => {
     console.log("useEffect fired");
     async function getUser() {
