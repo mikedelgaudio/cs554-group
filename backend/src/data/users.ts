@@ -1,10 +1,23 @@
 import { redisClient } from "../config/redisClient";
-import { contactInfo, user } from "./interfaces";
+import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "./interfaces";
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
 
+function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
+  return 'id' in obj && 'name' in obj;
+}
+function isAUserLikeItem(obj: any): obj is UserLikeItem {
+  return 'id' in obj && 'name' in obj;
+}
+function isASocialMediaItem(obj: any): obj is SocialMediaItem {
+  return 'profileURL' in obj && 'id' in obj;
+}
 module.exports = {
+  isASocialMediaItem,
+  isAUserDislikeItem,
+  isAUserLikeItem,
+
   async createUser(
     username: string,
     email: string,
@@ -13,9 +26,11 @@ module.exports = {
     firebaseUid: string
   ) {
     username = username.toLowerCase();
+    console.log("Check ME")
     if (!username || !email || !firstName || !lastName || !firebaseUid) {
       throw new Error("bad inputs");
     }
+    console.log("Check ME2")
     let userCollection = await users();
     const userList = await userCollection
       .find({ username: username })
@@ -23,26 +38,27 @@ module.exports = {
     if (userList.length > 0) {
       throw new Error("that username is already in use");
     }
-
-    let newUser: user = {
+    console.log("HO")
+    let newUser: User = {
       _id: new ObjectId(),
       firebaseUid,
       username,
       firstName,
       lastName,
       profileImage: "",
-      contactInfo: { email: email } as contactInfo,
-      socialMedias: [],
+      contactInfo: { email: email },
+      socialMedia: [],
       likes: [],
       dislikes: [],
       favoritedUsers: [],
     };
-
+    console.log(newUser);
     let newInsertInformation = await userCollection.insertOne(newUser);
     if (newInsertInformation.insertedCount == 0) {
       throw new Error("this didn't work");
     } else {
       let hashing = JSON.stringify(newUser);
+      console.log("Moop");
       await redisClient.set("User" + newUser._id.toString(), hashing);
       return newUser;
     }
@@ -105,8 +121,8 @@ module.exports = {
     }
   },
 
-  async patchUser(user: user, firebaseUid: string) {
-    const userObj = {} as user;
+  async patchUser(user: User, firebaseUid: string) {
+    const userObj = {} as User;
 
     if (user.username) {
       userObj.username = user.username;
@@ -125,15 +141,41 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
-    if (user.socialMedias) {
-      userObj.socialMedias = user.socialMedias;
-    }
-    if (user.likes) {
+    if (Array.isArray(user.socialMedia)) {
+      for(let i = 0; i<user.socialMedia.length; i++){
+        console.log("HOE")
+        if(!isASocialMediaItem(user.socialMedia[i])){
+          console.log("NO")
+          throw new Error("Not a valid Social Media Item");
+        }
+      }
+      userObj.socialMedia = user.socialMedia;
+    }else{
+        throw new Error("Must be Social Media Array");
+      }
+
+
+    if (Array.isArray(user.likes)) {
+      for(let i = 0; i<user.likes.length; i++){
+        if(!isAUserLikeItem(user.likes[i])){
+          throw new Error("Not a valid Like Item");
+        }
+      }
       userObj.likes = user.likes;
-    }
-    if (user.dislikes) {
-      userObj.dislikes = user.dislikes;
-    }
+    }else{
+        throw new Error("Must be Likes Array");
+      }
+      if (Array.isArray(user.dislikes)) {
+        for(let i = 0; i<user.dislikes.length; i++){
+          if(!isAUserDislikeItem(user.dislikes[i])){
+            throw new Error("Not a valid DislikeItem");
+          }
+        }
+        userObj.dislikes = user.dislikes;
+      }else{
+          throw new Error("Must be Likes Array");
+        }
+        
     if (user.favoritedUsers) {
       userObj.favoritedUsers = user.favoritedUsers;
     }
