@@ -11,7 +11,7 @@ export const checkAuth = async (
   next: NextFunction
 ) => {
   try {
-    if (!req.headers.token) throw "Unauthorized";
+    if (!req.headers.token) throw new Error("Unauthorized");
     const token = req.headers.token;
     await admin.auth().verifyIdToken(token);
     next();
