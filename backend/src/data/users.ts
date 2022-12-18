@@ -61,9 +61,7 @@ module.exports = {
   async getOneUser(firebaseUid: string) {
     try {
       let userCollection = await users();
-      let userList = await userCollection
-        .find({ firebaseUid: firebaseUid })
-        .toArray();
+      let userList = await userCollection.findOne({ firebaseUid: firebaseUid });
       return userList;
     } catch (e) {
       throw new Error("Could not get user.");
