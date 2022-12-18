@@ -56,11 +56,32 @@ module.exports = {
     } else {
       let hashing = JSON.stringify(newUser);
       await redisClient.set("User" + newUser._id.toString(), hashing);
+      let allUsers = await redisClient.get("allUsers");
+      let updateCache: [] = []; 
+      if (!allUsers) {
+        try {
+          await redisClient.set("allUsers", JSON.stringify([hashing]));
+        }
+        catch (e) {
+          throw new Error ("Reddis not adding")
+        }
+      } else {
+        try {
+            await redisClient.lPush("history", hashing);
+          }
+          catch (e) {
+            throw new Error ("Reddis not adding")
+          }
+      }
       return newUser;
     }
   },
 
   async getAllUsers() {
+    try {
+      await redisClient.get("User" + newUser._id.toString(), hashing);
+    }
+
     try {
       let userCollection = await users();
       let userList = await userCollection.find().toArray();
