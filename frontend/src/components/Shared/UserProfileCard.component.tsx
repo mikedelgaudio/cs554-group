@@ -2,10 +2,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import noImg from "../../assets/noImg.jpg";
 import {
-  dislike,
-  like,
-  socialMedia,
-  user,
+  SocialMediaItem,
+  User,
+  UserDislikeItem,
+  UserLikeItem,
 } from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
@@ -17,7 +17,7 @@ const UserProfileCard = ({
   id: string;
   isFavorited: boolean;
 }) => {
-  const [user, setUser] = useState<user>();
+  const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
   const [favorited, setFavorited] = useState<boolean>(isFavorited);
 
@@ -116,7 +116,7 @@ const UserProfileCard = ({
                 <h2 className="text-2xl font-bold text-slate-900">
                   {user?.firstName ?? "N/A"} {user?.lastName ?? "N/A"}
                 </h2>
-                <p>{user?.contactInfo?.currentRole ?? "No occupation"}</p>
+                <p>{user?.contactInfo?.occupation ?? "No occupation"}</p>
               </div>
 
               {/* Heart Icon */}
@@ -155,24 +155,24 @@ const UserProfileCard = ({
               <div>
                 <h3 className="font-semibold text-lg">Social Media</h3>
                 <ul>
-                  {user?.socialMedias?.map((item: socialMedia) => {
-                    return <li key={item?._id}>{item?.profileUrl}</li>;
+                  {user?.socialMedia?.map((item: SocialMediaItem) => {
+                    return <li key={item?.id}>{item?.profileURL}</li>;
                   })}
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Likes</h3>
                 <ul>
-                  {user?.likes?.map((item: like) => {
-                    return <li key={item?._id}>{item?.like}</li>;
+                  {user?.likes?.map((item: UserLikeItem) => {
+                    return <li key={item?.id}>{item?.name}</li>;
                   })}
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Dislikes</h3>
                 <ul>
-                  {user?.dislikes?.map((item: dislike) => {
-                    return <li key={item?._id}>{item?.dislike}</li>;
+                  {user?.dislikes?.map((item: UserDislikeItem) => {
+                    return <li key={item?.id}>{item?.name}</li>;
                   })}
                 </ul>
               </div>
