@@ -29,8 +29,6 @@ const UserProfileCard = ({
         const { data } = await axios.get(
           `http://localhost:3001/users/profile/${id}`,
         );
-        console.log(id);
-        console.log(data);
         setUser(data);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILE_CARD";
@@ -107,7 +105,7 @@ const UserProfileCard = ({
             height={256}
             width={256}
             loading="lazy"
-            src={user?.profileImage ?? noImg}
+            src={user?.profileImage || noImg}
             alt={`${user?.firstName ?? "N/A"}'s profile`}
           />
 
