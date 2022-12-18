@@ -1,20 +1,11 @@
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 import express, { Request, Response, Router } from "express";
-import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "../data/interfaces";
+import { user } from "../data/interfaces";
 let data = require("../data/users");
 
 export const usersRouter: Router = express.Router();
 
-function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-    return 'id' in obj && 'name' in obj;
-  }
-  function isAUserLikeItem(obj: any): obj is UserLikeItem {
-    return 'id' in obj && 'name' in obj;
-  }
-  function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-    return 'profileURL' in obj && 'id' in obj;
-  }
 usersRouter.post("/register", async (req: Request, res: Response) => {
   try {
     const { username, email, firstName, lastName, firebaseUid } = req.body;
@@ -78,7 +69,8 @@ usersRouter.post(
       let firebaseUid = req.params.firebaseUid;
 
       //console.log(username, email, password);
-      let userObj = {} as User;
+
+      let userObj = {} as user;
 
       if (req.body.username) {
         if (typeof req.body.username != "string" || !req.body.username) {
@@ -123,15 +115,15 @@ usersRouter.post(
         let contactFields = [
           "phoneNumber",
           "email",
-          "website",
-          "occupation",
+          "personalWebsite",
+          "currentRole",
         ];
 
         for (const [k, v] of Object.entries(req.body.contactInfo)) {
           if (!contactFields.includes(k)) {
             return res.status(400).json({
               error:
-                "Contact Field must be either phone number, email, website, or occupation",
+                "Contact Field must be either phone number, email, personal website, or current role",
             });
           }
           if (typeof v != "string") {
@@ -142,55 +134,34 @@ usersRouter.post(
         }
         userObj.contactInfo = req.body.contactInfo;
       }
-      if (req.body.socialMedia) {
-        if (!Array.isArray(req.body.socialMedia)) {
+      if (req.body.socialMedias) {
+        if (Array.isArray(req.body.socialMedias)) {
           return res
             .status(400)
             .json({ error: "Updated social medias must be a valid array" });
         } else {
-          console.log("EDSD")
-            for(let i = 0; i<req.body.socialMedia.length; i++){
-              console.log("SDF")
-                if(!isASocialMediaItem(req.body.socialMedia[i])){
-                    return res
-                    .status(400)
-                    .json({ error: "Social medias in array must be valid type" });                    }
-                }
-                userObj.socialMedia = req.body.socialMedia;  
+          userObj.socialMedias = req.body.socialMedias;
         }
       }
       if (req.body.likes) {
-        if (!Array.isArray(req.body.likes)) {
+        if (Array.isArray(req.body.likes) || !req.body.likes) {
           return res
             .status(400)
-            .json({ error: "Updated Likes must be a valid array" });
+            .json({ error: "Updated likes must be a valid array" });
         } else {
-            for(let i = 0; i<req.body.likes.length; i++){
-                if(!isAUserLikeItem(req.body.likes[i])){
-                    return res
-                    .status(400)
-                    .json({ error: "Likes in array must be valid type" });                    }
-                }
-                userObj.likes = req.body.likes;  
+          userObj.likes = req.body.likes;
         }
       }
       if (req.body.dislikes) {
-        if (!Array.isArray(req.body.dislikes)) {
+        if (Array.isArray(req.body.dislikes) || !req.body.dislikes) {
           return res
             .status(400)
             .json({ error: "Updated dislikes must be a valid array" });
         } else {
-            for(let i = 0; i<req.body.dislikes.length; i++){
-                if(!isAUserDislikeItem(req.body.dislikes[i])){
-                    return res
-                    .status(400)
-                    .json({ error: "Dislikes in array must be valid type" });                    }
-                }
-                userObj.dislikes = req.body.dislikes;  
+          userObj.dislikes = req.body.dislikes;
         }
       }
       let answer = await data.patchUser(userObj, firebaseUid);
-  
       return res.json(answer);
     } catch (e) {
       return res.status(404).json({ error: e });
