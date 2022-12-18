@@ -20,7 +20,15 @@ const Discover = () => {
       setLoading(true);
       try {
         const allUsersData = await axios.get("http://localhost:3001/users");
-        setUsers(allUsersData.data);
+
+        // Filter current user
+        const filteredUsers = allUsersData.data.filter(
+          (user: user) => user.firebaseUid !== currentUser?.uid,
+        );
+
+        console.log(filteredUsers, "fil");
+
+        setUsers(filteredUsers);
 
         const loggedInUserData = await axios.get(
           `http://localhost:3001/users/profile/${currentUser?.uid}`,
@@ -40,26 +48,32 @@ const Discover = () => {
     fetchData();
   }, []);
 
+  const layout = () => {
+    if (loading) {
+      <Loading />;
+    } else {
+      if (users?.length === 0) {
+        return <p>No other users are found...</p>;
+      } else {
+        users?.map((user: user) => {
+          const favorited = loggedInUser?.favoritedUsers?.find(
+            (favId: string) => favId === user?._id,
+          );
+          return (
+            <UserProfileCard
+              key={user?._id}
+              id={user?.firebaseUid}
+              isFavorited={!!favorited ?? false}
+            />
+          );
+        });
+      }
+    }
+  };
+
   return (
     <PageLayout header="Discover">
-      <div className="flex flex-col gap-6">
-        {loading ? (
-          <Loading />
-        ) : (
-          users?.map((user: user) => {
-            const favorited = loggedInUser?.favoritedUsers?.find(
-              (favId: string) => favId === user?._id,
-            );
-            return (
-              <UserProfileCard
-                key={user?._id}
-                id={user?.firebaseUid}
-                isFavorited={!!favorited ?? false}
-              />
-            );
-          })
-        )}
-      </div>
+      <div className="flex flex-col gap-6">{layout()}</div>
     </PageLayout>
   );
 };
