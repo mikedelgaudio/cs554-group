@@ -125,6 +125,8 @@ module.exports = {
         let userList = await userCollection.findOne({
           firebaseUid: firebaseUid,
         });
+        await redisClient.set("User"+firebaseUid, JSON.stringify(userList));
+
         return userList;
       } catch (e) {
         throw new Error("Could not get user.");
@@ -149,25 +151,23 @@ module.exports = {
   // },
 
   async getFavoritedUsers(firebaseUid: string) {
-    let answer: any[] = [];
-    let cached = await redisClient.get("favorite" + firebaseUid.toString());
+    let cached = await redisClient.lRange("favorite" + firebaseUid.toString(), 0, -1);
     if (cached) {
-      return JSON.parse(cached);
-    }
-    try {
-      let userList = await this.getOneUser(firebaseUid);
-      let fav = userList.favoritedUsers;
-      for (let i = 0; i < fav.length; i++) {
-        let temp = await this.getOneUser(fav[i]);
-        answer.push(temp);
-      }
-      let flattened = JSON.stringify(answer);
-      await redisClient.set("favorite" + firebaseUid.toString(), flattened);
-      return answer;
-    } catch (e) {
-      throw new Error("Could not get favorited users.");
-    }
-  },
+      console.log(cached);
+      return cached;
+    }else{
+      try {
+        let userCollection = await users();
+        let userList = await userCollection.findOne({ firebaseUid: firebaseUid });
+        let favoriteArr = userList.favoritedUsers;
+        for(let i = 0; i<favoriteArr.length; i++){
+          await redisClient.lPush("favorite" + firebaseUid, favoriteArr[i]);
+        }
+        return favoriteArr;
+      } catch (e) {
+        throw new Error("Could not get favorited users.");
+  }}
+},
 
   async patchUser(user: User, firebaseUid: string) {
     const userObj = {} as User;
@@ -189,35 +189,35 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
-    if (user.socialMedia) {
-      if (Array.isArray(user.socialMedia)) {
-        for (let i = 0; i < user.socialMedia.length; i++) {
-          if (!isASocialMediaItem(user.socialMedia[i])) {
-            throw new Error("Not a valid Social Media Item");
-          }
-          if (!user.socialMedia[i]["id"]) {
-            user.socialMedia[i]["id"] = ObjectId();
-          }
+    if(user.socialMedia){
+    if (Array.isArray(user.socialMedia)) {
+      for(let i = 0; i<user.socialMedia.length; i++){
+        if(!isASocialMediaItem(user.socialMedia[i])){
+          throw new Error("Not a valid Social Media Item");
         }
+        if(!user.socialMedia[i]["id"]){
+            user.socialMedia[i]["id"] = ObjectId();
+        }
+      }
 
-        userObj.socialMedia = user.socialMedia;
-      } else {
+      userObj.socialMedia = user.socialMedia;
+    }else{
         throw new Error("Must be Social Media Array");
       }
     }
 
-    if (user.likes) {
-      if (Array.isArray(user.likes)) {
-        for (let i = 0; i < user.likes.length; i++) {
-          if (!isAUserLikeItem(user.likes[i])) {
-            throw new Error("Not a valid Like Item");
-          }
-          if (!user.likes[i]["id"]) {
-            user.likes[i]["id"] = ObjectId();
-          }
+    if(user.likes){
+    if (Array.isArray(user.likes)) {
+      for(let i = 0; i<user.likes.length; i++){
+        if(!isAUserLikeItem(user.likes[i])){
+          throw new Error("Not a valid Like Item");
         }
-        userObj.likes = user.likes;
-      } else {
+        if(!user.likes[i]["id"]){
+          user.likes[i]["id"] = ObjectId();
+      }
+      }
+      userObj.likes = user.likes;
+    }else{
         throw new Error("Must be Likes Array");
       }
     }
@@ -228,9 +228,9 @@ module.exports = {
             throw new Error("Not a valid DislikeItem");
           }
 
-          if (!user.dislikes[i]["id"]) {
+          if(!user.dislikes[i]["id"]){
             user.dislikes[i]["id"] = ObjectId();
-          }
+        }
         }
         userObj.dislikes = user.dislikes;
       } else {
@@ -242,15 +242,42 @@ module.exports = {
       if (!Array.isArray(user.favoritedUsers)) {
         throw "Updated favorites must be a valid array";
       } else {
+        let oldArr = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
+        let favName = "favorite" + firebaseUid;
+        for(let i = 0; i<oldArr.length; i++){
+          await redisClient.lRem(favName,0, oldArr[i] )
+        }
+        //Unfavoriting something deletes all the IDs
         for (let i = 0; i < user.favoritedUsers.length; i++) {
           if (typeof user.favoritedUsers[i] != "string") {
             throw "Favorite values in array must be a strings";
           }
+         await redisClient.lPush(favName, user.favoritedUsers[i]);
         }
-        userObj.favoritedUsers = user.favoritedUsers;
+          userObj.favoritedUsers = user.favoritedUsers;
+        }
       }
-    }
 
+      let holder = await redisClient.get("User"+firebaseUid);
+      if(holder){
+        //Reisbackend updates
+        let newHolder: User = JSON.parse(holder);
+        let newRedisHolder = JSON.stringify(Object.assign(newHolder, userObj));
+        await redisClient.set("User" + firebaseUid, newRedisHolder)
+      }
+
+      let allUsers = await redisClient.lRange("allUsers", 0, -1);
+      if(allUsers){
+        for(let i = 0; i<allUsers.length; i++){
+          let temp: User = JSON.parse(allUsers[i]);
+          if(temp["firebaseUid"] === firebaseUid){
+            await redisClient.lRem("allUsers", 0, allUsers[i]);
+            let updatedAllUserObj = JSON.stringify(Object.assign(temp, userObj));
+            await redisClient.lPush("allUsers", updatedAllUserObj)
+          }
+        }
+      }
+    
     let userCollection = await users();
 
     const updateUser = await userCollection.updateOne(
