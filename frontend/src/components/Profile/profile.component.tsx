@@ -18,6 +18,7 @@ import {
   changeOccupation,
   changePhoneNumber,
   changeProfilePicture,
+  changeResume,
   changeUsername,
   changeWebsite,
   deleteDislike,
@@ -234,6 +235,39 @@ const Profile = () => {
             type="text"
             name="profileImageURL"
             defaultValue={currentUserState?.profileImage}
+          />
+        </label>
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
+      </form>
+
+      {/* Form to Edit Resume */}
+      <form
+        className="flex gap-6"
+        onSubmit={event => {
+          event.preventDefault();
+          const form = event.target as HTMLFormElement;
+          const formData = new FormData(form);
+          const resumeURL = formData.get("resumeURL");
+          if (resumeURL !== null && typeof resumeURL === "string") {
+            changeResume(currentUser, resumeURL);
+          } else {
+            TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
+          }
+        }}
+      >
+        <label className="flex items-center gap-3">
+          Resume URL:
+          <input
+            className="border border-slate-400 p-2 rounded-md"
+            type="text"
+            name="resumeURL"
+            defaultValue={currentUserState?.resume}
           />
         </label>
         <button
@@ -598,6 +632,20 @@ const Profile = () => {
 
       {/* Profile Image */}
       <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+
+      {/* Resume */}
+      {user?.resume ? (
+        <a
+          href={`https://${user?.resume}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Resume (Click Here)
+        </a>
+      ) : null}
+      {user?.resume ? (
+        <br/>
+      ) : null}
 
       {/* Contact Info (phone number, email, website, current role) */}
       {user?.contactInfo.phoneNumber ? (

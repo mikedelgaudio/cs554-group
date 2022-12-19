@@ -69,6 +69,23 @@ export const changeProfilePicture = async (currentUser: any, newProfilePicture: 
     }
 }
 
+// change Resume
+export const changeResume = async (currentUser: any, newResume: string) => {
+    try {
+        if (currentUser) {
+            await postRequest(
+                `http://localhost:3001/users/${currentUser.uid}/editUser`,
+                {
+                    resume: newResume,
+                },
+                currentUser,
+            );
+        }
+    } catch (e: any) {
+        console.log(e);
+    }
+}
+
 // Change Phone Number
 export const changePhoneNumber = async (currentUser: any, newPhoneNumber: string) => {
     const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
