@@ -93,10 +93,9 @@ module.exports = {
     }
     if (allUsers) {
       allUsers = allUsers.map((x) => JSON.parse(x));
-      let index = allUsers.findIndex(x => {return x.firebaseUid == firebaseUid});
-      console.log(index)
-      let newAllUsers = allUsers.splice(index);
-      return newAllUsers;
+      let notCurrent = allUsers.filter(x => {return x.firebaseUid != firebaseUid});
+      console.log(notCurrent)
+      return notCurrent;
     }
 
     try {
