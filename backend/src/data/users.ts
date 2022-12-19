@@ -62,8 +62,6 @@ module.exports = {
       let hashing = JSON.stringify(newUser);
       await redisClient.set("User" + newUser.firebaseUid, hashing);
       let allUsers = await redisClient.lRange("allUsers",0,-1);
-      if(!allUsers) throw "lrange failure"
-      console.log('addedOneUser')
       if (!allUsers) {
         try {
           await redisClient.lPush("allUsers", JSON.stringify(hashing));
@@ -75,7 +73,7 @@ module.exports = {
       } else {
         try {
             await redisClient.lPush("allUsers", hashing);
-            console.log("pushed more in")
+            console.log("pushed more in");
           }
           catch (e) {
             throw "Reddis not adding"
