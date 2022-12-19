@@ -118,7 +118,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const username = formData.get("username");
-          if (username !== null && typeof username === "string") {
+          if (username !== "" && typeof username === "string") {
             changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
@@ -151,7 +151,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
-          if (firstName !== null && typeof firstName === "string") {
+          if (firstName !== "" && typeof firstName === "string") {
             changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
@@ -184,7 +184,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
-          if (lastName !== null && typeof lastName === "string") {
+          if (lastName !== "" && typeof lastName === "string") {
             changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
@@ -217,7 +217,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const profileImageURL = formData.get("profileImageURL");
-          if (profileImageURL !== null && typeof profileImageURL === "string") {
+          if (profileImageURL !== null && profileImageURL !== "" && typeof profileImageURL === "string") {
             changeProfilePicture(currentUser, profileImageURL);
           } else {
             TOAST_SERVICE.error(
@@ -254,7 +254,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const resumeURL = formData.get("resumeURL");
-          if (resumeURL !== null && typeof resumeURL === "string") {
+          if (resumeURL !== null && resumeURL !== "" && typeof resumeURL === "string") {
             changeResume(currentUser, resumeURL);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
@@ -287,7 +287,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const phoneNumber = formData.get("phoneNumber");
-          if (phoneNumber !== null && typeof phoneNumber === "string") {
+          if (phoneNumber !== null && phoneNumber !== "" && typeof phoneNumber === "string") {
             changePhoneNumber(currentUser, phoneNumber);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
@@ -320,7 +320,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const email = formData.get("email");
-          if (email !== null && typeof email === "string") {
+          if (email !== null && email !== "" && typeof email === "string") {
             changeEmail(currentUser, email);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
@@ -353,7 +353,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const website = formData.get("website");
-          if (website !== null && typeof website === "string") {
+          if (website !== null && website !== "" && typeof website === "string") {
             changeWebsite(currentUser, website);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
@@ -386,7 +386,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const currentRole = formData.get("currentRole");
-          if (currentRole !== null && typeof currentRole === "string") {
+          if (currentRole !== null && currentRole !== "" && typeof currentRole === "string") {
             changeOccupation(currentUser, currentRole);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
@@ -452,7 +452,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
-          if (socialMediaURL !== null && typeof socialMediaURL === "string") {
+          if (socialMediaURL !== null && socialMediaURL !== "" && typeof socialMediaURL === "string") {
             setUser(await addSocialMedia(currentUser, socialMediaURL));
           } else {
             TOAST_SERVICE.error(
@@ -513,7 +513,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          if (like !== null && typeof like === "string") {
+          if (like !== null && like !== "" && typeof like === "string") {
             setUser(await addLike(currentUser, like));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
@@ -569,7 +569,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
-          if (dislike !== null && typeof dislike === "string") {
+          if (dislike !== null && dislike !== "" && typeof dislike === "string") {
             setUser(await addDislike(currentUser, dislike));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
