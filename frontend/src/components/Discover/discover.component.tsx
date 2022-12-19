@@ -56,6 +56,7 @@ const Discover = () => {
           const favorited = loggedInUser?.favoritedUsers?.find(
             (favId: string) => favId === user?._id,
           );
+          console.log(user);
           return (
             <UserProfileCard
               key={user?._id}
