@@ -77,7 +77,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const username = formData.get("username");
           if (username !== null && typeof username === "string") {
-            changeUsername(currentUser?.uid, username);
+            changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
           }
@@ -110,7 +110,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
           if (firstName !== null && typeof firstName === "string") {
-            changeFirstName(currentUser?.uid, firstName);
+            changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
           }
@@ -143,7 +143,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
           if (lastName !== null && typeof lastName === "string") {
-            changeLastName(currentUser?.uid, lastName);
+            changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
           }
@@ -176,7 +176,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const profileImageURL = formData.get("profileImageURL");
           if (profileImageURL !== null && typeof profileImageURL === "string") {
-            changeProfilePicture(currentUser?.uid, profileImageURL);
+            changeProfilePicture(currentUser, profileImageURL);
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -213,7 +213,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const phoneNumber = formData.get("phoneNumber");
           if (phoneNumber !== null && typeof phoneNumber === "string") {
-            changePhoneNumber(currentUser?.uid, phoneNumber);
+            changePhoneNumber(currentUser, phoneNumber);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
           }
@@ -246,7 +246,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const email = formData.get("email");
           if (email !== null && typeof email === "string") {
-            changeEmail(currentUser?.uid, email);
+            changeEmail(currentUser, email);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
           }
@@ -279,7 +279,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const website = formData.get("website");
           if (website !== null && typeof website === "string") {
-            changeWebsite(currentUser?.uid, website);
+            changeWebsite(currentUser, website);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
           }
@@ -312,7 +312,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const currentRole = formData.get("currentRole");
           if (currentRole !== null && typeof currentRole === "string") {
-            changeOccupation(currentUser?.uid, currentRole);
+            changeOccupation(currentUser, currentRole);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
           }
@@ -347,7 +347,7 @@ const Profile = () => {
               <button
                 className="profileButton"
                 onClick={() => {
-                  deleteSocialMedia(currentUser?.uid, socialMedia.id);
+                  deleteSocialMedia(currentUser, socialMedia.id);
                 }}
               >
                 Delete
@@ -365,7 +365,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
           if (socialMediaURL !== null && typeof socialMediaURL === "string") {
-            addSocialMedia(currentUser?.uid, socialMediaURL);
+            addSocialMedia(currentUser, socialMediaURL);
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -401,7 +401,7 @@ const Profile = () => {
               <button
                 className="profileButton"
                 onClick={() => {
-                  deleteLike(currentUser?.uid, like.id);
+                  deleteLike(currentUser, like.id);
                 }}
               >
                 Delete
@@ -419,7 +419,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const like = formData.get("like");
           if (like !== null && typeof like === "string") {
-            addLike(currentUser?.uid, like);
+            addLike(currentUser, like);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
@@ -451,7 +451,7 @@ const Profile = () => {
               <button
                 className="profileButton"
                 onClick={() => {
-                  deleteDislike(currentUser?.uid, dislike.id);
+                  deleteDislike(currentUser, dislike.id);
                 }}
               >
                 Delete
@@ -469,7 +469,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
           if (dislike !== null && typeof dislike === "string") {
-            addDislike(currentUser?.uid, dislike);
+            addDislike(currentUser, dislike);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
@@ -501,7 +501,7 @@ const Profile = () => {
               <button
                 className="profileButton"
                 onClick={() => {
-                  deleteFavoritedUser(currentUser?.uid, favoriteId);
+                  deleteFavoritedUser(currentUser, favoriteId);
                 }}
               >
                 Delete
