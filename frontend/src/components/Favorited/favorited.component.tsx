@@ -49,7 +49,7 @@ const Favorited = () => {
       if (users?.length === 0) {
         return <p>No favorited users are found...</p>;
       } else {
-        users?.map((user: User) => {
+        return users?.map((user: User) => {
           return (
             <UserProfileCard
               key={user?._id}
