@@ -1,17 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import noImg from "../../assets/noImg.jpg";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 import {
   SocialMediaItem,
   User,
   UserDislikeItem,
   UserLikeItem,
 } from "../../models/user.backend.model";
+import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
-import { postRequest } from "../../utils/api.util";
-import { useFirebaseAuth } from "../../firebase/firebase.context";
-import { Link } from "react-router-dom";
 
 const UserProfileCard = ({
   id,
@@ -32,7 +32,6 @@ const UserProfileCard = ({
     async function fetchData() {
       setLoading(true);
       try {
-        // TODO Update with actual backend URL
         const { data } = await axios.get(
           `http://localhost:3001/users/profile/${id}`,
         );

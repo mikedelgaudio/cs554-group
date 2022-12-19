@@ -23,12 +23,7 @@ const Discover = () => {
           `http://localhost:3001/users/${currentUser?.uid}`,
         );
 
-        // Filter current user
-        const filteredUsers = allUsersData.data.filter(
-          (user: User) => user.firebaseUid !== currentUser?.uid,
-        );
-
-        setUsers(filteredUsers);
+        setUsers(allUsersData.data);
 
         const loggedInUserData = await axios.get(
           `http://localhost:3001/users/profile/${currentUser?.uid}`,
@@ -58,7 +53,6 @@ const Discover = () => {
           const favorited = loggedInUser?.favoritedUsers?.find(
             (favId: string) => favId === user?.firebaseUid,
           );
-          console.log(user);
           return (
             <UserProfileCard
               key={user?._id}
