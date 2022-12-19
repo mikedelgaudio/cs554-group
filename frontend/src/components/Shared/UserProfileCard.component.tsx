@@ -12,6 +12,7 @@ import {
 import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
+import { Tag } from "./Tag.component";
 
 const UserProfileCard = ({
   id,
@@ -163,7 +164,9 @@ const UserProfileCard = ({
                 <h3 className="font-semibold text-lg">Likes</h3>
                 <ul>
                   {user?.likes?.map((item: UserLikeItem) => {
-                    return <li key={item?.id}>{item?.name}</li>;
+                    return (
+                      <Tag key={item?.id} text={item?.name} removable={false} />
+                    );
                   })}
                 </ul>
               </div>
@@ -171,7 +174,14 @@ const UserProfileCard = ({
                 <h3 className="font-semibold text-lg">Dislikes</h3>
                 <ul>
                   {user?.dislikes?.map((item: UserDislikeItem) => {
-                    return <li key={item?.id}>{item?.name}</li>;
+                    return (
+                      <Tag
+                        style="bg-red-200 text-red-700"
+                        key={item?.id}
+                        text={item?.name}
+                        removable={false}
+                      />
+                    );
                   })}
                 </ul>
               </div>

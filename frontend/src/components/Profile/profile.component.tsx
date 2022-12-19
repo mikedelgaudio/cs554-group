@@ -6,6 +6,7 @@ import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { PageLayout } from "../Shared/PageLayout.component";
+import { Tag } from "../Shared/Tag.component";
 import {
   addDislike,
   addLike,
@@ -23,6 +24,8 @@ import {
   deleteLike,
   deleteSocialMedia,
 } from "./helper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const Profile = () => {
   useTitle("Profile - DuckedIn");
@@ -33,8 +36,8 @@ const Profile = () => {
   const [favorited, setFavorited] = useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
-  const url = 'http://localhost:3001/users/profile/' + params.id;
-  const url2 = 'http://localhost:3001/users/profile/' + currentUser?.uid;
+  const url = "http://localhost:3001/users/profile/" + params.id;
+  const url2 = "http://localhost:3001/users/profile/" + currentUser?.uid;
   useEffect(() => {
     async function getUser() {
       try {
@@ -55,8 +58,8 @@ const Profile = () => {
       }
     }
     getUser();
-  }, [url]); 
-          
+  }, [url]);
+
   const handleFavoriteToggle = async () => {
     try {
       // TODO Handle API Call to Toggle Favoriting
@@ -342,24 +345,31 @@ const Profile = () => {
       {/* Delete Social Media */}
       <div className="border-2">
         <p>Current Social Media</p>
-        <br/>
+        <br />
         {user?.socialMedia
-          ?
-            user?.socialMedia.map(socialMedia => (
+          ? user?.socialMedia.map(socialMedia => (
               <div key={socialMedia?.id}>
                 <p>
-                  <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
+                  <a
+                    href={`https://${socialMedia.profileURL}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {socialMedia?.profileURL}
+                  </a>
                 </p>
                 <button
                   className="profileButton"
-                  onClick={async() => {
-                    setUser(await deleteSocialMedia(currentUser, socialMedia.id));
+                  onClick={async () => {
+                    setUser(
+                      await deleteSocialMedia(currentUser, socialMedia.id),
+                    );
                   }}
                 >
                   Delete
                 </button>
-                <br/>
-                <br/>
+                <br />
+                <br />
               </div>
             ))
           : null}
@@ -404,26 +414,23 @@ const Profile = () => {
       </form>
 
       {/* Delete Likes */}
-      <div className='border-2'>
+      <div className="border-2">
         <p>Current Likes</p>
-        <br/>
-        {user?.likes
-          ? user?.likes.map(like => (
-              <div key={like.id}>
-                <p>{like.name}</p>
-                <button
-                  className="profileButton"
-                  onClick={async() => {
-                    setUser(await deleteLike(currentUser, like.id));
-                  }}
-                >
-                  Delete
-                </button>
-                <br/>
-                <br/>
-              </div>
-            ))
-          : null}
+        <br />
+        <div>
+          {user?.likes
+            ? user?.likes.map(like => (
+                <Tag
+                  key={like.id}
+                  text={like.name}
+                  removable={true}
+                  state={async () =>
+                    setUser(await deleteLike(currentUser, like.id))
+                  }
+                />
+              ))
+            : null}
+        </div>
       </div>
 
       {/* Add Like */}
@@ -460,24 +467,20 @@ const Profile = () => {
       </form>
 
       {/* Delete Dislike */}
-      <div className='border-2'>
+      <div className="border-2">
         <p>Current Dislikes</p>
-        <br/>
+        <br />
         {user?.dislikes
           ? user?.dislikes.map(dislike => (
-              <div key={dislike.id}>
-                <p>{dislike.name}</p>
-                <button
-                  className="profileButton"
-                  onClick={async () => {
-                    setUser(await deleteDislike(currentUser, dislike.id));
-                  }}
-                >
-                  Delete
-                </button>
-                <br/>
-                <br/>
-              </div>
+              <Tag
+                style="bg-red-200 text-red-700"
+                key={dislike.id}
+                text={dislike.name}
+                removable={true}
+                state={async () =>
+                  setUser(await deleteDislike(currentUser, dislike.id))
+                }
+              />
             ))
           : null}
       </div>
@@ -516,9 +519,9 @@ const Profile = () => {
       </form>
 
       {/* Form to delete a favorited user? */}
-      <div className='border-2'>
+      <div className="border-2">
         <p>Current Favorited Users</p>
-        <br/>
+        <br />
         {user?.favoritedUsers
           ? user?.favoritedUsers.map(favoriteId => (
               <div key={favoriteId}>
@@ -531,7 +534,7 @@ const Profile = () => {
                 >
                   Delete
                 </button>
-                <br/>
+                <br />
               </div>
             ))
           : null}
@@ -555,7 +558,14 @@ const Profile = () => {
       <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
       <p>Email: {user?.contactInfo.email}</p>
       <p>
-        Website: <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a>
+        Website:{" "}
+        <a
+          href={`https://${user?.contactInfo?.website}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {user?.contactInfo?.website}
+        </a>
       </p>
       <p>Current Role: {user?.contactInfo.occupation}</p>
       <br />
@@ -565,8 +575,14 @@ const Profile = () => {
       {user?.socialMedia ? (
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
-            <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
-            <br/>
+            <a
+              href={`https://${socialMedia.profileURL}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {socialMedia?.profileURL}
+            </a>
+            <br />
           </div>
         ))
       ) : (
@@ -606,7 +622,7 @@ const Profile = () => {
         user?.favoritedUsers.map(favoriteId => (
           <div key={favoriteId}>
             <p>{favoriteId}</p>
-            <br/>
+            <br />
           </div>
         ))
       ) : (
