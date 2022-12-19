@@ -23,10 +23,9 @@ const Favorited = () => {
           `http://localhost:3001/users/favorited/${currentUser?.uid}`,
           currentUser ? currentUser : undefined,
         );
-
         // Filter current user
         const filteredUsers =
-          allUsersData.data?.filter(
+          allUsersData.filter(
             (user: User) => user.firebaseUid !== currentUser?.uid,
           ) ?? [];
 

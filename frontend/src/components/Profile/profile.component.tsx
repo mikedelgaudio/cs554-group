@@ -29,16 +29,20 @@ const Profile = () => {
   const params = useParams();
 
   const [user, setUser] = useState<User>();
+  const [currentUserState, setCurrentUser] = useState<User>();
   const [favorited, setFavorited] = useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   const url = 'http://localhost:3001/users/profile/' + params.id;
+  const url2 = 'http://localhost:3001/users/profile/' + currentUser?.uid;
   useEffect(() => {
     async function getUser() {
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
+        const { data: currentUserData } = await axios.get(url2);
         setUser(userData);
+        setCurrentUser(currentUserData);
         if (
           userData.favoritedUsers.find(
             (favoritedUser: { id: any }) => favoritedUser.id === userData.id,
@@ -88,7 +92,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="username"
-            defaultValue={user?.username}
+            defaultValue={currentUserState?.username}
           />
         </label>
         <button
@@ -121,7 +125,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="firstName"
-            defaultValue={user?.firstName}
+            defaultValue={currentUserState?.firstName}
           />
         </label>
         <button
@@ -154,7 +158,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="lastName"
-            defaultValue={user?.lastName}
+            defaultValue={currentUserState?.lastName}
           />
         </label>
         <button
@@ -191,7 +195,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="profileImageURL"
-            defaultValue={user?.profileImage}
+            defaultValue={currentUserState?.profileImage}
           />
         </label>
         <button
@@ -224,7 +228,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="phoneNumber"
-            defaultValue={user?.contactInfo?.phoneNumber}
+            defaultValue={currentUserState?.contactInfo?.phoneNumber}
           />
         </label>
         <button
@@ -257,7 +261,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="email"
             name="email"
-            defaultValue={user?.contactInfo.email}
+            defaultValue={currentUserState?.contactInfo?.email}
           />
         </label>
         <button
@@ -290,7 +294,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="website"
-            defaultValue={user?.contactInfo.website}
+            defaultValue={currentUserState?.contactInfo?.website}
           />
         </label>
         <button
@@ -323,7 +327,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="currentRole"
-            defaultValue={user?.contactInfo.occupation}
+            defaultValue={currentUserState?.contactInfo?.occupation}
           />
         </label>
         <button
