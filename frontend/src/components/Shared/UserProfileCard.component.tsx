@@ -9,17 +9,23 @@ import {
 } from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
+import { postRequest } from "../../utils/api.util";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 
 const UserProfileCard = ({
   id,
   isFavorited,
+  userFavorites,
 }: {
   id: string;
   isFavorited: boolean;
+  userFavorites?: string[];
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
   const [favorited, setFavorited] = useState<boolean>(isFavorited);
+
+  const { currentUser } = useFirebaseAuth();
 
   useEffect(() => {
     async function fetchData() {
@@ -55,40 +61,32 @@ const UserProfileCard = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      // TODO Update URL to Favorited Users
-      const { data } = await axios.get("http://localhost:3001/users/");
-      const loggedInUsersFavorited = data?.favoritedUsers;
-      const userFavorited = loggedInUsersFavorited.find(
-        (fId: string) => fId === id,
-      );
+      let updatedFavoriteList;
 
-      let updatedFavoriteList = [];
-
-      if (userFavorited) {
-        // Filter
-        updatedFavoriteList = loggedInUsersFavorited.filter(
-          (fId: string) => fId !== id,
-        );
+      if (favorited) {
+        updatedFavoriteList = userFavorites?.filter(userFid => {
+          userFid === id;
+        });
       } else {
-        // Append
-        updatedFavoriteList = [...loggedInUsersFavorited, id];
+        userFavorites?.push(id);
+        updatedFavoriteList = userFavorites;
       }
 
-      // TODO Update correct URL
-      // await axios.post(
-      //   `http://localhost:3001/users/${2}/editUser`,
-      //   {
-      //     favoritedUsers: updatedFavoriteList,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   },
-      // );
+      // TODO Update correct URLdata
+      if (currentUser) {
+        await postRequest(
+          `http://localhost:3001/users/${currentUser.uid}/editUser`,
+          {
+            favoritedUsers: updatedFavoriteList,
+          },
+          currentUser,
+        );
+        console.log("Am I reached");
 
-      setFavorited(prev => (prev = !prev));
+        setFavorited(prev => (prev = !prev));
+      }
     } catch (e) {
+      console.log(e);
       const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
       TOAST_SERVICE.error(TOAST_ID, "Failed to update user favorites", true);
     }
