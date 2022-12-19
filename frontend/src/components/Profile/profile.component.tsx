@@ -497,6 +497,7 @@ const Profile = () => {
       </form>
 
       {/* Form to delete a favorited user? */}
+      <p>Current Favorited Users (If Any)</p>
       {user?.favoritedUsers
         ? user?.favoritedUsers.map(favoriteId => (
             <div key={favoriteId}>

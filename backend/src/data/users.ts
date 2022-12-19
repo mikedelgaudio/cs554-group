@@ -1,5 +1,10 @@
 import { redisClient } from "../config/redisClient";
-import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "./interfaces";
+import {
+  User,
+  UserDislikeItem,
+  UserLikeItem,
+  SocialMediaItem,
+} from "./interfaces";
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
@@ -121,7 +126,7 @@ module.exports = {
     const userObj = {} as User;
 
     if (user.username) {
-        userObj.username = user.username;
+      userObj.username = user.username;
     }
 
     if (user.firstName) {
@@ -168,12 +173,11 @@ module.exports = {
     }else{
         throw new Error("Must be Likes Array");
       }
-
     }
-    if(user.dislikes){
+    if (user.dislikes) {
       if (Array.isArray(user.dislikes)) {
-        for(let i = 0; i<user.dislikes.length; i++){
-          if(!isAUserDislikeItem(user.dislikes[i])){
+        for (let i = 0; i < user.dislikes.length; i++) {
+          if (!isAUserDislikeItem(user.dislikes[i])) {
             throw new Error("Not a valid DislikeItem");
           }
 
@@ -182,23 +186,23 @@ module.exports = {
         }
         }
         userObj.dislikes = user.dislikes;
-      }else{
-          throw new Error("Must be Likes Array");
-        }
+      } else {
+        throw new Error("Must be Likes Array");
       }
-        
-      if(user.favoritedUsers){
-        if(!Array.isArray(user.favoritedUsers)){
-          throw "Updated favorites must be a valid array";
-        }else{
-          for(let i=0; i<user.favoritedUsers.length; i++){
-            if(typeof(user.favoritedUsers[i]) != 'string'){
-              throw"Favorite values in array must be a strings";
-            }
+    }
+
+    if (user.favoritedUsers) {
+      if (!Array.isArray(user.favoritedUsers)) {
+        throw "Updated favorites must be a valid array";
+      } else {
+        for (let i = 0; i < user.favoritedUsers.length; i++) {
+          if (typeof user.favoritedUsers[i] != "string") {
+            throw "Favorite values in array must be a strings";
           }
-          userObj.favoritedUsers = user.favoritedUsers;
         }
+        userObj.favoritedUsers = user.favoritedUsers;
       }
+    }
 
     let userCollection = await users();
 
