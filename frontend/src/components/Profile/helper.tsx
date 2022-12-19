@@ -278,7 +278,6 @@ export const addFavoritedUser = async (currentUser: any, favoritedUserID: any) =
                 },
                 currentUser,
             );
-            console.log('data: ', data);
             return data;
         }
     } catch (e: any) {
@@ -299,7 +298,6 @@ export const deleteFavoritedUser = async (currentUser: any, favoritedUserID: any
                 },
                 currentUser,
             );
-            console.log('data: ', data);
             return data;
         }
     } catch (e: any) {
