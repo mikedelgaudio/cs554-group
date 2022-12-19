@@ -337,6 +337,7 @@ const Profile = () => {
       </form>
 
       {/* Delete Social Media */}
+      <p>Current Social Media (If Any)</p>
       {user?.socialMedia
         ?
           user?.socialMedia.map(socialMedia => (
@@ -394,6 +395,7 @@ const Profile = () => {
       </form>
 
       {/* Delete Likes */}
+      <p>Current Likes (If Any)</p>
       {user?.likes
         ? user?.likes.map(like => (
             <div key={like.id}>
@@ -444,6 +446,7 @@ const Profile = () => {
       </form>
 
       {/* Delete Dislike */}
+      <p>Current Dislikes (If Any)</p>
       {user?.dislikes
         ? user?.dislikes.map(dislike => (
             <div key={dislike.id}>
