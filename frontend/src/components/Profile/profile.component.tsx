@@ -576,7 +576,6 @@ const Profile = () => {
         user?.likes.map(like => (
           <div key={like.id}>
             <p>{like.name}</p>
-            <br/>
           </div>
         ))
       ) : (
@@ -590,7 +589,6 @@ const Profile = () => {
         user?.dislikes.map(dislike => (
           <div key={dislike.id}>
             <p>{dislike.name}</p>
-            <br/>
           </div>
         ))
       ) : (
