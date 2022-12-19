@@ -548,12 +548,10 @@ const Profile = () => {
       <img src={user?.profileImage} alt="Profile Image" />
 
       {/* Contact Info (phone number, email, website, current role) */}
-      <h2>Contact Information: </h2>
       <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
       <p>Email: {user?.contactInfo.email}</p>
       <p>
-        Website:
-        <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a>
+        Website: <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a>
       </p>
       <p>Current Role: {user?.contactInfo.occupation}</p>
       <br />
@@ -564,6 +562,7 @@ const Profile = () => {
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
             <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
+            <br/>
           </div>
         ))
       ) : (
@@ -577,6 +576,7 @@ const Profile = () => {
         user?.likes.map(like => (
           <div key={like.id}>
             <p>{like.name}</p>
+            <br/>
           </div>
         ))
       ) : (
@@ -590,6 +590,7 @@ const Profile = () => {
         user?.dislikes.map(dislike => (
           <div key={dislike.id}>
             <p>{dislike.name}</p>
+            <br/>
           </div>
         ))
       ) : (
@@ -603,6 +604,7 @@ const Profile = () => {
         user?.favoritedUsers.map(favoriteId => (
           <div key={favoriteId}>
             <p>{favoriteId}</p>
+            <br/>
           </div>
         ))
       ) : (
