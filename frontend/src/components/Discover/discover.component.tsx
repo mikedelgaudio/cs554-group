@@ -54,7 +54,7 @@ const Discover = () => {
       } else {
         return users?.map((user: User) => {
           const favorited = loggedInUser?.favoritedUsers?.find(
-            (favId: string) => favId === user?._id,
+            (favId: string) => favId === user?.firebaseUid,
           );
           console.log(user);
           return (

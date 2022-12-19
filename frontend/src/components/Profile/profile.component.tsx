@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
@@ -28,20 +28,16 @@ const Profile = () => {
   useTitle("Profile - DuckedIn");
   const params = useParams();
 
-  const [user, setUser] = React.useState<User>();
-  const [favorited, setFavorited] = React.useState<boolean>(false);
+  const [user, setUser] = useState<User>();
+  const [favorited, setFavorited] = useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
-  // const url = 'http://localhost:3001/profile/${params.id}';
-  // const url2 = 'http://localhost:3001/profile/${currentUser?.uid}';
-  const url = `http://localhost:3001/users/profile/${params.id}`;
-  const url2 = `http://localhost:3001/users/1`;
+  const url = 'http://localhost:3001/users/profile/' + params.id;
   useEffect(() => {
     async function getUser() {
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
-
         setUser(userData);
         if (
           userData.favoritedUsers.find(
@@ -55,8 +51,8 @@ const Profile = () => {
       }
     }
     getUser();
-  }, [url]);
-
+  }, [url]); 
+          
   const handleFavoriteToggle = async () => {
     try {
       // TODO Handle API Call to Toggle Favoriting
@@ -80,7 +76,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const username = formData.get("username");
           if (username !== null && typeof username === "string") {
-            changeUsername(currentUser?.uid, username);
+            changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
           }
@@ -113,7 +109,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
           if (firstName !== null && typeof firstName === "string") {
-            changeFirstName(currentUser?.uid, firstName);
+            changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
           }
@@ -146,7 +142,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
           if (lastName !== null && typeof lastName === "string") {
-            changeLastName(currentUser?.uid, lastName);
+            changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
           }
@@ -179,7 +175,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const profileImageURL = formData.get("profileImageURL");
           if (profileImageURL !== null && typeof profileImageURL === "string") {
-            changeProfilePicture(currentUser?.uid, profileImageURL);
+            changeProfilePicture(currentUser, profileImageURL);
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -216,7 +212,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const phoneNumber = formData.get("phoneNumber");
           if (phoneNumber !== null && typeof phoneNumber === "string") {
-            changePhoneNumber(currentUser?.uid, phoneNumber);
+            changePhoneNumber(currentUser, phoneNumber);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
           }
@@ -249,7 +245,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const email = formData.get("email");
           if (email !== null && typeof email === "string") {
-            changeEmail(currentUser?.uid, email);
+            changeEmail(currentUser, email);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
           }
@@ -282,7 +278,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const website = formData.get("website");
           if (website !== null && typeof website === "string") {
-            changeWebsite(currentUser?.uid, website);
+            changeWebsite(currentUser, website);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
           }
@@ -315,7 +311,7 @@ const Profile = () => {
           const formData = new FormData(form);
           const currentRole = formData.get("currentRole");
           if (currentRole !== null && typeof currentRole === "string") {
-            changeOccupation(currentUser?.uid, currentRole);
+            changeOccupation(currentUser, currentRole);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
           }
@@ -340,35 +336,41 @@ const Profile = () => {
       </form>
 
       {/* Delete Social Media */}
-      {user?.socialMedia
-        ? // ? user?.socialMedias.map(socialMedia => (
-          user?.socialMedia.map(socialMedia => (
-            <div key={socialMedia.id}>
-              <p>
-                <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
-              </p>
-              <button
-                className="profileButton"
-                onClick={() => {
-                  deleteSocialMedia(currentUser?.uid, socialMedia.id);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className="border-2">
+        <p>Current Social Media</p>
+        <br/>
+        {user?.socialMedia
+          ?
+            user?.socialMedia.map(socialMedia => (
+              <div key={socialMedia?.id}>
+                <p>
+                  <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
+                </p>
+                <button
+                  className="profileButton"
+                  onClick={async() => {
+                    setUser(await deleteSocialMedia(currentUser, socialMedia.id));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
 
       {/* Add Social Media */}
       <form
         className="flex gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
           if (socialMediaURL !== null && typeof socialMediaURL === "string") {
-            addSocialMedia(currentUser?.uid, socialMediaURL);
+            setUser(await addSocialMedia(currentUser, socialMediaURL));
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -376,6 +378,7 @@ const Profile = () => {
               true,
             );
           }
+          // refetch page
         }}
       >
         <label className="flex items-center gap-3">
@@ -384,7 +387,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="socialMediaURL"
-            defaultValue="google.com"
+            placeholder="google.com"
           />
         </label>
         <button
@@ -397,32 +400,38 @@ const Profile = () => {
       </form>
 
       {/* Delete Likes */}
-      {user?.likes
-        ? user?.likes.map(like => (
-            <div key={like.id}>
-              <p>{like.name}</p>
-              <button
-                className="profileButton"
-                onClick={() => {
-                  deleteLike(currentUser?.uid, like.id);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className='border-2'>
+        <p>Current Likes</p>
+        <br/>
+        {user?.likes
+          ? user?.likes.map(like => (
+              <div key={like.id}>
+                <p>{like.name}</p>
+                <button
+                  className="profileButton"
+                  onClick={async() => {
+                    setUser(await deleteLike(currentUser, like.id));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
 
-      {/* Add user? Like */}
+      {/* Add Like */}
       <form
         className="flex gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
           if (like !== null && typeof like === "string") {
-            addLike(currentUser?.uid, like);
+            setUser(await addLike(currentUser, like));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
@@ -434,7 +443,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="like"
-            defaultValue="like"
+            placeholder="Web Programming"
           />
         </label>
         <button
@@ -447,32 +456,38 @@ const Profile = () => {
       </form>
 
       {/* Delete Dislike */}
-      {user?.dislikes
-        ? user?.dislikes.map(dislike => (
-            <div key={dislike.id}>
-              <p>{dislike.name}</p>
-              <button
-                className="profileButton"
-                onClick={() => {
-                  deleteDislike(currentUser?.uid, dislike.id);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className='border-2'>
+        <p>Current Dislikes</p>
+        <br/>
+        {user?.dislikes
+          ? user?.dislikes.map(dislike => (
+              <div key={dislike.id}>
+                <p>{dislike.name}</p>
+                <button
+                  className="profileButton"
+                  onClick={async () => {
+                    setUser(await deleteDislike(currentUser, dislike.id));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
 
       {/* Add Dislike */}
       <form
         className="flex gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
           if (dislike !== null && typeof dislike === "string") {
-            addDislike(currentUser?.uid, dislike);
+            setUser(await addDislike(currentUser, dislike));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
@@ -484,7 +499,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="dislike"
-            defaultValue="dislike"
+            placeholder="Bugs in my code"
           />
         </label>
         <button
@@ -497,21 +512,26 @@ const Profile = () => {
       </form>
 
       {/* Form to delete a favorited user? */}
-      {user?.favoritedUsers
-        ? user?.favoritedUsers.map(favoriteId => (
-            <div key={favoriteId}>
-              <p>{favoriteId}</p>
-              <button
-                className="profileButton"
-                onClick={() => {
-                  deleteFavoritedUser(currentUser?.uid, favoriteId);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className='border-2'>
+        <p>Current Favorited Users</p>
+        <br/>
+        {user?.favoritedUsers
+          ? user?.favoritedUsers.map(favoriteId => (
+              <div key={favoriteId}>
+                <p>{favoriteId}</p>
+                <button
+                  className="profileButton"
+                  onClick={async () => {
+                    setUser(await deleteFavoritedUser(currentUser, favoriteId));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
     </div>
   );
   const viewingLayout = (
@@ -528,12 +548,10 @@ const Profile = () => {
       <img src={user?.profileImage} alt="Profile Image" />
 
       {/* Contact Info (phone number, email, website, current role) */}
-      <h2>Contact Information: </h2>
       <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
       <p>Email: {user?.contactInfo.email}</p>
       <p>
-        Website:
-        <a href={user?.contactInfo.website}>{user?.contactInfo.website}</a>
+        Website: <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a>
       </p>
       <p>Current Role: {user?.contactInfo.occupation}</p>
       <br />
@@ -543,7 +561,8 @@ const Profile = () => {
       {user?.socialMedia ? (
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
-            <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
+            <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
+            <br/>
           </div>
         ))
       ) : (
@@ -583,6 +602,7 @@ const Profile = () => {
         user?.favoritedUsers.map(favoriteId => (
           <div key={favoriteId}>
             <p>{favoriteId}</p>
+            <br/>
           </div>
         ))
       ) : (
