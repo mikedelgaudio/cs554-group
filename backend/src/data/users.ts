@@ -176,9 +176,18 @@ module.exports = {
         }
       }
         
-    if (user.favoritedUsers) {
-      userObj.favoritedUsers = user.favoritedUsers;
-    }
+      if(user.favoritedUsers){
+        if(!Array.isArray(user.favoritedUsers)){
+          throw "Updated favorites must be a valid array";
+        }else{
+          for(let i=0; i<user.favoritedUsers.length; i++){
+            if(typeof(user.favoritedUsers[i]) != 'string'){
+              throw"Favorite values in array must be a strings";
+            }
+          }
+          userObj.favoritedUsers = user.favoritedUsers;
+        }
+      }
 
     let userCollection = await users();
 
