@@ -151,13 +151,14 @@ export const addSocialMedia = async (currentUser: any, socialMediaURL: string) =
     user.data.socialMedia.push({profileURL: socialMediaURL});
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     socialMedia: user.data.socialMedia,
                 },
                 currentUser,
             );
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -166,17 +167,18 @@ export const addSocialMedia = async (currentUser: any, socialMediaURL: string) =
 
 // Delete Social Media
 export const deleteSocialMedia = async (currentUser: any, socialMediaID: any) => {
-    const user = await axios.get(`http://localhost:3001/users/profile/${currentUser}`);
-    user.data.socialMedia.splice(socialMediaID, 1);
+    const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
+    user.data.socialMedia = user.data.socialMedia.filter((socialMedia: any) => socialMedia.id !== socialMediaID);
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     socialMedia: user.data.socialMedia,
                 },
                 currentUser,
             );
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -189,13 +191,14 @@ export const addLike = async (currentUser: any, like: string) => {
     user.data.likes.push({name: like});
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     likes: user.data.likes,
                 },
                 currentUser,
             );
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -205,16 +208,17 @@ export const addLike = async (currentUser: any, like: string) => {
 // Delete a Like
 export const deleteLike = async (currentUser: any, likeID: any) => {
     const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
-    user.data.likes.splice(likeID, 1);
+    user.data.likes = user.data.likes.filter((like: any) => like.id !== likeID);
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     likes: user.data.likes,
                 },
                 currentUser,
             );
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -227,13 +231,14 @@ export const addDislike = async (currentUser: any, dislike: string) => {
     user.data.dislikes.push({name: dislike});
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     dislikes: user.data.dislikes,
                 },
                 currentUser,
             );
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -243,16 +248,17 @@ export const addDislike = async (currentUser: any, dislike: string) => {
 // Delete a Dislike
 export const deleteDislike = async (currentUser: any, dislikeID: any) => {
     const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
-    user.data.dislikes.splice(dislikeID, 1);
+    user.data.dislikes = user.data.dislikes.filter((dislike: any) => dislike.id !== dislikeID);
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     dislikes: user.data.dislikes,
                 },
                 currentUser,
             );
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -265,13 +271,15 @@ export const addFavoritedUser = async (currentUser: any, favoritedUserID: any) =
     user.data.favoritedUsers.push({id: favoritedUserID});
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     favoritedUsers: user.data.favoritedUsers,
                 },
                 currentUser,
             );
+            console.log('data: ', data);
+            return data;
         }
     } catch (e: any) {
         console.log(e);
@@ -284,13 +292,15 @@ export const deleteFavoritedUser = async (currentUser: any, favoritedUserID: any
     user.data.favoritedUsers.splice(favoritedUserID, 1);
     try {
         if (currentUser) {
-            await postRequest(
+            const data = await postRequest(
                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
                 {
                     favoritedUsers: user.data.favoritedUsers,
                 },
                 currentUser,
             );
+            console.log('data: ', data);
+            return data;
         }
     } catch (e: any) {
         console.log(e);

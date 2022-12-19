@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
@@ -28,8 +28,11 @@ const Profile = () => {
   useTitle("Profile - DuckedIn");
   const params = useParams();
 
-  const [user, setUser] = React.useState<User>();
-  const [favorited, setFavorited] = React.useState<boolean>(false);
+  const [user, setUser] = useState<User>();
+  const [socialMedia, setSocialMedia] = useState<any>(null);
+  const [likes, setLikes] = useState<any>(null);
+  const [dislikes, setDislikes] = useState<any>(null);
+  const [favorited, setFavorited] = useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   const url = 'http://localhost:3001/users/profile/' + params.id;
@@ -38,7 +41,6 @@ const Profile = () => {
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
-
         setUser(userData);
         if (
           userData.favoritedUsers.find(
@@ -52,8 +54,8 @@ const Profile = () => {
       }
     }
     getUser();
-  }, [url]);
-
+  }, [url]); 
+          
   const handleFavoriteToggle = async () => {
     try {
       // TODO Handle API Call to Toggle Favoriting
@@ -341,14 +343,14 @@ const Profile = () => {
       {user?.socialMedia
         ?
           user?.socialMedia.map(socialMedia => (
-            <div key={socialMedia.id}>
+            <div key={socialMedia?.id}>
               <p>
-                <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
+                <a href={socialMedia?.profileURL}>{socialMedia?.profileURL}</a>
               </p>
               <button
                 className="profileButton"
-                onClick={() => {
-                  deleteSocialMedia(currentUser, socialMedia.id);
+                onClick={async() => {
+                  setUser(await deleteSocialMedia(currentUser, socialMedia.id));
                 }}
               >
                 Delete
@@ -360,13 +362,13 @@ const Profile = () => {
       {/* Add Social Media */}
       <form
         className="flex gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
           if (socialMediaURL !== null && typeof socialMediaURL === "string") {
-            addSocialMedia(currentUser, socialMediaURL);
+            setUser(await addSocialMedia(currentUser, socialMediaURL));
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -374,6 +376,7 @@ const Profile = () => {
               true,
             );
           }
+          // refetch page
         }}
       >
         <label className="flex items-center gap-3">
@@ -402,8 +405,8 @@ const Profile = () => {
               <p>{like.name}</p>
               <button
                 className="profileButton"
-                onClick={() => {
-                  deleteLike(currentUser, like.id);
+                onClick={async() => {
+                  setUser(await deleteLike(currentUser, like.id));
                 }}
               >
                 Delete
@@ -412,16 +415,16 @@ const Profile = () => {
           ))
         : null}
 
-      {/* Add user? Like */}
+      {/* Add Like */}
       <form
         className="flex gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
           if (like !== null && typeof like === "string") {
-            addLike(currentUser, like);
+            setUser(await addLike(currentUser, like));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
@@ -453,8 +456,8 @@ const Profile = () => {
               <p>{dislike.name}</p>
               <button
                 className="profileButton"
-                onClick={() => {
-                  deleteDislike(currentUser, dislike.id);
+                onClick={async () => {
+                  setUser(await deleteDislike(currentUser, dislike.id));
                 }}
               >
                 Delete
@@ -466,13 +469,13 @@ const Profile = () => {
       {/* Add Dislike */}
       <form
         className="flex gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
           if (dislike !== null && typeof dislike === "string") {
-            addDislike(currentUser, dislike);
+            setUser(await addDislike(currentUser, dislike));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
@@ -503,8 +506,8 @@ const Profile = () => {
               <p>{favoriteId}</p>
               <button
                 className="profileButton"
-                onClick={() => {
-                  deleteFavoritedUser(currentUser, favoriteId);
+                onClick={async () => {
+                  setUser(await deleteFavoritedUser(currentUser, favoriteId));
                 }}
               >
                 Delete
