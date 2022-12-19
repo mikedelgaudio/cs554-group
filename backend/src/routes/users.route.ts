@@ -1,15 +1,12 @@
-const mongoCollections = require("../config/mongoCollections");
-const users = mongoCollections.users;
-import { checkAuth } from "../middleware/token.middleware";
 import express, { Request, Response, Router } from "express";
 import {
+  SocialMediaItem,
   User,
   UserDislikeItem,
   UserLikeItem,
-  SocialMediaItem,
 } from "../data/interfaces";
+import { checkAuth } from "../middleware/token.middleware";
 let data = require("../data/users");
-import ObjectId from "mongodb";
 
 export const usersRouter: Router = express.Router();
 
@@ -191,14 +188,14 @@ usersRouter.post(
       }
       if (req.body.likes) {
         if (!Array.isArray(req.body.likes)) {
-          console.log("Array Type Check")
+          console.log("Array Type Check");
           return res
             .status(400)
             .json({ error: "Updated Likes must be a valid array" });
         } else {
           for (let i = 0; i < req.body.likes.length; i++) {
             if (!isAUserLikeItem(req.body.likes[i])) {
-              console.log("Array Value errors")
+              console.log("Array Value errors");
               return res
                 .status(400)
                 .json({ error: "Likes in array must be valid type" });
@@ -252,13 +249,11 @@ usersRouter.post(
 );
 
 usersRouter.get("/:firebaseUid", async (req: Request, res: Response) => {
-  console.log("eeee");
   if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
     throw "add uid as a parameter";
   }
   try {
     let users = await data.getAllUsers(req.params.firebaseUid);
-    console.log(users);
     return res.json(users);
   } catch (e) {
     res.status(404).json({ error: e });

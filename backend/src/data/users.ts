@@ -1,22 +1,22 @@
 import { redisClient } from "../config/redisClient";
 import {
+  SocialMediaItem,
   User,
   UserDislikeItem,
   UserLikeItem,
-  SocialMediaItem,
 } from "./interfaces";
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-  return 'name' in obj;
+  return "name" in obj;
 }
 function isAUserLikeItem(obj: any): obj is UserLikeItem {
-  return 'name' in obj;
+  return "name" in obj;
 }
 function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-  return 'profileURL' in obj;
+  return "profileURL" in obj;
 }
 module.exports = {
   isASocialMediaItem,
@@ -82,26 +82,28 @@ module.exports = {
   },
 
   async getAllUsers(firebaseUid: string) {
-    let allUsers = [] as any[];
+    const filterCurrentUser = (users: User[]) => {
+      return users?.filter((user: User) => user.firebaseUid !== firebaseUid);
+    };
+
     try {
-      allUsers = await redisClient.lRange("allUsers", 0, -1);
+      const allUsers = await redisClient.lRange("allUsers", 0, -1);
+      if (allUsers.length > 0) {
+        return filterCurrentUser(allUsers.map(x => JSON.parse(x)));
+      }
     } catch (e) {
       throw "error with reddis";
-    }
-    if (allUsers.length) {
-      allUsers = allUsers.map(x => JSON.parse(x));
-      let notCurrent = allUsers.filter(x => {
-        return x.firebaseUid != firebaseUid;
-      });
-      console.log(notCurrent);
-      return notCurrent;
     }
 
     try {
       let userCollection = await users();
       let userList: User[] = await userCollection.find().toArray();
-      userList.map(x => redisClient.lPush("allUsers", JSON.stringify(x)));
-      return userList;
+
+      for (let i = 0; i < userList.length; i++) {
+        await redisClient.lPush("allUsers", JSON.stringify(userList[i]));
+      }
+
+      return filterCurrentUser(userList);
     } catch (e) {
       throw "Could not get users.";
     }
@@ -187,35 +189,35 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
-    if(user.socialMedia){
-    if (Array.isArray(user.socialMedia)) {
-      for(let i = 0; i<user.socialMedia.length; i++){
-        if(!isASocialMediaItem(user.socialMedia[i])){
-          throw new Error("Not a valid Social Media Item");
-        }
-        if(!user.socialMedia[i]["id"]){
+    if (user.socialMedia) {
+      if (Array.isArray(user.socialMedia)) {
+        for (let i = 0; i < user.socialMedia.length; i++) {
+          if (!isASocialMediaItem(user.socialMedia[i])) {
+            throw new Error("Not a valid Social Media Item");
+          }
+          if (!user.socialMedia[i]["id"]) {
             user.socialMedia[i]["id"] = ObjectId();
+          }
         }
-      }
 
-      userObj.socialMedia = user.socialMedia;
-    }else{
+        userObj.socialMedia = user.socialMedia;
+      } else {
         throw new Error("Must be Social Media Array");
       }
     }
 
-    if(user.likes){
-    if (Array.isArray(user.likes)) {
-      for(let i = 0; i<user.likes.length; i++){
-        if(!isAUserLikeItem(user.likes[i])){
-          throw new Error("Not a valid Like Item");
+    if (user.likes) {
+      if (Array.isArray(user.likes)) {
+        for (let i = 0; i < user.likes.length; i++) {
+          if (!isAUserLikeItem(user.likes[i])) {
+            throw new Error("Not a valid Like Item");
+          }
+          if (!user.likes[i]["id"]) {
+            user.likes[i]["id"] = ObjectId();
+          }
         }
-        if(!user.likes[i]["id"]){
-          user.likes[i]["id"] = ObjectId();
-      }
-      }
-      userObj.likes = user.likes;
-    }else{
+        userObj.likes = user.likes;
+      } else {
         throw new Error("Must be Likes Array");
       }
     }
@@ -226,9 +228,9 @@ module.exports = {
             throw new Error("Not a valid DislikeItem");
           }
 
-          if(!user.dislikes[i]["id"]){
+          if (!user.dislikes[i]["id"]) {
             user.dislikes[i]["id"] = ObjectId();
-        }
+          }
         }
         userObj.dislikes = user.dislikes;
       } else {
