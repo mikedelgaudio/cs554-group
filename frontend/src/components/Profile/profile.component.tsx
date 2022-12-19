@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
@@ -336,25 +336,29 @@ const Profile = () => {
       </form>
 
       {/* Delete Social Media */}
-      <p>Current Social Media (If Any)</p>
-      {user?.socialMedia
-        ?
-          user?.socialMedia.map(socialMedia => (
-            <div key={socialMedia?.id}>
-              <p>
-                <a href={socialMedia?.profileURL}>{socialMedia?.profileURL}</a>
-              </p>
-              <button
-                className="profileButton"
-                onClick={async() => {
-                  setUser(await deleteSocialMedia(currentUser, socialMedia.id));
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div >
+        <p>Current Social Media (If Any)</p>
+        <br/>
+        {user?.socialMedia
+          ?
+            user?.socialMedia.map(socialMedia => (
+              <div key={socialMedia?.id}>
+                <p>
+                  <a href={socialMedia?.profileURL}>{socialMedia?.profileURL}</a>
+                </p>
+                <button
+                  className="profileButton"
+                  onClick={async() => {
+                    setUser(await deleteSocialMedia(currentUser, socialMedia.id));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
 
       {/* Add Social Media */}
       <form
@@ -395,22 +399,26 @@ const Profile = () => {
       </form>
 
       {/* Delete Likes */}
-      <p>Current Likes (If Any)</p>
-      {user?.likes
-        ? user?.likes.map(like => (
-            <div key={like.id}>
-              <p>{like.name}</p>
-              <button
-                className="profileButton"
-                onClick={async() => {
-                  setUser(await deleteLike(currentUser, like.id));
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className='border-2'>
+        <p>Current Likes (If Any)</p>
+        <br/>
+        {user?.likes
+          ? user?.likes.map(like => (
+              <div key={like.id}>
+                <p>{like.name}</p>
+                <button
+                  className="profileButton"
+                  onClick={async() => {
+                    setUser(await deleteLike(currentUser, like.id));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
 
       {/* Add Like */}
       <form
@@ -446,22 +454,26 @@ const Profile = () => {
       </form>
 
       {/* Delete Dislike */}
-      <p>Current Dislikes (If Any)</p>
-      {user?.dislikes
-        ? user?.dislikes.map(dislike => (
-            <div key={dislike.id}>
-              <p>{dislike.name}</p>
-              <button
-                className="profileButton"
-                onClick={async () => {
-                  setUser(await deleteDislike(currentUser, dislike.id));
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className='border-2'>
+        <p>Current Dislikes (If Any)</p>
+        <br/>
+        {user?.dislikes
+          ? user?.dislikes.map(dislike => (
+              <div key={dislike.id}>
+                <p>{dislike.name}</p>
+                <button
+                  className="profileButton"
+                  onClick={async () => {
+                    setUser(await deleteDislike(currentUser, dislike.id));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
 
       {/* Add Dislike */}
       <form
@@ -497,22 +509,26 @@ const Profile = () => {
       </form>
 
       {/* Form to delete a favorited user? */}
-      <p>Current Favorited Users (If Any)</p>
-      {user?.favoritedUsers
-        ? user?.favoritedUsers.map(favoriteId => (
-            <div key={favoriteId}>
-              <p>{favoriteId}</p>
-              <button
-                className="profileButton"
-                onClick={async () => {
-                  setUser(await deleteFavoritedUser(currentUser, favoriteId));
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        : null}
+      <div className='border-2'>
+        <p>Current Favorited Users (If Any)</p>
+        <br/>
+        {user?.favoritedUsers
+          ? user?.favoritedUsers.map(favoriteId => (
+              <div key={favoriteId}>
+                <p>{favoriteId}</p>
+                <button
+                  className="profileButton"
+                  onClick={async () => {
+                    setUser(await deleteFavoritedUser(currentUser, favoriteId));
+                  }}
+                >
+                  Delete
+                </button>
+                <br/>
+              </div>
+            ))
+          : null}
+      </div>
     </div>
   );
   const viewingLayout = (
