@@ -124,6 +124,7 @@ module.exports = {
         let userList = await userCollection.findOne({
           firebaseUid: firebaseUid,
         });
+        await redisClient.set("User"+firebaseUid, JSON.stringify(userList));
         return userList;
       } catch (e) {
         throw new Error("Could not get user.");
@@ -157,8 +158,8 @@ module.exports = {
         let userCollection = await users();
         let userList = await userCollection.findOne({ firebaseUid: firebaseUid });
         let favoriteArr = userList.favoritedUsers;
-        for(let i = 0; i<favoriteArr; i++){
-          await redisClient.lPush("favorite" + firebaseUid.toString(), favoriteArr[i]);
+        for(let i = 0; i<favoriteArr.length; i++){
+          await redisClient.lPush("favorite" + firebaseUid, favoriteArr[i]);
         }
         return favoriteArr;
       } catch (e) {
@@ -250,7 +251,7 @@ module.exports = {
           if (typeof user.favoritedUsers[i] != "string") {
             throw "Favorite values in array must be a strings";
           }
-         await redisClient.lPush("favorite" + firebaseUid, user.favoritedUsers[i]);
+         await redisClient.lPush(favName, user.favoritedUsers[i]);
         }
           userObj.favoritedUsers = user.favoritedUsers;
         }
