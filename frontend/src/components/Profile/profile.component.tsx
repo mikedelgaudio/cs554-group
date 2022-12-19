@@ -585,7 +585,6 @@ const Profile = () => {
           <p>Current Role: {user?.contactInfo.occupation}</p>
         ) : null
       }
-      <br />
 
       {/* Social Media */}
       {/* if user.socialMedia array length is 0 */}
@@ -604,7 +603,6 @@ const Profile = () => {
       ) : (
         <p>No Social Media</p>
       )}
-      <br />
 
       {/* Likes */}
       {hasLikes ? 
@@ -638,10 +636,9 @@ const Profile = () => {
       ) : (
         <p>No Dislikes</p>
       )}
-      <br />
 
       {/* Favorited Users */}
-      {hasFavoritedUsers ?
+      {/* {hasFavoritedUsers ?
         (
           <p>Favorited Users: </p>
         ) : null
@@ -656,7 +653,7 @@ const Profile = () => {
       ) : (
         <p>No Favorited Users</p>
       )}
-      <br />
+      <br /> */}
 
       {/* Heart Icon */}
       <div>
