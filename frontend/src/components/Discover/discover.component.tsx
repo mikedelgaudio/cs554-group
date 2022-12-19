@@ -52,7 +52,7 @@ const Discover = () => {
       if (users?.length === 0) {
         return <p>No other users are found...</p>;
       } else {
-        users?.map((user: User) => {
+        return users?.map((user: User) => {
           const favorited = loggedInUser?.favoritedUsers?.find(
             (favId: string) => favId === user?._id,
           );
