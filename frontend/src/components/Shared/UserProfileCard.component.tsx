@@ -56,39 +56,50 @@ const UserProfileCard = ({
   const handleFavoriteToggle = async () => {
     try {
       // TODO Update URL to Favorited Users
-      const { data } = await axios.get("http://localhost:3001/users/");
-      const loggedInUsersFavorited = data?.favoritedUsers;
-      const userFavorited = loggedInUsersFavorited.find(
-        (fId: string) => fId === id,
-      );
+      const { data } = await axios.get("http://localhost:3001/users");
+      
+      console.log(data);
+      // console.log(data?.favoritedUsers);
+
+      // const userFavorited = data.find(
+      //   (fId: string) => fId === id,
+      // );
 
       let updatedFavoriteList = [];
 
-      if (userFavorited) {
-        // Filter
-        updatedFavoriteList = loggedInUsersFavorited.filter(
-          (fId: string) => fId !== id,
-        );
-      } else {
-        // Append
-        updatedFavoriteList = [...loggedInUsersFavorited, id];
+      // if (userFavorited) {
+      //   // Filter
+      //   updatedFavoriteList = data.filter(
+      //     (fId: string) => fId !== id,
+      //   );
+      // } else {
+      //   // Append
+      //   updatedFavoriteList = [...data, id];
+      // }
+
+      for(let i=0; i<data.length; i++){
+        if (!user?.favoritedUsers?.includes(data[i]._id)){
+          updatedFavoriteList.push(data[i]._id);
+        }
       }
 
-      // TODO Update correct URL
-      // await axios.post(
-      //   `http://localhost:3001/users/${2}/editUser`,
-      //   {
-      //     favoritedUsers: updatedFavoriteList,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   },
-      // );
+      // TODO Update correct URLdata
+      await axios.post(
+        `http://localhost:3001/users/${2}/editUser`,
+        {
+          favoritedUsers: updatedFavoriteList,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      console.log("Am I reached");
 
       setFavorited(prev => (prev = !prev));
     } catch (e) {
+      console.log(e);
       const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
       TOAST_SERVICE.error(TOAST_ID, "Failed to update user favorites", true);
     }

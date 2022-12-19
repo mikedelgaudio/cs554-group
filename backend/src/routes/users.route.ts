@@ -192,6 +192,25 @@ usersRouter.post(
                 userObj.dislikes = req.body.dislikes;  
         }
       }
+      console.log(req.body);
+      if(req.body.favoritedUsers){
+        console.log(req.body.favoritedUsers);
+        if(!Array.isArray(req.body.favoritedUsers)){
+          return res
+          .status(400)
+          .json({ error: "Updated favorites must be a valid array" });
+        }else{
+          for(let i=0; i<req.body.favoritedUsers; i++){
+            if(typeof(req.body.favoritedUsers[i]) != 'string'){
+              return res
+              .status(400)
+              .json({ error: "Favorite values in array must be a strings" });
+            }
+          }
+          userObj.favoritedUsers = req.body.favoritedUsers;
+        }
+      }
+
       let answer = await data.patchUser(userObj, firebaseUid);
   
       return res.json(answer);
