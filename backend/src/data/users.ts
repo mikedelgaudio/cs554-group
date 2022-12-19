@@ -260,6 +260,7 @@ module.exports = {
 
       let holder = await redisClient.get("User"+firebaseUid);
       if(holder){
+        //Reisbackend updates
         let newHolder: User = JSON.parse(holder);
         let newRedisHolder = JSON.stringify(Object.assign(newHolder, userObj));
         await redisClient.set("User" + firebaseUid, newRedisHolder);
