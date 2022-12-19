@@ -6,6 +6,8 @@ import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { PageLayout } from "../Shared/PageLayout.component";
+import { Loading } from "../Shared/Loading.component";
+import { postRequest } from "../../utils/api.util";
 import {
   addDislike,
   addLike,
@@ -35,12 +37,14 @@ const Profile = () => {
   const [hasLikes, setHasLikes] = useState<boolean>(false);
   const [hasDislikes, setHasDislikes] = useState<boolean>(false);
   const [hasFavoritedUsers, setHasFavoritedUsers] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
-  const url = 'http://localhost:3001/users/profile/' + params.id;
-  const url2 = 'http://localhost:3001/users/profile/' + currentUser?.uid;
+  const url = "http://localhost:3001/users/profile/" + params.id;
+  const url2 = "http://localhost:3001/users/profile/" + currentUser?.uid;
   useEffect(() => {
     async function getUser() {
+      setLoading(true);
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
@@ -60,27 +64,45 @@ const Profile = () => {
           setHasFavoritedUsers(true);
         }
         if (
-          userData.favoritedUsers.find(
-            (favoritedUser: { id: any }) => favoritedUser.id === userData.id,
-          )
+          currentUserData?.favoritedUsers?.includes(userData.firebaseUid) 
         ) {
           setFavorited(true);
         }
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     }
     getUser();
-  }, [url]); 
-          
+  }, [url]);
+
   const handleFavoriteToggle = async () => {
     try {
-      // TODO Handle API Call to Toggle Favoriting
-      setFavorited(prev => (prev = !prev));
+      let updatedFavoriteList;
+
+      if (favorited) {
+        updatedFavoriteList = currentUserState?.favoritedUsers?.filter(userFid => userFid !== user?.firebaseUid);
+      } else {
+        if (user) {
+          currentUserState?.favoritedUsers?.push(user?.firebaseUid);
+          updatedFavoriteList = currentUserState?.favoritedUsers;
+        }
+      }
+      // TODO Update correct URLdata
+      if (currentUser) {
+        await postRequest(
+          `http://localhost:3001/users/${currentUser.uid}/editUser`,
+          {
+            favoritedUsers: updatedFavoriteList,
+          },
+          currentUser,
+        );
+        setFavorited(prev => (prev = !prev));
+      }
     } catch (e) {
-      TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
-      TOAST_SERVICE.error(TOAST_ID, "Failed to update user? favorites", true);
-      TOAST_ID = "ERROR_UPDATING_PROFILE";
+      console.log(e);
+      const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
+      TOAST_SERVICE.error(TOAST_ID, "Failed to update user favorites", true);
     }
   };
 
@@ -358,24 +380,31 @@ const Profile = () => {
       {/* Delete Social Media */}
       <div className="border-2">
         <p>Current Social Media</p>
-        <br/>
+        <br />
         {user?.socialMedia
-          ?
-            user?.socialMedia.map(socialMedia => (
+          ? user?.socialMedia.map(socialMedia => (
               <div key={socialMedia?.id}>
                 <p>
-                  <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
+                  <a
+                    href={`https://${socialMedia.profileURL}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {socialMedia?.profileURL}
+                  </a>
                 </p>
                 <button
                   className="profileButton"
-                  onClick={async() => {
-                    setUser(await deleteSocialMedia(currentUser, socialMedia.id));
+                  onClick={async () => {
+                    setUser(
+                      await deleteSocialMedia(currentUser, socialMedia.id),
+                    );
                   }}
                 >
                   Delete
                 </button>
-                <br/>
-                <br/>
+                <br />
+                <br />
               </div>
             ))
           : null}
@@ -420,23 +449,23 @@ const Profile = () => {
       </form>
 
       {/* Delete Likes */}
-      <div className='border-2'>
+      <div className="border-2">
         <p>Current Likes</p>
-        <br/>
+        <br />
         {user?.likes
           ? user?.likes.map(like => (
               <div key={like.id}>
                 <p>{like.name}</p>
                 <button
                   className="profileButton"
-                  onClick={async() => {
+                  onClick={async () => {
                     setUser(await deleteLike(currentUser, like.id));
                   }}
                 >
                   Delete
                 </button>
-                <br/>
-                <br/>
+                <br />
+                <br />
               </div>
             ))
           : null}
@@ -476,9 +505,9 @@ const Profile = () => {
       </form>
 
       {/* Delete Dislike */}
-      <div className='border-2'>
+      <div className="border-2">
         <p>Current Dislikes</p>
-        <br/>
+        <br />
         {user?.dislikes
           ? user?.dislikes.map(dislike => (
               <div key={dislike.id}>
@@ -491,8 +520,8 @@ const Profile = () => {
                 >
                   Delete
                 </button>
-                <br/>
-                <br/>
+                <br />
+                <br />
               </div>
             ))
           : null}
@@ -532,9 +561,9 @@ const Profile = () => {
       </form>
 
       {/* Form to delete a favorited user? */}
-      <div className='border-2'>
+      <div className="border-2">
         <p>Current Favorited Users</p>
-        <br/>
+        <br />
         {user?.favoritedUsers
           ? user?.favoritedUsers.map(favoriteId => (
               <div key={favoriteId}>
@@ -547,15 +576,17 @@ const Profile = () => {
                 >
                   Delete
                 </button>
-                <br/>
-                <br/>
+                <br />
+                <br />
               </div>
             ))
           : null}
       </div>
     </div>
   );
-  const viewingLayout = (
+  const viewingLayout = loading ? (
+    <Loading />
+  ) : (
     <>
       {/* Username */}
       <h1>Username: {user?.username}</h1>
@@ -566,60 +597,55 @@ const Profile = () => {
       </h2>
 
       {/* Profile Image */}
-      <img src={user?.profileImage} alt="Profile Image" className='w-80'/>
+      <img src={user?.profileImage} alt="Profile Image" className="w-80" />
 
       {/* Contact Info (phone number, email, website, current role) */}
-      { user?.contactInfo.phoneNumber ? 
-        (
-          <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
-        ) : null
-      }
+      {user?.contactInfo.phoneNumber ? (
+        <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
+      ) : null}
       <p>Email: {user?.contactInfo.email}</p>
-      { user?.contactInfo.website ?
-        (
-          <p>Website: <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a></p>
-        ) : null
-      }
-      { user?.contactInfo.occupation ?
-        (
-          <div>
-            <p>Current Role: {user?.contactInfo.occupation}</p>
-          </div>
-        ) : null
-      }
-      { user?.contactInfo ?
-        (
-          <br/>
-        ) : null
-    }
+      {user?.contactInfo.website ? (
+        <p>
+          Website:{" "}
+          <a
+            href={`https://${user?.contactInfo?.website}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {user?.contactInfo?.website}
+          </a>
+        </p>
+      ) : null}
+      {user?.contactInfo.occupation ? (
+        <div>
+          <p>Current Role: {user?.contactInfo.occupation}</p>
+        </div>
+      ) : null}
+      {user?.contactInfo ? <br /> : null}
 
       {/* Social Media */}
       {/* if user.socialMedia array length is 0 */}
-      {hasSocialMedia ?
-        (
-        <p>Social Media: </p>
-        ) : null
-      }
+      {hasSocialMedia ? <p>Social Media: </p> : null}
       {user?.socialMedia ? (
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
-            <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
-            <br/>
+            <a
+              href={`https://${socialMedia.profileURL}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {socialMedia?.profileURL}
+            </a>
+            <br />
           </div>
         ))
       ) : (
         <p>No Social Media</p>
       )}
-      {user?.socialMedia ? (
-        <br/>
-      ) : null}
+      {user?.socialMedia ? <br /> : null}
 
       {/* Likes */}
-      {hasLikes ? 
-        (
-          <p>Likes: </p>
-        ) : null
-      }
+      {hasLikes ? <p>Likes: </p> : null}
       {user?.likes ? (
         user?.likes.map(like => (
           <div key={like.id}>
@@ -629,19 +655,10 @@ const Profile = () => {
       ) : (
         <p>No Likes</p>
       )}
-      {hasLikes ?
-        (
-          <br/>
-        ) : null
-      }
-
+      {hasLikes ? <br /> : null}
 
       {/* Dislikes */}
-      {hasDislikes ?
-        (
-          <p>Dislikes: </p>
-        ) : null
-      }
+      {hasDislikes ? <p>Dislikes: </p> : null}
       {user?.dislikes ? (
         user?.dislikes.map(dislike => (
           <div key={dislike.id}>
@@ -654,21 +671,21 @@ const Profile = () => {
 
       {/* Favorited Users */}
       {/* {hasFavoritedUsers ?
-        (
-          <p>Favorited Users: </p>
-        ) : null
-      }
-      {user?.favoritedUsers ? (
-        user?.favoritedUsers.map(favoriteId => (
-          <div key={favoriteId}>
-            <p>{favoriteId}</p>
-            <br/>
-          </div>
-        ))
-      ) : (
-        <p>No Favorited Users</p>
-      )}
-      <br /> */}
+          (
+            <p>Favorited Users: </p>
+          ) : null
+        }
+        {user?.favoritedUsers ? (
+          user?.favoritedUsers.map(favoriteId => (
+            <div key={favoriteId}>
+              <p>{favoriteId}</p>
+              <br/>
+            </div>
+          ))
+        ) : (
+          <p>No Favorited Users</p>
+        )}
+        <br /> */}
 
       {/* Heart Icon */}
       <div>
