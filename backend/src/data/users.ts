@@ -172,6 +172,11 @@ module.exports = {
 
   async patchUser(user: User, firebaseUid: string) {
     const userObj = {} as User;
+    let holder = await redisClient.get("User"+firebaseUid);
+    if(holder){
+      holder = JSON.parse(holder);
+    }
+
 
     if (user.username) {
       userObj.username = user.username;
@@ -246,23 +251,30 @@ module.exports = {
       if (!Array.isArray(user.favoritedUsers)) {
         throw "Updated favorites must be a valid array";
       } else {
-        let oldArr = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
-        let favName = "favorite" + firebaseUid;
-        for(let i = 0; i<oldArr.length; i++){
-          await redisClient.lRem(favName,0, oldArr[i] )
-        }
-        //Unfavoriting something deletes all the IDs
         for (let i = 0; i < user.favoritedUsers.length; i++) {
           if (typeof user.favoritedUsers[i] != "string") {
             throw "Favorite values in array must be a strings";
           }
-         await redisClient.lPush(favName, user.favoritedUsers[i]);
         }
-          userObj.favoritedUsers = user.favoritedUsers;
+
+        let oldArr = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
+        if(oldArr){
+        let favName = "favorite" + firebaseUid;
+        if(oldArr.includes(user.favoritedUsers[0])){
+            await redisClient.lRem(favName,0, user.favoritedUsers[0]);
+            let index = oldArr.indexOf(user.favoritedUsers[0]);  
+            if (index !== -1) {
+              oldArr.splice(index, 1);
+            }          
+          }else{
+            await redisClient.lPush(favName, user.favoritedUsers[0]);
+            oldArr.push(user.favoritedUsers[0])
+          }
+      }
+          userObj.favoritedUsers = oldArr;
         }
       }
 
-      let holder = await redisClient.get("User"+firebaseUid);
       if(holder){
         //Reisbackend updates
         let newHolder: User = JSON.parse(holder);
