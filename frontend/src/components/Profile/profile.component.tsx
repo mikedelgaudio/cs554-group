@@ -582,9 +582,16 @@ const Profile = () => {
       }
       { user?.contactInfo.occupation ?
         (
-          <p>Current Role: {user?.contactInfo.occupation}</p>
+          <div>
+            <p>Current Role: {user?.contactInfo.occupation}</p>
+          </div>
         ) : null
       }
+      { user?.contactInfo ?
+        (
+          <br/>
+        ) : null
+    }
 
       {/* Social Media */}
       {/* if user.socialMedia array length is 0 */}
@@ -603,6 +610,9 @@ const Profile = () => {
       ) : (
         <p>No Social Media</p>
       )}
+      {user?.socialMedia ? (
+        <br/>
+      ) : null}
 
       {/* Likes */}
       {hasLikes ? 
@@ -619,7 +629,12 @@ const Profile = () => {
       ) : (
         <p>No Likes</p>
       )}
-      <br />
+      {hasLikes ?
+        (
+          <br/>
+        ) : null
+      }
+
 
       {/* Dislikes */}
       {hasDislikes ?
