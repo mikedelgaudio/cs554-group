@@ -29,9 +29,6 @@ const Profile = () => {
   const params = useParams();
 
   const [user, setUser] = useState<User>();
-  const [socialMedia, setSocialMedia] = useState<any>(null);
-  const [likes, setLikes] = useState<any>(null);
-  const [dislikes, setDislikes] = useState<any>(null);
   const [favorited, setFavorited] = useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
@@ -385,7 +382,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="socialMediaURL"
-            defaultValue="google.com"
+            placeholder="google.com"
           />
         </label>
         <button
@@ -436,7 +433,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="like"
-            defaultValue="Web Programming"
+            placeholder="Web Programming"
           />
         </label>
         <button
@@ -487,7 +484,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="dislike"
-            defaultValue="Bugs in my code"
+            placeholder="Bugs in my code"
           />
         </label>
         <button
