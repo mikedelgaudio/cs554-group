@@ -14,13 +14,13 @@ import ObjectId from "mongodb";
 export const usersRouter: Router = express.Router();
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-  return "id" in obj && "name" in obj;
+  return "name" in obj;
 }
 function isAUserLikeItem(obj: any): obj is UserLikeItem {
-  return "id" in obj && "name" in obj;
+  return "name" in obj;
 }
 function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-  return "profileURL" in obj && "id" in obj;
+  return "profileURL" in obj;
 }
 usersRouter.post("/register", async (req: Request, res: Response) => {
   if (!req.body.username || typeof req.body.username !== "string") {
@@ -104,6 +104,7 @@ usersRouter.post(
   "/:firebaseUid/editUser",
   checkAuth,
   async (req: Request, res: Response) => {
+    console.log(req.body);
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
       throw "add uid as a parameter";
     }
@@ -190,12 +191,14 @@ usersRouter.post(
       }
       if (req.body.likes) {
         if (!Array.isArray(req.body.likes)) {
+          console.log("Array Type Check")
           return res
             .status(400)
             .json({ error: "Updated Likes must be a valid array" });
         } else {
           for (let i = 0; i < req.body.likes.length; i++) {
             if (!isAUserLikeItem(req.body.likes[i])) {
+              console.log("Array Value errors")
               return res
                 .status(400)
                 .json({ error: "Likes in array must be valid type" });
