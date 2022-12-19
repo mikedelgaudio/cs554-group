@@ -5,6 +5,7 @@ import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/useTitle.hook";
 import { TOAST_SERVICE } from "../../../utils/toast.util";
 import { AuthLayout } from "../layouts/auth-layout.component";
+import { postRequest } from "../../../utils/api.util";
 
 const Register = () => {
   useTitle("Register - Prism");
@@ -49,7 +50,7 @@ const Register = () => {
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
 
       const url = "http://localhost:3001/users/register";
-      await axios.post(url, {
+      await postRequest(url, {
         username,
         firebaseUid: userId,
         email,

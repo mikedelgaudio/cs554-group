@@ -15,9 +15,11 @@ import { useFirebaseAuth } from "../../firebase/firebase.context";
 const UserProfileCard = ({
   id,
   isFavorited,
+  userFavorites,
 }: {
   id: string;
   isFavorited: boolean;
+  userFavorites?: string[];
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,46 +61,30 @@ const UserProfileCard = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      // TODO Update URL to Favorited Users
-      const { data } = await axios.get("http://localhost:3001/users");
-      
-      console.log(data);
-      // console.log(data?.favoritedUsers);
+      let updatedFavoriteList;
 
-      // const userFavorited = data.find(
-      //   (fId: string) => fId === id,
-      // );
-
-      let updatedFavoriteList = [];
-
-      // if (userFavorited) {
-      //   // Filter
-      //   updatedFavoriteList = data.filter(
-      //     (fId: string) => fId !== id,
-      //   );
-      // } else {
-      //   // Append
-      //   updatedFavoriteList = [...data, id];
-      // }
-
-      for(let i=0; i<data.length; i++){
-        if (!user?.favoritedUsers?.includes(data[i]._id)){
-          updatedFavoriteList.push(data[i]._id);
-        }
+      if (favorited) {
+        updatedFavoriteList = userFavorites?.filter(userFid => {
+          userFid === id;
+        });
+      } else {
+        userFavorites?.push(id);
+        updatedFavoriteList = userFavorites;
       }
 
       // TODO Update correct URLdata
-      if(currentUser){
-      await postRequest(
-        `http://localhost:3001/users/${2}/editUser`,
-        {
-          favoritedUsers: updatedFavoriteList,
-        }, currentUser
-      );
-      console.log("Am I reached");
+      if (currentUser) {
+        await postRequest(
+          `http://localhost:3001/users/${currentUser.uid}/editUser`,
+          {
+            favoritedUsers: updatedFavoriteList,
+          },
+          currentUser,
+        );
+        console.log("Am I reached");
 
-      setFavorited(prev => (prev = !prev));
-    }
+        setFavorited(prev => (prev = !prev));
+      }
     } catch (e) {
       console.log(e);
       const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";

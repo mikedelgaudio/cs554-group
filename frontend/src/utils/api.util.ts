@@ -29,14 +29,14 @@ export const getRequest = async (url: string, user?: User) => {
   }
 };
 
-export const postRequest = async (url: string, body: any, user: User) => {
+export const postRequest = async (url: string, body: any, user?: User) => {
   if (!url) throw "No URL was provided";
 
   try {
     if (!user) {
-      console.log("Not logged in!")
+      console.log("Not logged in!");
       // If we're not signed in, assume just browsing...
-      throw "Cannot post if not logged in."
+      throw "Cannot post if not logged in.";
     }
     console.log("Hello");
 
@@ -58,4 +58,3 @@ export const postRequest = async (url: string, body: any, user: User) => {
     console.log(e);
   }
 };
-
