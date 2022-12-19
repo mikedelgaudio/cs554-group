@@ -9,6 +9,8 @@ import {
 } from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
+import { postRequest } from "../../utils/api.util";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 
 const UserProfileCard = ({
   id,
@@ -20,6 +22,8 @@ const UserProfileCard = ({
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
   const [favorited, setFavorited] = useState<boolean>(isFavorited);
+
+  const { currentUser } = useFirebaseAuth();
 
   useEffect(() => {
     async function fetchData() {
@@ -84,20 +88,17 @@ const UserProfileCard = ({
       }
 
       // TODO Update correct URLdata
-      await axios.post(
+      if(currentUser){
+      await postRequest(
         `http://localhost:3001/users/${2}/editUser`,
         {
           favoritedUsers: updatedFavoriteList,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
+        }, currentUser
       );
       console.log("Am I reached");
 
       setFavorited(prev => (prev = !prev));
+    }
     } catch (e) {
       console.log(e);
       const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
