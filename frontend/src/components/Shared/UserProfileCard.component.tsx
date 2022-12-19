@@ -64,9 +64,7 @@ const UserProfileCard = ({
       let updatedFavoriteList;
 
       if (favorited) {
-        updatedFavoriteList = userFavorites?.filter(userFid => {
-          userFid === id;
-        });
+        updatedFavoriteList = userFavorites?.filter(userFid => userFid !== id);
       } else {
         userFavorites?.push(id);
         updatedFavoriteList = userFavorites;
