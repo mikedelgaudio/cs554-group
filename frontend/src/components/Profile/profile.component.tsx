@@ -21,9 +21,9 @@ import {
   changeUsername,
   changeWebsite,
   deleteDislike,
-  deleteFavoritedUser,
   deleteLike,
   deleteSocialMedia,
+  modifyFavorites,
 } from "./helper";
 
 const Profile = () => {
@@ -63,9 +63,7 @@ const Profile = () => {
         if (userData.favoritedUsers.length > 0) {
           setHasFavoritedUsers(true);
         }
-        if (
-          currentUserData?.favoritedUsers?.includes(userData.firebaseUid) 
-        ) {
+        if (currentUserData?.favoritedUsers?.includes(userData.firebaseUid)) {
           setFavorited(true);
         }
       } catch (error) {
@@ -81,7 +79,9 @@ const Profile = () => {
       let updatedFavoriteList;
 
       if (favorited) {
-        updatedFavoriteList = currentUserState?.favoritedUsers?.filter(userFid => userFid !== user?.firebaseUid);
+        updatedFavoriteList = currentUserState?.favoritedUsers?.filter(
+          userFid => userFid !== user?.firebaseUid,
+        );
       } else {
         if (user) {
           currentUserState?.favoritedUsers?.push(user?.firebaseUid);
@@ -571,7 +571,7 @@ const Profile = () => {
                 <button
                   className="profileButton"
                   onClick={async () => {
-                    setUser(await deleteFavoritedUser(currentUser, favoriteId));
+                    setUser(await modifyFavorites(currentUser, favoriteId));
                   }}
                 >
                   Delete
