@@ -28,7 +28,7 @@ module.exports = {
     email: string,
     firstName: string,
     lastName: string,
-    firebaseUid: string
+    firebaseUid: string,
   ) {
     username = username.toLowerCase();
     if (!username || !email || !firstName || !lastName || !firebaseUid) {
@@ -61,46 +61,46 @@ module.exports = {
     } else {
       let hashing = JSON.stringify(newUser);
       await redisClient.set("User" + newUser.firebaseUid, hashing);
-      let allUsers = await redisClient.lRange("allUsers",0,-1);
+      let allUsers = await redisClient.lRange("allUsers", 0, -1);
       if (!allUsers) {
         try {
           await redisClient.lPush("allUsers", hashing);
-          console.log("addedUserList")
-        }
-        catch (e) {
-          throw "Reddis not adding"
+          console.log("addedUserList");
+        } catch (e) {
+          throw "Reddis not adding";
         }
       } else {
         try {
-            await redisClient.lPush("allUsers", hashing);
-            console.log("pushed more in");
-          }
-          catch (e) {
-            throw "Reddis not adding"
-          }
+          await redisClient.lPush("allUsers", hashing);
+          console.log("pushed more in");
+        } catch (e) {
+          throw "Reddis not adding";
+        }
       }
       return newUser;
     }
   },
 
   async getAllUsers(firebaseUid: string) {
-    let allUsers = null;
+    let allUsers = [] as any[];
     try {
       allUsers = await redisClient.lRange("allUsers", 0, -1);
+    } catch (e) {
+      throw "error with reddis";
     }
-    catch (e) {
-      throw "error with reddis"
-    }
-    if (allUsers) {
-      allUsers = allUsers.map((x) => JSON.parse(x));
-      let notCurrent = allUsers.filter(x => {return x.firebaseUid != firebaseUid});
-      console.log(notCurrent)
+    if (allUsers.length) {
+      allUsers = allUsers.map(x => JSON.parse(x));
+      let notCurrent = allUsers.filter(x => {
+        return x.firebaseUid != firebaseUid;
+      });
+      console.log(notCurrent);
       return notCurrent;
     }
 
     try {
       let userCollection = await users();
-      let userList = await userCollection.find().toArray();
+      let userList: User[] = await userCollection.find().toArray();
+      userList.map(x => redisClient.lPush("allUsers", JSON.stringify(x)));
       return userList;
     } catch (e) {
       throw "Could not get users.";
@@ -108,26 +108,26 @@ module.exports = {
   },
 
   async getOneUser(firebaseUid: string) {
-    let holder = null;
+    let holder;
     try {
-      holder = await redisClient.get("User"+firebaseUid);
-    }
-    catch (e) {
+      holder = await redisClient.get("User" + firebaseUid);
+    } catch (e) {
       throw e;
     }
     if (holder) {
       holder = JSON.parse(holder);
       return holder;
+    } else {
+      try {
+        let userCollection = await users();
+        let userList = await userCollection.findOne({
+          firebaseUid: firebaseUid,
+        });
+        return userList;
+      } catch (e) {
+        throw new Error("Could not get user.");
+      }
     }
-    else {
-    try {
-      let userCollection = await users();
-      let userList = await userCollection.findOne({ firebaseUid: firebaseUid });
-      return userList;
-    } catch (e) {
-      throw new Error("Could not get user.");
-    }
-  }
   },
 
   // No plans for this
@@ -147,7 +147,7 @@ module.exports = {
   // },
 
   async getFavoritedUsers(firebaseUid: string) {
-    let answer = [];
+    let answer: any[] = [];
     let cached = await redisClient.get("favorite" + firebaseUid.toString());
     if (cached) {
       return JSON.parse(cached);
@@ -242,7 +242,7 @@ module.exports = {
 
     const updateUser = await userCollection.updateOne(
       { firebaseUid: firebaseUid },
-      { $set: userObj }
+      { $set: userObj },
     );
     return this.getOneUser(firebaseUid);
   },
