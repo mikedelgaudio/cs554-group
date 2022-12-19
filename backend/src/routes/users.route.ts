@@ -150,6 +150,19 @@ usersRouter.post(
           userObj.profileImage = req.body.profileImage;
         }
       }
+
+      if (req.body.resume) {
+        if (
+          typeof req.body.resume != "string" ||
+          !req.body.resume
+        ) {
+          return res
+            .status(400)
+            .json({ error: "Resume be a valid string" });
+        } else {
+          userObj.resume = req.body.resume;
+        }
+      }
       if (req.body.contactInfo) {
         let contactFields = ["phoneNumber", "email", "website", "occupation"];
 

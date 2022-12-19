@@ -53,6 +53,7 @@ module.exports = {
       likes: [],
       dislikes: [],
       favoritedUsers: [],
+      resume: ""
     };
     console.log(newUser);
     let newInsertInformation = await userCollection.insertOne(newUser);
@@ -189,6 +190,9 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
+    if (user.resume) {
+      userObj.resume = user.resume;
+    }
     if(user.socialMedia){
     if (Array.isArray(user.socialMedia)) {
       for(let i = 0; i<user.socialMedia.length; i++){
@@ -199,7 +203,6 @@ module.exports = {
             user.socialMedia[i]["id"] = ObjectId();
         }
       }
-
       userObj.socialMedia = user.socialMedia;
     }else{
         throw new Error("Must be Social Media Array");
@@ -239,6 +242,7 @@ module.exports = {
     }
 
     if (user.favoritedUsers) {
+      console.log(user.favoritedUsers);
       if (!Array.isArray(user.favoritedUsers)) {
         throw "Updated favorites must be a valid array";
       } else {
