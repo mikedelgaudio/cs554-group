@@ -30,4 +30,5 @@ export interface User {
   likes?: UserLikeItem[];
   dislikes?: UserDislikeItem[];
   favoritedUsers?: string[];
+  resume?: string;
 }
