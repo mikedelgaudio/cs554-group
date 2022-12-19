@@ -228,7 +228,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="phoneNumber"
-            defaultValue={user?.contactInfo.phoneNumber}
+            defaultValue={user?.contactInfo?.phoneNumber}
           />
         </label>
         <button

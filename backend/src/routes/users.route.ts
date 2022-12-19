@@ -201,9 +201,9 @@ usersRouter.post(
   }
 );
 
-usersRouter.get("/", async (req: Request, res: Response) => {
+usersRouter.get("/:firebaseUid", async (req: Request, res: Response) => {
   try {
-    let users = await data.getAllUsers();
+    let users = await data.getAllUsers(req.params.firebaseUid);
     return res.json(users);
   } catch (e) {
     res.status(404).json({ error: e });
