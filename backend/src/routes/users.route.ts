@@ -163,7 +163,7 @@ usersRouter.post(
                 "Contact Field must be either phone number, email, website, or occupation",
             });
           }
-          if (typeof v != "string") {
+          if (typeof v != "string" || v.trim() === "") {
             return res
               .status(400)
               .json({ error: "Contact Info must be string" });
