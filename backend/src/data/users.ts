@@ -55,9 +55,8 @@ module.exports = {
       throw new Error("this didn't work");
     } else {
       let hashing = JSON.stringify(newUser);
-      await redisClient.set("User" + newUser._id.toString(), hashing);
+      await redisClient.set("User" + newUser.firebaseUid.toString(), hashing);
       let allUsers = await redisClient.get("allUsers");
-      let updateCache: [] = []; 
       if (!allUsers) {
         try {
           await redisClient.set("allUsers", JSON.stringify([hashing]));
@@ -77,9 +76,16 @@ module.exports = {
     }
   },
 
-  async getAllUsers() {
+  async getAllUsers(firebaseUid) {
+    let allUsers = null;
     try {
-      await redisClient.get("User" + newUser._id.toString(), hashing);
+      allUsers = await redisClient.get("allUsers");
+    }
+    catch (e) {
+      throw "error with reddis"
+    }
+    if (allUsers) {
+      allUsers.indexOf({firebaseUid: })
     }
 
     try {
