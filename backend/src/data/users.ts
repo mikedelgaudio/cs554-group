@@ -1,22 +1,22 @@
 import { redisClient } from "../config/redisClient";
 import {
+  SocialMediaItem,
   User,
   UserDislikeItem,
   UserLikeItem,
-  SocialMediaItem,
 } from "./interfaces";
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-  return 'name' in obj;
+  return "name" in obj;
 }
 function isAUserLikeItem(obj: any): obj is UserLikeItem {
-  return 'name' in obj;
+  return "name" in obj;
 }
 function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-  return 'profileURL' in obj;
+  return "profileURL" in obj;
 }
 module.exports = {
   isASocialMediaItem,
@@ -43,10 +43,10 @@ module.exports = {
     }
     let newUser: User = {
       _id: new ObjectId(),
-      firebaseUid: firebaseUid,
-      username: username,
-      firstName: firstName,
-      lastName: lastName,
+      firebaseUid,
+      username,
+      firstName,
+      lastName,
       profileImage: "",
       contactInfo: { email: email },
       socialMedia: [],
@@ -54,7 +54,7 @@ module.exports = {
       dislikes: [],
       favoritedUsers: [],
     };
-    // console.log(newUser);
+    console.log(newUser);
     let newInsertInformation = await userCollection.insertOne(newUser);
     if (newInsertInformation.insertedCount == 0) {
       throw "this didn't work";
@@ -82,31 +82,31 @@ module.exports = {
   },
 
   async getAllUsers(firebaseUid: string) {
-    let allUsers = [] as any[];
+    const filterCurrentUser = (users: User[]) => {
+      return users?.filter((user: User) => user.firebaseUid !== firebaseUid);
+    };
+
     try {
-      allUsers = await redisClient.lRange("allUsers", 0, -1);
+      const allUsers = await redisClient.lRange("allUsers", 0, -1);
+      if (allUsers.length > 0) {
+        return filterCurrentUser(allUsers.map(x => JSON.parse(x)));
+      }
     } catch (e) {
       throw "error with reddis";
     }
-    if (allUsers.length > 0) {
-      allUsers = allUsers.map(x => JSON.parse(x));
-      let notCurrent = allUsers.filter(x => {
-        return x.firebaseUid != firebaseUid;
-      });
 
-      return notCurrent;
-    }
-    else {
     try {
       let userCollection = await users();
       let userList: User[] = await userCollection.find().toArray();
-      userList.map(x => redisClient.lPush("allUsers", JSON.stringify(x)));
-      // console.log(userList)
-      return userList;
+
+      for (let i = 0; i < userList.length; i++) {
+        await redisClient.lPush("allUsers", JSON.stringify(userList[i]));
+      }
+
+      return filterCurrentUser(userList);
     } catch (e) {
       throw "Could not get users.";
     }
-  }
   },
 
   async getOneUser(firebaseUid: string) {
@@ -125,9 +125,8 @@ module.exports = {
         let userList = await userCollection.findOne({
           firebaseUid: firebaseUid,
         });
-        console.log("here1230978");
-        // console.log(userList)
-        await redisClient.set("User"+firebaseUid, JSON.stringify(userList))
+        await redisClient.set("User"+firebaseUid, JSON.stringify(userList));
+
         return userList;
       } catch (e) {
         throw new Error("Could not get user.");
@@ -152,26 +151,23 @@ module.exports = {
   // },
 
   async getFavoritedUsers(firebaseUid: string) {
-    let answer: any[] = [];
-    let cached = await redisClient.get("favorite" + firebaseUid.toString());
+    let cached = await redisClient.lRange("favorite" + firebaseUid.toString(), 0, -1);
     if (cached) {
-      return JSON.parse(cached);
       console.log(cached);
-    }
-    else {
-    try {
-      let userList = await this.getOneUser(firebaseUid);
-      let fav = userList.favoritedUsers;
-      for (let i = 0; i < fav.length; i++) {
-        redisClient.lPush("favorite"+ firebaseUid, fav[i]);
-      }
-      let flattened = JSON.stringify(answer);
-      return fav;
-    } catch (e) {
-      throw new Error("Could not get favorited users.");
-    }
-  }
-  },
+      return cached;
+    }else{
+      try {
+        let userCollection = await users();
+        let userList = await userCollection.findOne({ firebaseUid: firebaseUid });
+        let favoriteArr = userList.favoritedUsers;
+        for(let i = 0; i<favoriteArr.length; i++){
+          await redisClient.lPush("favorite" + firebaseUid, favoriteArr[i]);
+        }
+        return favoriteArr;
+      } catch (e) {
+        throw new Error("Could not get favorited users.");
+  }}
+},
 
   async patchUser(user: User, firebaseUid: string) {
     const userObj = {} as User;
@@ -246,15 +242,42 @@ module.exports = {
       if (!Array.isArray(user.favoritedUsers)) {
         throw "Updated favorites must be a valid array";
       } else {
+        let oldArr = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
+        let favName = "favorite" + firebaseUid;
+        for(let i = 0; i<oldArr.length; i++){
+          await redisClient.lRem(favName,0, oldArr[i] )
+        }
+        //Unfavoriting something deletes all the IDs
         for (let i = 0; i < user.favoritedUsers.length; i++) {
           if (typeof user.favoritedUsers[i] != "string") {
             throw "Favorite values in array must be a strings";
           }
+         await redisClient.lPush(favName, user.favoritedUsers[i]);
         }
-        userObj.favoritedUsers = user.favoritedUsers;
+          userObj.favoritedUsers = user.favoritedUsers;
+        }
       }
-    }
 
+      let holder = await redisClient.get("User"+firebaseUid);
+      if(holder){
+        //Reisbackend updates
+        let newHolder: User = JSON.parse(holder);
+        let newRedisHolder = JSON.stringify(Object.assign(newHolder, userObj));
+        await redisClient.set("User" + firebaseUid, newRedisHolder)
+      }
+
+      let allUsers = await redisClient.lRange("allUsers", 0, -1);
+      if(allUsers){
+        for(let i = 0; i<allUsers.length; i++){
+          let temp: User = JSON.parse(allUsers[i]);
+          if(temp["firebaseUid"] === firebaseUid){
+            await redisClient.lRem("allUsers", 0, allUsers[i]);
+            let updatedAllUserObj = JSON.stringify(Object.assign(temp, userObj));
+            await redisClient.lPush("allUsers", updatedAllUserObj)
+          }
+        }
+      }
+    
     let userCollection = await users();
 
     const updateUser = await userCollection.updateOne(
