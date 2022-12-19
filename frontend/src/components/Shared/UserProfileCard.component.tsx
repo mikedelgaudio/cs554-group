@@ -11,6 +11,7 @@ import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
 import { postRequest } from "../../utils/api.util";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
+import { Link } from "react-router-dom";
 
 const UserProfileCard = ({
   id,
@@ -98,25 +99,28 @@ const UserProfileCard = ({
         <Loading />
       ) : (
         <div className="bg-slate-200 p-6 flex rounded-xl shadow-md gap-6 flex-col md:flex-row">
-          <img
-            className="object-cover w-40 h-40 lg:w-[16rem] lg:h-[16rem] rounded-2xl"
-            height={256}
-            width={256}
-            loading="lazy"
-            src={user?.profileImage || noImg}
-            alt={`${user?.firstName ?? "N/A"}'s profile`}
-          />
-
+          <Link to={`/profile/${id}`}>
+            <img
+              className="max-w-none w-40 h-40 lg:w-[16rem] lg:h-[16rem] rounded-2xl"
+              height={256}
+              width={256}
+              loading="lazy"
+              src={user?.profileImage || noImg}
+              alt={`${user?.firstName ?? "N/A"}'s profile`}
+            />
+          </Link>
           <div className="flex flex-col w-full gap-6">
             {/* <!--Header--> */}
-            <div className="flex items-center justify-between  border-b-2 border-slate-600 pb-4">
-              <div className="leading-3">
-                <h2 className="text-2xl font-bold text-slate-900">
-                  {user?.firstName ?? "N/A"} {user?.lastName ?? "N/A"}
-                </h2>
-                <p>{user?.contactInfo?.occupation ?? "No occupation"}</p>
-              </div>
 
+            <div className="flex items-center justify-between  border-b-2 border-slate-600 pb-4">
+              <Link to={`/profile/${id}`}>
+                <div className="leading-3">
+                  <h2 className="text-2xl font-bold text-slate-900">
+                    {user?.firstName ?? "N/A"} {user?.lastName ?? "N/A"}
+                  </h2>
+                  <p>{user?.contactInfo?.occupation ?? "No occupation"}</p>
+                </div>
+              </Link>
               {/* Heart Icon */}
               <div>
                 <svg id="heart" height="0" width="0">

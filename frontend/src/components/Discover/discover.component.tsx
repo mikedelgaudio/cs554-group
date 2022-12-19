@@ -19,7 +19,9 @@ const Discover = () => {
     async function fetchData() {
       setLoading(true);
       try {
-        const allUsersData = await axios.get(`http://localhost:3001/users/${currentUser?.uid}`);
+        const allUsersData = await axios.get(
+          `http://localhost:3001/users/${currentUser?.uid}`,
+        );
 
         // Filter current user
         const filteredUsers = allUsersData.data.filter(
