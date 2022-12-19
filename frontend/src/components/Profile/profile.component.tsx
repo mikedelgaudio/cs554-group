@@ -31,6 +31,10 @@ const Profile = () => {
   const [user, setUser] = useState<User>();
   const [currentUserState, setCurrentUser] = useState<User>();
   const [favorited, setFavorited] = useState<boolean>(false);
+  const [hasSocialMedia, setHasSocialMeda] = useState<boolean>(false);
+  const [hasLikes, setHasLikes] = useState<boolean>(false);
+  const [hasDislikes, setHasDislikes] = useState<boolean>(false);
+  const [hasFavoritedUsers, setHasFavoritedUsers] = useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   const url = 'http://localhost:3001/users/profile/' + params.id;
@@ -43,6 +47,18 @@ const Profile = () => {
         const { data: currentUserData } = await axios.get(url2);
         setUser(userData);
         setCurrentUser(currentUserData);
+        if (userData.socialMedia.length > 0) {
+          setHasSocialMeda(true);
+        }
+        if (userData.likes.length > 0) {
+          setHasLikes(true);
+        }
+        if (userData.dislikes.length > 0) {
+          setHasDislikes(true);
+        }
+        if (userData.favoritedUsers.length > 0) {
+          setHasFavoritedUsers(true);
+        }
         if (
           userData.favoritedUsers.find(
             (favoritedUser: { id: any }) => favoritedUser.id === userData.id,
@@ -391,7 +407,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="socialMediaURL"
-            placeholder="google.com"
+            placeholder="instagram.com/gogo.the.gorilla.dnt/"
           />
         </label>
         <button
@@ -549,19 +565,34 @@ const Profile = () => {
       </h2>
 
       {/* Profile Image */}
-      <img src={user?.profileImage} alt="Profile Image" />
+      <img src={user?.profileImage} alt="Profile Image" className='w-80'/>
 
       {/* Contact Info (phone number, email, website, current role) */}
-      <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
+      { user?.contactInfo.phoneNumber ? 
+        (
+          <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
+        ) : null
+      }
       <p>Email: {user?.contactInfo.email}</p>
-      <p>
-        Website: <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a>
-      </p>
-      <p>Current Role: {user?.contactInfo.occupation}</p>
+      { user?.contactInfo.website ?
+        (
+          <p>Website: <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a></p>
+        ) : null
+      }
+      { user?.contactInfo.occupation ?
+        (
+          <p>Current Role: {user?.contactInfo.occupation}</p>
+        ) : null
+      }
       <br />
 
       {/* Social Media */}
-      <p>Social Media: </p>
+      {/* if user.socialMedia array length is 0 */}
+      {hasSocialMedia ?
+        (
+        <p>Social Media: </p>
+        ) : null
+      }
       {user?.socialMedia ? (
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
@@ -575,7 +606,11 @@ const Profile = () => {
       <br />
 
       {/* Likes */}
-      <p>Likes: </p>
+      {hasLikes ? 
+        (
+          <p>Likes: </p>
+        ) : null
+      }
       {user?.likes ? (
         user?.likes.map(like => (
           <div key={like.id}>
@@ -588,7 +623,11 @@ const Profile = () => {
       <br />
 
       {/* Dislikes */}
-      <p>Dislikes: </p>
+      {hasDislikes ?
+        (
+          <p>Dislikes: </p>
+        ) : null
+      }
       {user?.dislikes ? (
         user?.dislikes.map(dislike => (
           <div key={dislike.id}>
@@ -601,7 +640,11 @@ const Profile = () => {
       <br />
 
       {/* Favorited Users */}
-      <p>Favorited Users: </p>
+      {hasFavoritedUsers ?
+        (
+          <p>Favorited Users: </p>
+        ) : null
+      }
       {user?.favoritedUsers ? (
         user?.favoritedUsers.map(favoriteId => (
           <div key={favoriteId}>
