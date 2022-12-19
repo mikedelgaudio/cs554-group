@@ -61,6 +61,7 @@ const Discover = () => {
               key={user?._id}
               id={user?.firebaseUid}
               isFavorited={!!favorited ?? false}
+              userFavorites={loggedInUser?.favoritedUsers}
             />
           );
         });
