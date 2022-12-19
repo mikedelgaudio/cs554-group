@@ -247,6 +247,7 @@ module.exports = {
     }
 
     if (user.favoritedUsers) {
+      console.log("DO I REACH HERE?")
       console.log(user.favoritedUsers);
       if (!Array.isArray(user.favoritedUsers)) {
         throw "Updated favorites must be a valid array";
@@ -258,6 +259,8 @@ module.exports = {
         }
 
         let oldArr = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
+        console.log("THIS IS CURRENT FAVORITES")
+        console.log(oldArr);
         if(oldArr){
         let favName = "favorite" + firebaseUid;
         if(oldArr.includes(user.favoritedUsers[0])){
@@ -270,8 +273,21 @@ module.exports = {
             await redisClient.lPush(favName, user.favoritedUsers[0]);
             oldArr.push(user.favoritedUsers[0])
           }
-      }
           userObj.favoritedUsers = oldArr;
+      }
+      else{
+        let getOldUser = this.getOneUser(firebaseUid);
+        let oldFavoritedMongo = getOldUser.favoritedUsers;
+        if(oldFavoritedMongo.includes(user.favoritedUsers[0])){
+          let index = oldFavoritedMongo.indexOf(user.favoritedUsers[0]);  
+          if (index !== -1) {
+            oldFavoritedMongo.splice(index, 1);
+          }          
+        }else{
+          oldFavoritedMongo.push(user.favoritedUsers[0])
+        }
+
+      }
         }
       }
 
