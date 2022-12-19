@@ -32,10 +32,7 @@ const Profile = () => {
   const [favorited, setFavorited] = React.useState<boolean>(false);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
-  // const url = 'http://localhost:3001/profile/${params.id}';
-  // const url2 = 'http://localhost:3001/profile/${currentUser?.uid}';
-  const url = `http://localhost:3001/users/profile/${params.id}`;
-  const url2 = `http://localhost:3001/users/1`;
+  const url = 'http://localhost:3001/users/profile/' + params.id;
   useEffect(() => {
     async function getUser() {
       try {
@@ -341,7 +338,7 @@ const Profile = () => {
 
       {/* Delete Social Media */}
       {user?.socialMedia
-        ? // ? user?.socialMedias.map(socialMedia => (
+        ?
           user?.socialMedia.map(socialMedia => (
             <div key={socialMedia.id}>
               <p>
@@ -434,7 +431,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="like"
-            defaultValue="like"
+            defaultValue="Web Programming"
           />
         </label>
         <button
@@ -484,7 +481,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="dislike"
-            defaultValue="dislike"
+            defaultValue="Bugs in my code"
           />
         </label>
         <button
