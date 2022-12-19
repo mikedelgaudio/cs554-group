@@ -23,7 +23,6 @@ import {
   deleteLike,
   deleteSocialMedia,
 } from "./helper";
-import "./profile.css";
 
 const Profile = () => {
   useTitle("Profile - DuckedIn");
@@ -71,10 +70,10 @@ const Profile = () => {
 
   // Types of Views
   const loggedInLayout = (
-    <>
+    <div className="flex gap-5 flex-col">
       {/* Form to edit Username */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -87,21 +86,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Username:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="username"
             defaultValue={user?.username}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to edit First Name */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -114,21 +119,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           First Name:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="firstName"
             defaultValue={user?.firstName}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to edit Last Name */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -141,21 +152,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Last Name:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="lastName"
             defaultValue={user?.lastName}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to Edit Profile Image URL */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -172,21 +189,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Profile Image URL:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="profileImageURL"
             defaultValue={user?.profileImage}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to Edit Phone Number (phone number, email, website, current role) */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -199,21 +222,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Phone Number:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="phoneNumber"
             defaultValue={user?.contactInfo.phoneNumber}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to Edit Email */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -226,21 +255,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Email:
           <input
-            className="profileInput"
-            type="text"
+            className="border border-slate-400 p-2 rounded-md"
+            type="email"
             name="email"
             defaultValue={user?.contactInfo.email}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to Edit Website */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -253,22 +288,27 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Website:
-          {/* <input className='profileInput' type='text' name='website' defaultValue={user?.contactInfo.personalWebsite}/> */}
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="website"
             defaultValue={user?.contactInfo.website}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to Edit Current Role */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -281,21 +321,25 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Current Role:
-          {/* <input className='profileInput' type='text' name='currentRole' defaultValue={user?.contactInfo.currentRole}/> */}
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="currentRole"
             defaultValue={user?.contactInfo.occupation}
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Delete Social Media */}
-      {/* {user?.socialMedias */}
       {user?.socialMedia
         ? // ? user?.socialMedias.map(socialMedia => (
           user?.socialMedia.map(socialMedia => (
@@ -317,6 +361,7 @@ const Profile = () => {
 
       {/* Add Social Media */}
       <form
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -333,16 +378,22 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Social Media URL:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="socialMediaURL"
             defaultValue="google.com"
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Delete Likes */}
@@ -364,6 +415,7 @@ const Profile = () => {
 
       {/* Add user? Like */}
       <form
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -376,16 +428,22 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Like:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="like"
             defaultValue="like"
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Delete Dislike */}
@@ -407,7 +465,7 @@ const Profile = () => {
 
       {/* Add Dislike */}
       <form
-        className="profileForm"
+        className="flex gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -420,16 +478,22 @@ const Profile = () => {
           }
         }}
       >
-        <label>
+        <label className="flex items-center gap-3">
           Dislike:
           <input
-            className="profileInput"
+            className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="dislike"
             defaultValue="dislike"
           />
         </label>
-        <input className="profileSubmit" type="submit" value="Submit" />
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
       </form>
 
       {/* Form to delete a favorited user? */}
@@ -448,7 +512,7 @@ const Profile = () => {
             </div>
           ))
         : null}
-    </>
+    </div>
   );
   const viewingLayout = (
     <>
