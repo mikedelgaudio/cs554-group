@@ -64,7 +64,7 @@ module.exports = {
       let allUsers = await redisClient.lRange("allUsers",0,-1);
       if (!allUsers) {
         try {
-          await redisClient.lPush("allUsers", JSON.stringify(hashing));
+          await redisClient.lPush("allUsers", hashing);
           console.log("addedUserList")
         }
         catch (e) {
