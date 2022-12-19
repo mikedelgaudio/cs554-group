@@ -32,14 +32,14 @@ module.exports = {
   ) {
     username = username.toLowerCase();
     if (!username || !email || !firstName || !lastName || !firebaseUid) {
-      throw new Error("bad inputs");
+      throw "bad inputs";
     }
     let userCollection = await users();
     const userList = await userCollection
       .find({ username: username })
       .toArray();
     if (userList.length > 0) {
-      throw new Error("that username is already in use");
+      throw "that username is already in use";
     }
     let newUser: User = {
       _id: new ObjectId(),
@@ -57,25 +57,69 @@ module.exports = {
     console.log(newUser);
     let newInsertInformation = await userCollection.insertOne(newUser);
     if (newInsertInformation.insertedCount == 0) {
-      throw new Error("this didn't work");
+      throw "this didn't work";
     } else {
       let hashing = JSON.stringify(newUser);
-      await redisClient.set("User" + newUser._id.toString(), hashing);
+      await redisClient.set("User" + newUser.firebaseUid, hashing);
+      let allUsers = await redisClient.lRange("allUsers",0,-1);
+      if (!allUsers) {
+        try {
+          await redisClient.lPush("allUsers", hashing);
+          console.log("addedUserList")
+        }
+        catch (e) {
+          throw "Reddis not adding"
+        }
+      } else {
+        try {
+            await redisClient.lPush("allUsers", hashing);
+            console.log("pushed more in");
+          }
+          catch (e) {
+            throw "Reddis not adding"
+          }
+      }
       return newUser;
     }
   },
 
-  async getAllUsers() {
+  async getAllUsers(firebaseUid: string) {
+    let allUsers = null;
+    try {
+      allUsers = await redisClient.lRange("allUsers", 0, -1);
+    }
+    catch (e) {
+      throw "error with reddis"
+    }
+    if (allUsers) {
+      allUsers = allUsers.map((x) => JSON.parse(x));
+      let notCurrent = allUsers.filter(x => {return x.firebaseUid != firebaseUid});
+      console.log(notCurrent)
+      return notCurrent;
+    }
+
     try {
       let userCollection = await users();
       let userList = await userCollection.find().toArray();
       return userList;
     } catch (e) {
-      throw new Error("Could not get users.");
+      throw "Could not get users.";
     }
   },
 
   async getOneUser(firebaseUid: string) {
+    let holder = null;
+    try {
+      holder = await redisClient.get("User"+firebaseUid);
+    }
+    catch (e) {
+      throw e;
+    }
+    if (holder) {
+      holder = JSON.parse(holder);
+      return holder;
+    }
+    else {
     try {
       let userCollection = await users();
       let userList = await userCollection.findOne({ firebaseUid: firebaseUid });
@@ -83,6 +127,7 @@ module.exports = {
     } catch (e) {
       throw new Error("Could not get user.");
     }
+  }
   },
 
   // No plans for this

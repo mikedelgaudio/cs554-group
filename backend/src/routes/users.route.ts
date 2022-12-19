@@ -17,6 +17,21 @@ function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
     return 'profileURL' in obj && 'id' in obj;
   }
 usersRouter.post("/register", async (req: Request, res: Response) => {
+  if (!req.body.username || typeof req.body.username !== "string") {
+    throw "add username as a parameter"
+  }
+  if (!req.body.email || typeof req.body.email !== "string") {
+    throw "add email as a parameter"
+  }
+  if (!req.body.firstName || typeof req.body.lastName !== "string") {
+    throw "add firstName as a parameter"
+  }
+  if (!req.body.lastName || typeof req.body.lastName !== "string") {
+    throw "add lastName as a parameter"
+  }
+  if (!req.body.firebaseUid || typeof req.body.firebaseUid !== "string") {
+    throw "add uid as a parameter"
+  }
   try {
     const { username, email, firstName, lastName, firebaseUid } = req.body;
     const response = await data.createUser(
@@ -35,6 +50,9 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 usersRouter.get(
   "/profile/:firebaseUid",
   async (req: Request, res: Response) => {
+    if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
+      throw "add uid as a parameter"
+    }
     const firebaseUid = req.params.firebaseUid;
     try {
       let users = await data.getOneUser(firebaseUid);
@@ -61,6 +79,9 @@ usersRouter.get(
   "/favorited/:firebaseUid",
   checkAuth,
   async (req: Request, res: Response) => {
+    if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
+      throw "add uid as a parameter"
+    }
     let firebaseUid = req.params.firebaseUid;
     let favorites;
     try {
@@ -77,6 +98,9 @@ usersRouter.post(
   "/:firebaseUid/editUser",
   checkAuth,
   async (req: Request, res: Response) => {
+    if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
+      throw "add uid as a parameter"
+    }
     try {
       let firebaseUid = req.params.firebaseUid;
 
@@ -220,9 +244,12 @@ usersRouter.post(
   }
 );
 
-usersRouter.get("/", async (req: Request, res: Response) => {
+usersRouter.get("/:firebaseUid", async (req: Request, res: Response) => {
+  if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
+    throw "add uid as a parameter"
+  }
   try {
-    let users = await data.getAllUsers();
+    let users = await data.getAllUsers(req.params.firebaseUid);
     return res.json(users);
   } catch (e) {
     res.status(404).json({ error: e });
