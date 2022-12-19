@@ -106,23 +106,23 @@ export const changePhoneNumber = async (currentUser: any, newPhoneNumber: string
 }
 
 // Change Email
-export const changeEmail = async (currentUser: any, newEmail: string) => {
-    const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
-    user.data.contactInfo.email = newEmail;
-    try {
-        if (currentUser) {
-            await postRequest(
-                `http://localhost:3001/users/${currentUser.uid}/editUser`,
-                {
-                    contactInfo: user.data.contactInfo,
-                },
-                currentUser,
-            );
-        }
-    } catch (e: any) {
-        console.log(e);
-    }
-}
+// export const changeEmail = async (currentUser: any, newEmail: string) => {
+//     const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
+//     user.data.contactInfo.email = newEmail;
+//     try {
+//         if (currentUser) {
+//             await postRequest(
+//                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
+//                 {
+//                     contactInfo: user.data.contactInfo,
+//                 },
+//                 currentUser,
+//             );
+//         }
+//     } catch (e: any) {
+//         console.log(e);
+//     }
+// }
 
 // Change Website
 export const changeWebsite = async (currentUser: any, newWebsite: string) => {

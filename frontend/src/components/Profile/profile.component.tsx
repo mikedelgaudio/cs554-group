@@ -12,7 +12,7 @@ import {
   addDislike,
   addLike,
   addSocialMedia,
-  changeEmail,
+  // changeEmail,
   changeFirstName,
   changeLastName,
   changeOccupation,
@@ -312,7 +312,7 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Form to Edit Email */}
+      {/* Form to Edit Email
       <form
         className="flex gap-6"
         onSubmit={event => {
@@ -343,7 +343,7 @@ const Profile = () => {
         >
           Submit
         </button>
-      </form>
+      </form> */}
 
       {/* Form to Edit Website */}
       <form
