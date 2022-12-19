@@ -641,7 +641,7 @@ const Profile = () => {
       <br />
 
       {/* Favorited Users */}
-      {hasFavoritedUsers ?
+      {/* {hasFavoritedUsers ?
         (
           <p>Favorited Users: </p>
         ) : null
@@ -656,7 +656,7 @@ const Profile = () => {
       ) : (
         <p>No Favorited Users</p>
       )}
-      <br />
+      <br /> */}
 
       {/* Heart Icon */}
       <div>
