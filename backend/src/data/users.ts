@@ -143,7 +143,11 @@ module.exports = {
         if(!isASocialMediaItem(user.socialMedia[i])){
           throw new Error("Not a valid Social Media Item");
         }
+        if(!user.socialMedia[i]["id"]){
+            user.socialMedia[i]["id"] = ObjectId();
+        }
       }
+
       userObj.socialMedia = user.socialMedia;
     }else{
         throw new Error("Must be Social Media Array");
@@ -156,6 +160,9 @@ module.exports = {
         if(!isAUserLikeItem(user.likes[i])){
           throw new Error("Not a valid Like Item");
         }
+        if(!user.likes[i]["id"]){
+          user.likes[i]["id"] = ObjectId();
+      }
       }
       userObj.likes = user.likes;
     }else{
@@ -169,6 +176,10 @@ module.exports = {
           if(!isAUserDislikeItem(user.dislikes[i])){
             throw new Error("Not a valid DislikeItem");
           }
+
+          if(!user.dislikes[i]["id"]){
+            user.dislikes[i]["id"] = ObjectId();
+        }
         }
         userObj.dislikes = user.dislikes;
       }else{

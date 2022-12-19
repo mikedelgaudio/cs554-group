@@ -4,6 +4,7 @@ import { checkAuth } from "../middleware/token.middleware";
 import express, { Request, Response, Router } from "express";
 import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "../data/interfaces";
 let data = require("../data/users");
+import ObjectId from "mongodb";
 
 export const usersRouter: Router = express.Router();
 
@@ -159,6 +160,7 @@ usersRouter.post(
                     .status(400)
                     .json({ error: "Social medias in array must be valid type" });                    }
                 }
+          
                 userObj.socialMedia = req.body.socialMedia;  
         }
       }
