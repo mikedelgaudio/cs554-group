@@ -80,7 +80,7 @@ module.exports = {
     }
   },
 
-  async getAllUsers(firebaseUid: any) {
+  async getAllUsers(firebaseUid: string) {
     let allUsers = null;
     try {
       allUsers = await redisClient.lRange("allUsers", 0, -1);
@@ -88,10 +88,10 @@ module.exports = {
     catch (e) {
       throw "error with reddis"
     }
-    console.log("here")
     if (allUsers) {
       allUsers = allUsers.map((x) => JSON.parse(x));
-      let index = allUsers.indexOf({"firebaseUid": firebaseUid});
+      let index = allUsers.findIndex(x => {return x.firebaseUid == firebaseUid});
+      console.log(index)
       let newAllUsers = allUsers.splice(index);
       return newAllUsers;
     }
