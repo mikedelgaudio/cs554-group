@@ -8,7 +8,7 @@ export interface IAuthReq extends Request {
 export const checkAuth = async (
   req: IAuthReq,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     if (!req.headers.token) throw new Error("Unauthorized");

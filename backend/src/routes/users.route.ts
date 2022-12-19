@@ -2,36 +2,41 @@ const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 import { checkAuth } from "../middleware/token.middleware";
 import express, { Request, Response, Router } from "express";
-import { User, UserDislikeItem, UserLikeItem, SocialMediaItem } from "../data/interfaces";
+import {
+  User,
+  UserDislikeItem,
+  UserLikeItem,
+  SocialMediaItem,
+} from "../data/interfaces";
 let data = require("../data/users");
 import ObjectId from "mongodb";
 
 export const usersRouter: Router = express.Router();
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-    return  'name' in obj;
-  }
-  function isAUserLikeItem(obj: any): obj is UserLikeItem {
-    return 'name' in obj;
-  }
-  function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-    return 'profileURL' in obj;
-  }
+  return "id" in obj && "name" in obj;
+}
+function isAUserLikeItem(obj: any): obj is UserLikeItem {
+  return "id" in obj && "name" in obj;
+}
+function isASocialMediaItem(obj: any): obj is SocialMediaItem {
+  return "profileURL" in obj && "id" in obj;
+}
 usersRouter.post("/register", async (req: Request, res: Response) => {
   if (!req.body.username || typeof req.body.username !== "string") {
-    throw "add username as a parameter"
+    throw "add username as a parameter";
   }
   if (!req.body.email || typeof req.body.email !== "string") {
-    throw "add email as a parameter"
+    throw "add email as a parameter";
   }
   if (!req.body.firstName || typeof req.body.lastName !== "string") {
-    throw "add firstName as a parameter"
+    throw "add firstName as a parameter";
   }
   if (!req.body.lastName || typeof req.body.lastName !== "string") {
-    throw "add lastName as a parameter"
+    throw "add lastName as a parameter";
   }
   if (!req.body.firebaseUid || typeof req.body.firebaseUid !== "string") {
-    throw "add uid as a parameter"
+    throw "add uid as a parameter";
   }
   try {
     const { username, email, firstName, lastName, firebaseUid } = req.body;
@@ -40,7 +45,7 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
       email,
       firstName,
       lastName,
-      firebaseUid
+      firebaseUid,
     );
     res.json(response);
   } catch (e) {
@@ -52,7 +57,7 @@ usersRouter.get(
   "/profile/:firebaseUid",
   async (req: Request, res: Response) => {
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
-      throw "add uid as a parameter"
+      throw "add uid as a parameter";
     }
     const firebaseUid = req.params.firebaseUid;
     try {
@@ -61,7 +66,7 @@ usersRouter.get(
     } catch (e) {
       res.status(404).json({ error: e });
     }
-  }
+  },
 );
 
 // No plans for this
@@ -81,7 +86,7 @@ usersRouter.get(
   checkAuth,
   async (req: Request, res: Response) => {
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
-      throw "add uid as a parameter"
+      throw "add uid as a parameter";
     }
     let firebaseUid = req.params.firebaseUid;
     let favorites;
@@ -92,7 +97,7 @@ usersRouter.get(
       console.log(e);
       res.status(400).json({ error: e });
     }
-  }
+  },
 );
 
 usersRouter.post(
@@ -100,7 +105,7 @@ usersRouter.post(
   checkAuth,
   async (req: Request, res: Response) => {
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
-      throw "add uid as a parameter"
+      throw "add uid as a parameter";
     }
     try {
       let firebaseUid = req.params.firebaseUid;
@@ -148,12 +153,7 @@ usersRouter.post(
         }
       }
       if (req.body.contactInfo) {
-        let contactFields = [
-          "phoneNumber",
-          "email",
-          "website",
-          "occupation",
-        ];
+        let contactFields = ["phoneNumber", "email", "website", "occupation"];
 
         for (const [k, v] of Object.entries(req.body.contactInfo)) {
           if (!contactFields.includes(k)) {
@@ -176,16 +176,16 @@ usersRouter.post(
             .status(400)
             .json({ error: "Updated social medias must be a valid array" });
         } else {
-          console.log("EDSD")
-            for(let i = 0; i<req.body.socialMedia.length; i++){
-              console.log("SDF")
-                if(!isASocialMediaItem(req.body.socialMedia[i])){
-                    return res
-                    .status(400)
-                    .json({ error: "Social medias in array must be valid type" });                    }
-                }
-          
-                userObj.socialMedia = req.body.socialMedia;  
+          console.log("EDSD");
+          for (let i = 0; i < req.body.socialMedia.length; i++) {
+            console.log("SDF");
+            if (!isASocialMediaItem(req.body.socialMedia[i])) {
+              return res
+                .status(400)
+                .json({ error: "Social medias in array must be valid type" });
+            }
+          }
+          userObj.socialMedia = req.body.socialMedia;
         }
       }
       if (req.body.likes) {
@@ -194,13 +194,14 @@ usersRouter.post(
             .status(400)
             .json({ error: "Updated Likes must be a valid array" });
         } else {
-            for(let i = 0; i<req.body.likes.length; i++){
-                if(!isAUserLikeItem(req.body.likes[i])){
-                    return res
-                    .status(400)
-                    .json({ error: "Likes in array must be valid type" });                    }
-                }
-                userObj.likes = req.body.likes;  
+          for (let i = 0; i < req.body.likes.length; i++) {
+            if (!isAUserLikeItem(req.body.likes[i])) {
+              return res
+                .status(400)
+                .json({ error: "Likes in array must be valid type" });
+            }
+          }
+          userObj.likes = req.body.likes;
         }
       }
       if (req.body.dislikes) {
@@ -209,28 +210,29 @@ usersRouter.post(
             .status(400)
             .json({ error: "Updated dislikes must be a valid array" });
         } else {
-            for(let i = 0; i<req.body.dislikes.length; i++){
-                if(!isAUserDislikeItem(req.body.dislikes[i])){
-                    return res
-                    .status(400)
-                    .json({ error: "Dislikes in array must be valid type" });                    }
-                }
-                userObj.dislikes = req.body.dislikes;  
+          for (let i = 0; i < req.body.dislikes.length; i++) {
+            if (!isAUserDislikeItem(req.body.dislikes[i])) {
+              return res
+                .status(400)
+                .json({ error: "Dislikes in array must be valid type" });
+            }
+          }
+          userObj.dislikes = req.body.dislikes;
         }
       }
       console.log(req.body);
-      if(req.body.favoritedUsers){
+      if (req.body.favoritedUsers) {
         console.log(req.body.favoritedUsers);
-        if(!Array.isArray(req.body.favoritedUsers)){
+        if (!Array.isArray(req.body.favoritedUsers)) {
           return res
-          .status(400)
-          .json({ error: "Updated favorites must be a valid array" });
-        }else{
-          for(let i=0; i<req.body.favoritedUsers; i++){
-            if(typeof(req.body.favoritedUsers[i]) != 'string'){
+            .status(400)
+            .json({ error: "Updated favorites must be a valid array" });
+        } else {
+          for (let i = 0; i < req.body.favoritedUsers; i++) {
+            if (typeof req.body.favoritedUsers[i] != "string") {
               return res
-              .status(400)
-              .json({ error: "Favorite values in array must be a strings" });
+                .status(400)
+                .json({ error: "Favorite values in array must be a strings" });
             }
           }
           userObj.favoritedUsers = req.body.favoritedUsers;
@@ -238,20 +240,22 @@ usersRouter.post(
       }
 
       let answer = await data.patchUser(userObj, firebaseUid);
-  
+
       return res.json(answer);
     } catch (e) {
       return res.status(404).json({ error: e });
     }
-  }
+  },
 );
 
 usersRouter.get("/:firebaseUid", async (req: Request, res: Response) => {
+  console.log("eeee");
   if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
-    throw "add uid as a parameter"
+    throw "add uid as a parameter";
   }
   try {
     let users = await data.getAllUsers(req.params.firebaseUid);
+    console.log(users);
     return res.json(users);
   } catch (e) {
     res.status(404).json({ error: e });
