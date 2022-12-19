@@ -9,6 +9,7 @@ import {
   SocialMediaItem,
 } from "../data/interfaces";
 let data = require("../data/users");
+import ObjectId from "mongodb";
 
 export const usersRouter: Router = express.Router();
 

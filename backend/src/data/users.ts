@@ -11,13 +11,13 @@ const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-  return "id" in obj && "name" in obj;
+  return 'name' in obj;
 }
 function isAUserLikeItem(obj: any): obj is UserLikeItem {
-  return "id" in obj && "name" in obj;
+  return 'name' in obj;
 }
 function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-  return "profileURL" in obj && "id" in obj;
+  return 'profileURL' in obj;
 }
 module.exports = {
   isASocialMediaItem,
@@ -188,28 +188,35 @@ module.exports = {
     if (user.contactInfo) {
       userObj.contactInfo = user.contactInfo;
     }
-    if (user.socialMedia) {
-      if (Array.isArray(user.socialMedia)) {
-        for (let i = 0; i < user.socialMedia.length; i++) {
-          if (!isASocialMediaItem(user.socialMedia[i])) {
-            throw new Error("Not a valid Social Media Item");
-          }
+    if(user.socialMedia){
+    if (Array.isArray(user.socialMedia)) {
+      for(let i = 0; i<user.socialMedia.length; i++){
+        if(!isASocialMediaItem(user.socialMedia[i])){
+          throw new Error("Not a valid Social Media Item");
         }
-        userObj.socialMedia = user.socialMedia;
-      } else {
+        if(!user.socialMedia[i]["id"]){
+            user.socialMedia[i]["id"] = ObjectId();
+        }
+      }
+
+      userObj.socialMedia = user.socialMedia;
+    }else{
         throw new Error("Must be Social Media Array");
       }
     }
 
-    if (user.likes) {
-      if (Array.isArray(user.likes)) {
-        for (let i = 0; i < user.likes.length; i++) {
-          if (!isAUserLikeItem(user.likes[i])) {
-            throw new Error("Not a valid Like Item");
-          }
+    if(user.likes){
+    if (Array.isArray(user.likes)) {
+      for(let i = 0; i<user.likes.length; i++){
+        if(!isAUserLikeItem(user.likes[i])){
+          throw new Error("Not a valid Like Item");
         }
-        userObj.likes = user.likes;
-      } else {
+        if(!user.likes[i]["id"]){
+          user.likes[i]["id"] = ObjectId();
+      }
+      }
+      userObj.likes = user.likes;
+    }else{
         throw new Error("Must be Likes Array");
       }
     }
@@ -219,6 +226,10 @@ module.exports = {
           if (!isAUserDislikeItem(user.dislikes[i])) {
             throw new Error("Not a valid DislikeItem");
           }
+
+          if(!user.dislikes[i]["id"]){
+            user.dislikes[i]["id"] = ObjectId();
+        }
         }
         userObj.dislikes = user.dislikes;
       } else {

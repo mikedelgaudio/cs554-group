@@ -44,14 +44,14 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     if (!validString(email) || !validString(password))
       return Promise.reject({ message: "Invalid fields to register" });
 
-    return createUserWithEmailAndPassword(auth, email, password);
+    return await createUserWithEmailAndPassword(auth, email, password);
   };
 
   const login = async (email: string, password: string) => {
     if (!validString(email) || !validString(password))
       return Promise.reject({ message: "Invalid fields to login" });
 
-    return signInWithEmailAndPassword(auth, email, password);
+    return await signInWithEmailAndPassword(auth, email, password);
   };
 
   const updateDisplayName = async (firstName: string, lastName: string) => {

@@ -1,15 +1,15 @@
 export interface SocialMediaItem {
-  id: string;
+  id?: string;
   profileURL: string;
 }
 
 export interface UserLikeItem {
-  id: string;
+  id?: string;
   name: string;
 }
 
 export interface UserDislikeItem {
-  id: string;
+  id?: string;
   name: string;
 }
 
