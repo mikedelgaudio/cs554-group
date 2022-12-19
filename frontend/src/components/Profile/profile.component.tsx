@@ -336,15 +336,15 @@ const Profile = () => {
       </form>
 
       {/* Delete Social Media */}
-      <div >
-        <p>Current Social Media (If Any)</p>
+      <div className="border-2">
+        <p>Current Social Media</p>
         <br/>
         {user?.socialMedia
           ?
             user?.socialMedia.map(socialMedia => (
               <div key={socialMedia?.id}>
                 <p>
-                  <a href={socialMedia?.profileURL}>{socialMedia?.profileURL}</a>
+                  <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
                 </p>
                 <button
                   className="profileButton"
@@ -354,6 +354,7 @@ const Profile = () => {
                 >
                   Delete
                 </button>
+                <br/>
                 <br/>
               </div>
             ))
@@ -400,7 +401,7 @@ const Profile = () => {
 
       {/* Delete Likes */}
       <div className='border-2'>
-        <p>Current Likes (If Any)</p>
+        <p>Current Likes</p>
         <br/>
         {user?.likes
           ? user?.likes.map(like => (
@@ -414,6 +415,7 @@ const Profile = () => {
                 >
                   Delete
                 </button>
+                <br/>
                 <br/>
               </div>
             ))
@@ -455,7 +457,7 @@ const Profile = () => {
 
       {/* Delete Dislike */}
       <div className='border-2'>
-        <p>Current Dislikes (If Any)</p>
+        <p>Current Dislikes</p>
         <br/>
         {user?.dislikes
           ? user?.dislikes.map(dislike => (
@@ -469,6 +471,7 @@ const Profile = () => {
                 >
                   Delete
                 </button>
+                <br/>
                 <br/>
               </div>
             ))
@@ -510,7 +513,7 @@ const Profile = () => {
 
       {/* Form to delete a favorited user? */}
       <div className='border-2'>
-        <p>Current Favorited Users (If Any)</p>
+        <p>Current Favorited Users</p>
         <br/>
         {user?.favoritedUsers
           ? user?.favoritedUsers.map(favoriteId => (
@@ -550,7 +553,7 @@ const Profile = () => {
       <p>Email: {user?.contactInfo.email}</p>
       <p>
         Website:
-        <a href={user?.contactInfo.website}>{user?.contactInfo.website}</a>
+        <a href={`https://${user?.contactInfo?.website}`} target="_blank" rel="noreferrer">{user?.contactInfo?.website}</a>
       </p>
       <p>Current Role: {user?.contactInfo.occupation}</p>
       <br />
@@ -560,7 +563,7 @@ const Profile = () => {
       {user?.socialMedia ? (
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
-            <a href={socialMedia.profileURL}>{socialMedia.profileURL}</a>
+            <a href={`https://${socialMedia.profileURL}`} target="_blank" rel="noreferrer">{socialMedia?.profileURL}</a>
           </div>
         ))
       ) : (
