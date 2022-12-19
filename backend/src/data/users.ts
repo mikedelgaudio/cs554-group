@@ -247,6 +247,7 @@ module.exports = {
         for(let i = 0; i<oldArr.length; i++){
           await redisClient.lRem(favName,0, oldArr[i] )
         }
+        //Unfavoriting something deletes all the IDs
         for (let i = 0; i < user.favoritedUsers.length; i++) {
           if (typeof user.favoritedUsers[i] != "string") {
             throw "Favorite values in array must be a strings";
