@@ -61,26 +61,15 @@ const UserProfileCard = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      let updatedFavoriteList;
-
-      if (favorited) {
-        updatedFavoriteList = userFavorites?.filter(userFid => userFid !== id);
-      } else {
-        userFavorites?.push(id);
-        updatedFavoriteList = userFavorites;
-      }
-
       // TODO Update correct URLdata
       if (currentUser) {
         await postRequest(
           `http://localhost:3001/users/${currentUser.uid}/editUser`,
           {
-            favoritedUsers: updatedFavoriteList,
+            favoritedUsers: [id],
           },
           currentUser,
         );
-        console.log("Am I reached");
-
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {
