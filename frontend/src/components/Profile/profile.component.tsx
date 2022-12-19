@@ -631,7 +631,11 @@ const Profile = () => {
       </h2>
 
       {/* Profile Image */}
-      <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+      {user?.profileImage ? 
+        (
+          <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+        ) : null
+      }
 
       {/* Resume */}
       {user?.resume ? (
