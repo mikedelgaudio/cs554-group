@@ -8,13 +8,13 @@ let data = require("../data/users");
 export const usersRouter: Router = express.Router();
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
-    return 'id' in obj && 'name' in obj;
+    return  'name' in obj;
   }
   function isAUserLikeItem(obj: any): obj is UserLikeItem {
-    return 'id' in obj && 'name' in obj;
+    return 'name' in obj;
   }
   function isASocialMediaItem(obj: any): obj is SocialMediaItem {
-    return 'profileURL' in obj && 'id' in obj;
+    return 'profileURL' in obj;
   }
 usersRouter.post("/register", async (req: Request, res: Response) => {
   try {
