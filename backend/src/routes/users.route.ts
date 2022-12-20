@@ -88,8 +88,12 @@ usersRouter.get(
     let firebaseUid = req.params.firebaseUid;
     let favorites;
     try {
+      let objArr: User[] = [];
       favorites = await data.getFavoritedUsers(firebaseUid);
-      res.json(favorites);
+      for (let i = 0; i < favorites.length; i++) {
+        objArr.push(await data.getOneUser(favorites[i]));
+      }
+      res.json(objArr);
     } catch (e) {
       console.log(e);
       res.status(400).json({ error: e });
@@ -148,6 +152,14 @@ usersRouter.post(
             .json({ error: "Updated profile image must be a valid string" });
         } else {
           userObj.profileImage = req.body.profileImage;
+        }
+      }
+
+      if (req.body.resume) {
+        if (typeof req.body.resume != "string" || !req.body.resume) {
+          return res.status(400).json({ error: "Resume be a valid string" });
+        } else {
+          userObj.resume = req.body.resume;
         }
       }
       if (req.body.contactInfo) {
@@ -220,9 +232,7 @@ usersRouter.post(
           userObj.dislikes = req.body.dislikes;
         }
       }
-      console.log(req.body);
       if (req.body.favoritedUsers) {
-        console.log(req.body.favoritedUsers);
         if (!Array.isArray(req.body.favoritedUsers)) {
           return res
             .status(400)

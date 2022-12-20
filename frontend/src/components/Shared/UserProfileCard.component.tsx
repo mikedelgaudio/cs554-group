@@ -13,15 +13,18 @@ import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
 import { Tag } from "./Tag.component";
+import { Dispatch, SetStateAction } from "react";
 
 const UserProfileCard = ({
   id,
   isFavorited,
-  userFavorites,
+  updateVal,
+  update,
 }: {
   id: string;
   isFavorited: boolean;
-  userFavorites?: string[];
+  updateVal?: number;
+  update?: Dispatch<SetStateAction<any>>;
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -62,26 +65,17 @@ const UserProfileCard = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      let updatedFavoriteList;
-
-      if (favorited) {
-        updatedFavoriteList = userFavorites?.filter(userFid => userFid !== id);
-      } else {
-        userFavorites?.push(id);
-        updatedFavoriteList = userFavorites;
-      }
-
       // TODO Update correct URLdata
       if (currentUser) {
-        await postRequest(
+        const updatedUser = await postRequest(
           `http://localhost:3001/users/${currentUser.uid}/editUser`,
           {
-            favoritedUsers: updatedFavoriteList,
+            favoritedUsers: [id],
           },
           currentUser,
         );
-        console.log("Am I reached");
-
+        console.log("yo! ", updatedUser);
+        if (update) update(id);
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {

@@ -7,25 +7,26 @@ import { User } from "../../models/user.backend.model";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { PageLayout } from "../Shared/PageLayout.component";
 import { Tag } from "../Shared/Tag.component";
+import { Loading } from "../Shared/Loading.component";
+import { postRequest } from "../../utils/api.util";
 import {
   addDislike,
   addLike,
   addSocialMedia,
-  changeEmail,
+  // changeEmail,
   changeFirstName,
   changeLastName,
   changeOccupation,
   changePhoneNumber,
   changeProfilePicture,
+  changeResume,
   changeUsername,
   changeWebsite,
   deleteDislike,
-  deleteFavoritedUser,
   deleteLike,
   deleteSocialMedia,
+  modifyFavorites,
 } from "./helper";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const Profile = () => {
   useTitle("Profile - DuckedIn");
@@ -34,40 +35,78 @@ const Profile = () => {
   const [user, setUser] = useState<User>();
   const [currentUserState, setCurrentUser] = useState<User>();
   const [favorited, setFavorited] = useState<boolean>(false);
+  const [hasSocialMedia, setHasSocialMeda] = useState<boolean>(false);
+  const [hasLikes, setHasLikes] = useState<boolean>(false);
+  const [hasDislikes, setHasDislikes] = useState<boolean>(false);
+  const [hasFavoritedUsers, setHasFavoritedUsers] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
   const url = "http://localhost:3001/users/profile/" + params.id;
   const url2 = "http://localhost:3001/users/profile/" + currentUser?.uid;
   useEffect(() => {
     async function getUser() {
+      setLoading(true);
       try {
         // check if url has data
         const { data: userData } = await axios.get(url);
         const { data: currentUserData } = await axios.get(url2);
         setUser(userData);
         setCurrentUser(currentUserData);
-        if (
-          userData.favoritedUsers.find(
-            (favoritedUser: { id: any }) => favoritedUser.id === userData.id,
-          )
-        ) {
+        console.log(userData);
+        if (userData.socialMedias.length > 0) {
+          setHasSocialMeda(true);
+        }
+        if (userData.likes.length > 0) {
+          setHasLikes(true);
+        }
+        if (userData.dislikes.length > 0) {
+          setHasDislikes(true);
+        }
+        if (userData.favoritedUsers.length > 0) {
+          setHasFavoritedUsers(true);
+        }
+        console.log("hggg ", currentUserData?.favoritedUsers);
+        if (currentUserData?.favoritedUsers?.includes(userData.firebaseUid)) {
           setFavorited(true);
         }
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     }
     getUser();
   }, [url]);
 
   const handleFavoriteToggle = async () => {
     try {
-      // TODO Handle API Call to Toggle Favoriting
-      setFavorited(prev => (prev = !prev));
+      let updatedFavoriteList;
+
+      if (favorited) {
+        updatedFavoriteList = currentUserState?.favoritedUsers?.filter(
+          userFid => userFid !== user?.firebaseUid,
+        );
+      } else {
+        if (user) {
+          currentUserState?.favoritedUsers?.push(user?.firebaseUid);
+          updatedFavoriteList = currentUserState?.favoritedUsers;
+        }
+      }
+      // TODO Update correct URLdata
+      if (currentUser) {
+        await postRequest(
+          `http://localhost:3001/users/${currentUser.uid}/editUser`,
+          {
+            favoritedUsers: updatedFavoriteList,
+          },
+          currentUser,
+        );
+        setFavorited(prev => (prev = !prev));
+      }
     } catch (e) {
-      TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
-      TOAST_SERVICE.error(TOAST_ID, "Failed to update user? favorites", true);
-      TOAST_ID = "ERROR_UPDATING_PROFILE";
+      console.log(e);
+      const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
+      TOAST_SERVICE.error(TOAST_ID, "Failed to update user favorites", true);
     }
   };
 
@@ -82,7 +121,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const username = formData.get("username");
-          if (username !== null && typeof username === "string") {
+          if (username !== "" && typeof username === "string") {
             changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
@@ -115,7 +154,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
-          if (firstName !== null && typeof firstName === "string") {
+          if (firstName !== "" && typeof firstName === "string") {
             changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
@@ -148,7 +187,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
-          if (lastName !== null && typeof lastName === "string") {
+          if (lastName !== "" && typeof lastName === "string") {
             changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
@@ -181,7 +220,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const profileImageURL = formData.get("profileImageURL");
-          if (profileImageURL !== null && typeof profileImageURL === "string") {
+          if (
+            profileImageURL !== null &&
+            profileImageURL !== "" &&
+            typeof profileImageURL === "string"
+          ) {
             changeProfilePicture(currentUser, profileImageURL);
           } else {
             TOAST_SERVICE.error(
@@ -210,6 +253,43 @@ const Profile = () => {
         </button>
       </form>
 
+      {/* Form to Edit Resume */}
+      <form
+        className="flex gap-6"
+        onSubmit={event => {
+          event.preventDefault();
+          const form = event.target as HTMLFormElement;
+          const formData = new FormData(form);
+          const resumeURL = formData.get("resumeURL");
+          if (
+            resumeURL !== null &&
+            resumeURL !== "" &&
+            typeof resumeURL === "string"
+          ) {
+            changeResume(currentUser, resumeURL);
+          } else {
+            TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
+          }
+        }}
+      >
+        <label className="flex items-center gap-3">
+          Resume URL:
+          <input
+            className="border border-slate-400 p-2 rounded-md"
+            type="text"
+            name="resumeURL"
+            defaultValue={currentUserState?.resume}
+          />
+        </label>
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
+      </form>
+
       {/* Form to Edit Phone Number (phone number, email, website, current role) */}
       <form
         className="flex gap-6"
@@ -218,7 +298,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const phoneNumber = formData.get("phoneNumber");
-          if (phoneNumber !== null && typeof phoneNumber === "string") {
+          if (
+            phoneNumber !== null &&
+            phoneNumber !== "" &&
+            typeof phoneNumber === "string"
+          ) {
             changePhoneNumber(currentUser, phoneNumber);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
@@ -243,7 +327,7 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Form to Edit Email */}
+      {/* Form to Edit Email
       <form
         className="flex gap-6"
         onSubmit={event => {
@@ -251,7 +335,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const email = formData.get("email");
-          if (email !== null && typeof email === "string") {
+          if (email !== null && email !== "" && typeof email === "string") {
             changeEmail(currentUser, email);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
@@ -274,7 +358,7 @@ const Profile = () => {
         >
           Submit
         </button>
-      </form>
+      </form> */}
 
       {/* Form to Edit Website */}
       <form
@@ -284,7 +368,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const website = formData.get("website");
-          if (website !== null && typeof website === "string") {
+          if (
+            website !== null &&
+            website !== "" &&
+            typeof website === "string"
+          ) {
             changeWebsite(currentUser, website);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
@@ -317,7 +405,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const currentRole = formData.get("currentRole");
-          if (currentRole !== null && typeof currentRole === "string") {
+          if (
+            currentRole !== null &&
+            currentRole !== "" &&
+            typeof currentRole === "string"
+          ) {
             changeOccupation(currentUser, currentRole);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
@@ -383,7 +475,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
-          if (socialMediaURL !== null && typeof socialMediaURL === "string") {
+          if (
+            socialMediaURL !== null &&
+            socialMediaURL !== "" &&
+            typeof socialMediaURL === "string"
+          ) {
             setUser(await addSocialMedia(currentUser, socialMediaURL));
           } else {
             TOAST_SERVICE.error(
@@ -401,7 +497,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md"
             type="text"
             name="socialMediaURL"
-            placeholder="google.com"
+            placeholder="instagram.com/gogo.the.gorilla.dnt/"
           />
         </label>
         <button
@@ -441,7 +537,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          if (like !== null && typeof like === "string") {
+          if (like !== null && like !== "" && typeof like === "string") {
             setUser(await addLike(currentUser, like));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
@@ -493,7 +589,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
-          if (dislike !== null && typeof dislike === "string") {
+          if (
+            dislike !== null &&
+            dislike !== "" &&
+            typeof dislike === "string"
+          ) {
             setUser(await addDislike(currentUser, dislike));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
@@ -529,7 +629,7 @@ const Profile = () => {
                 <button
                   className="profileButton"
                   onClick={async () => {
-                    setUser(await deleteFavoritedUser(currentUser, favoriteId));
+                    setUser(await modifyFavorites(currentUser, favoriteId));
                   }}
                 >
                   Delete
@@ -541,7 +641,9 @@ const Profile = () => {
       </div>
     </div>
   );
-  const viewingLayout = (
+  const viewingLayout = loading ? (
+    <Loading />
+  ) : (
     <>
       {/* Username */}
       <h1>Username: {user?.username}</h1>
@@ -552,26 +654,45 @@ const Profile = () => {
       </h2>
 
       {/* Profile Image */}
-      <img src={user?.profileImage} alt="Profile Image" />
+      {user?.profileImage ? (
+        <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+      ) : null}
+
+      {/* Resume */}
+      {user?.resume ? (
+        <a href={`https://${user?.resume}`} target="_blank" rel="noreferrer">
+          Resume (Click Here)
+        </a>
+      ) : null}
+      {user?.resume ? <br /> : null}
 
       {/* Contact Info (phone number, email, website, current role) */}
-      <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
+      {user?.contactInfo.phoneNumber ? (
+        <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
+      ) : null}
       <p>Email: {user?.contactInfo.email}</p>
-      <p>
-        Website:{" "}
-        <a
-          href={`https://${user?.contactInfo?.website}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {user?.contactInfo?.website}
-        </a>
-      </p>
-      <p>Current Role: {user?.contactInfo.occupation}</p>
-      <br />
+      {user?.contactInfo.website ? (
+        <p>
+          Website:{" "}
+          <a
+            href={`https://${user?.contactInfo?.website}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {user?.contactInfo?.website}
+          </a>
+        </p>
+      ) : null}
+      {user?.contactInfo.occupation ? (
+        <div>
+          <p>Current Role: {user?.contactInfo.occupation}</p>
+        </div>
+      ) : null}
+      {user?.contactInfo ? <br /> : null}
 
       {/* Social Media */}
-      <p>Social Media: </p>
+      {/* if user.socialMedia array length is 0 */}
+      {hasSocialMedia ? <p>Social Media: </p> : null}
       {user?.socialMedia ? (
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
@@ -588,10 +709,10 @@ const Profile = () => {
       ) : (
         <p>No Social Media</p>
       )}
-      <br />
+      {user?.socialMedia ? <br /> : null}
 
       {/* Likes */}
-      <p>Likes: </p>
+      {hasLikes ? <p>Likes: </p> : null}
       {user?.likes ? (
         user?.likes.map(like => (
           <div key={like.id}>
@@ -601,10 +722,10 @@ const Profile = () => {
       ) : (
         <p>No Likes</p>
       )}
-      <br />
+      {hasLikes ? <br /> : null}
 
       {/* Dislikes */}
-      <p>Dislikes: </p>
+      {hasDislikes ? <p>Dislikes: </p> : null}
       {user?.dislikes ? (
         user?.dislikes.map(dislike => (
           <div key={dislike.id}>
@@ -614,21 +735,24 @@ const Profile = () => {
       ) : (
         <p>No Dislikes</p>
       )}
-      <br />
 
       {/* Favorited Users */}
-      <p>Favorited Users: </p>
-      {user?.favoritedUsers ? (
-        user?.favoritedUsers.map(favoriteId => (
-          <div key={favoriteId}>
-            <p>{favoriteId}</p>
-            <br />
-          </div>
-        ))
-      ) : (
-        <p>No Favorited Users</p>
-      )}
-      <br />
+      {/* {hasFavoritedUsers ?
+          (
+            <p>Favorited Users: </p>
+          ) : null
+        }
+        {user?.favoritedUsers ? (
+          user?.favoritedUsers.map(favoriteId => (
+            <div key={favoriteId}>
+              <p>{favoriteId}</p>
+              <br/>
+            </div>
+          ))
+        ) : (
+          <p>No Favorited Users</p>
+        )}
+        <br /> */}
 
       {/* Heart Icon */}
       <div>

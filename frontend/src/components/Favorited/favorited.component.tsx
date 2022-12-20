@@ -12,6 +12,7 @@ const Favorited = () => {
   useTitle("Favorited - DuckedIn");
   const { currentUser } = useFirebaseAuth();
   const [users, setUsers] = useState<User[]>();
+  const [removing, setRemoving] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const Favorited = () => {
           allUsersData.filter(
             (user: User) => user.firebaseUid !== currentUser?.uid,
           ) ?? [];
-
+        console.log("test ", filteredUsers);
         setUsers(filteredUsers);
       } catch (e: any) {
         const TOAST_ID = "ERROR_LOADING_PROFILES";
@@ -39,7 +40,7 @@ const Favorited = () => {
     }
 
     fetchData();
-  }, []);
+  }, [removing]);
 
   const layout = () => {
     if (loading) {
@@ -49,11 +50,13 @@ const Favorited = () => {
         return <p>No favorited users are found...</p>;
       } else {
         return users?.map((user: User) => {
+          console.log("hello ", user);
           return (
             <UserProfileCard
               key={user?._id}
               id={user?.firebaseUid}
               isFavorited={true}
+              update={setRemoving}
             />
           );
         });
