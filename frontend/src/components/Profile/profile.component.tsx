@@ -440,7 +440,7 @@ const Profile = () => {
               <div key={socialMedia?.id}>
                 <p>
                   <a
-                    href={`https://${socialMedia.profileURL}`}
+                    href={`${socialMedia.profileURL}`}
                     target="_blank"
                     rel="noreferrer"
                   >
