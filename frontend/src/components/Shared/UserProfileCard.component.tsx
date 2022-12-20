@@ -17,11 +17,13 @@ import { Dispatch, SetStateAction } from "react";
 const UserProfileCard = ({
   id,
   isFavorited,
+  updateVal,
   update,
 }: {
   id: string;
   isFavorited: boolean;
-  update: Dispatch<SetStateAction<any>>;
+  updateVal?: number;
+  update?: Dispatch<SetStateAction<any>>;
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -72,7 +74,7 @@ const UserProfileCard = ({
           currentUser,
         );
         console.log("yo! ", updatedUser);
-        if (update) update(true);
+        if (update) update(id);
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {
