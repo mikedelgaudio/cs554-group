@@ -206,7 +206,14 @@ export const addSocialMedia = async (
       return data;
     }
   } catch (e: any) {
+    console.log("FRONTEND I AM HERE")
     console.log(e);
+    if (typeof e == 'string') {
+      throw "please enter a valid link"
+    }
+    else {
+    throw (e);
+    }
   }
 };
 
