@@ -32,7 +32,9 @@ app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
         yield redisClient_1.redisClient.connect();
     }
     catch (e) {
+        // eslint-disable-next-line no-console
         console.error("[REDIS] Error - Unable to connect to Redis");
     }
+    // eslint-disable-next-line no-console
     console.log(`[EXPRESS] Running on port: ${PORT}`);
 }));

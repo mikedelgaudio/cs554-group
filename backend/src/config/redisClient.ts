@@ -1,2 +1,5 @@
 import * as redis from "redis";
-export const redisClient = redis.createClient();
+const REDIS_HOST = process.env?.REDIS_URL || "redis://redis:6379";
+export const redisClient = redis.createClient({
+  url: REDIS_HOST,
+});
