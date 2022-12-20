@@ -501,7 +501,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="socialMediaURL"
-            placeholder="instagram.com/gogo.the.gorilla.dnt/"
+            placeholder="https://instagram.com/gogo.the.gorilla.dnt/"
           />
         </label>
         <button
