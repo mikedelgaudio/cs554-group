@@ -212,7 +212,7 @@ const Profile = () => {
       {/* Form to Edit Profile Image URL */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
@@ -222,7 +222,17 @@ const Profile = () => {
             profileImageURL !== "" &&
             typeof profileImageURL === "string"
           ) {
-            changeProfilePicture(currentUser, profileImageURL);
+            try{
+               await changeProfilePicture(currentUser, profileImageURL);
+            }catch(e){
+              console.log("HERE")
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+            else{
+              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for profile image.", true);
+            }   
+            }
+            
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,

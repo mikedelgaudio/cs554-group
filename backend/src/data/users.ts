@@ -22,6 +22,7 @@ function isAUserLikeItem(obj: any): obj is UserLikeItem {
 function isASocialMediaItem(obj: any): obj is SocialMediaItem {
   return "profileURL" in obj;
 }
+
 module.exports = {
   isASocialMediaItem,
   isAUserDislikeItem,
@@ -196,6 +197,9 @@ module.exports = {
       userObj.lastName = user.lastName;
     }
     if (user.profileImage) {
+      if (!validator.isURL(user.profileImage)) {
+        throw "Please enter a valid link for images."
+      }
       userObj.profileImage = user.profileImage;
     }
     if (user.contactInfo) {
