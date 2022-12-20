@@ -20,13 +20,13 @@ const Discover = () => {
       setLoading(true);
       try {
         const allUsersData = await axios.get(
-          `http://localhost:3001/users/${currentUser?.uid}`,
+          `${import.meta.env?.VITE_API_URL}/users/${currentUser?.uid}`,
         );
 
         setUsers(allUsersData.data);
 
         const loggedInUserData = await axios.get(
-          `http://localhost:3001/users/profile/${currentUser?.uid}`,
+          `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser?.uid}`,
         );
 
         setLoggedInUser(loggedInUserData.data);

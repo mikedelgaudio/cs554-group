@@ -50,8 +50,8 @@ services:
     depends_on:
       - redis
       - mongodb
-    # env_file:
-    #   - ./backend/.env
+    env_file:
+      - ./backend/.env
     networks:
       - external-proxy
       - internal-proxy
@@ -72,8 +72,8 @@ services:
           memory: 0.5GB
     depends_on:
       - backend
-    # env_file:
-    #   - ./frontend/.env
+    env_file:
+      - ./frontend/.env
     ports:
       - "80:80"
     command: ["nginx", "-g", "daemon off;"]
@@ -86,7 +86,7 @@ networks:
     external: false
 volumes:
   db:
-    # driver: azure_file
-    # driver_opts:
-    #   share_name: cs554storageshare
-    #   storage_account_name: cs554storage
+    driver: azure_file
+    driver_opts:
+      share_name: cs554storageshare
+      storage_account_name: cs554storage

@@ -1,11 +1,10 @@
-import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/useTitle.hook";
+import { postRequest } from "../../../utils/api.util";
 import { TOAST_SERVICE } from "../../../utils/toast.util";
 import { AuthLayout } from "../layouts/auth-layout.component";
-import { postRequest } from "../../../utils/api.util";
 
 const Register = () => {
   useTitle("Register - Prism");
@@ -49,7 +48,7 @@ const Register = () => {
 
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
 
-      const url = "http://localhost:3001/users/register";
+      const url = `${import.meta.env?.VITE_API_URL}/users/register`;
       await postRequest(url, {
         username,
         firebaseUid: userId,
