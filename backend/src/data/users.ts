@@ -218,6 +218,7 @@ module.exports = {
           console.log(user.socialMedia[i]["profileURL"])
           console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
           if (!validator.isURL(user.socialMedia[i]["profileURL"])) {
+            console.log("HALP");
             throw "please enter a valid link"
           }
           for (let j = i+1; j < user.socialMedia.length; j++) {
