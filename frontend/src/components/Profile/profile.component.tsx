@@ -472,12 +472,19 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
+          let e:string = "noError"
           if (
             socialMediaURL !== null &&
             socialMediaURL !== "" &&
             typeof socialMediaURL === "string"
           ) {
-            setUser(await addSocialMedia(currentUser, socialMediaURL));
+            try {
+              setUser(await addSocialMedia(currentUser, socialMediaURL));
+            }
+            catch (error) {
+              if (typeof error == 'string')
+              TOAST_SERVICE.error(TOAST_ID, error, true);
+            }
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -534,8 +541,19 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          if (like !== null && like !== "" && typeof like === "string") {
-            setUser(await addLike(currentUser, like));
+          console.log(currentUser)
+          if (
+            like !== null &&
+            like !== "" &&
+            typeof like === "string"
+          ) {
+            try {
+              console.log(like);
+              setUser(await addLike(currentUser, like));
+            }
+            catch (e: any) {
+              TOAST_SERVICE.error(TOAST_ID, e, true);
+            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
@@ -586,12 +604,18 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
+          console.log(currentUser)
           if (
             dislike !== null &&
             dislike !== "" &&
             typeof dislike === "string"
           ) {
-            setUser(await addDislike(currentUser, dislike));
+            try {
+              setUser(await addDislike(currentUser, dislike));
+            }
+            catch (e) {
+              TOAST_SERVICE.error(TOAST_ID, "Please enter a unique dislike", true);
+            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
