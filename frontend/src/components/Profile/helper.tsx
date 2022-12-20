@@ -188,6 +188,11 @@ export const addSocialMedia = async (
   const user = await axios.get(
     `http://localhost:3001/users/profile/${currentUser.uid}`,
   );
+  for (let i = 0; i < user.data.socialMedia.length; i++) {
+    if (user.data.socialMedia[i]["profileURL"] === socialMediaURL){
+      throw "please select a unique Social Media"
+  }
+}
   user.data.socialMedia.push({ profileURL: socialMediaURL });
   try {
     if (currentUser) {
@@ -237,6 +242,12 @@ export const addLike = async (currentUser: any, like: string) => {
   const user = await axios.get(
     `http://localhost:3001/users/profile/${currentUser.uid}`,
   );
+  console.log(user);
+  for (let i = 0; i < user.data.likes.length; i++) {
+    if (user.data.likes[i]["name"] === like){
+      throw "please select a unique like"
+  }
+}
   user.data.likes.push({ name: like });
   try {
     if (currentUser) {
@@ -281,6 +292,12 @@ export const addDislike = async (currentUser: any, dislike: string) => {
   const user = await axios.get(
     `http://localhost:3001/users/profile/${currentUser.uid}`,
   );
+  console.log(dislike)
+  for (let i = 0; i < user.data.dislikes.length; i++) {
+    if (user.data.dislikes[i]["name"] === dislike){
+      throw "please select a unique dislike"
+  }
+}
   user.data.dislikes.push({ name: dislike });
   try {
     if (currentUser) {

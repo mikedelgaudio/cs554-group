@@ -6,9 +6,12 @@ import {
   UserDislikeItem,
   UserLikeItem,
 } from "./interfaces";
+// @ts-ignore
+const validator = require('validator');
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
+
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
   return "name" in obj;
@@ -210,6 +213,18 @@ module.exports = {
           if (!user.socialMedia[i]["id"]) {
             user.socialMedia[i]["id"] = ObjectId();
           }
+          console.log("HERE I AM");
+          console.log(validator.isURL("https://google.com"));
+          console.log(user.socialMedia[i]["profileURL"])
+          console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
+          if (!validator.isURL(user.socialMedia[i]["profileURL"])) {
+            throw "please enter a valid link"
+          }
+          for (let j = i+1; j < user.socialMedia.length; j++) {
+            if (user.socialMedia[i]["profileURL"] === user.socialMedia[j]["profileURL"]){
+              throw "no duplicate items allowed";
+            }
+          }
         }
         userObj.socialMedia = user.socialMedia;
       } else {
@@ -226,6 +241,11 @@ module.exports = {
           if (!user.likes[i]["id"]) {
             user.likes[i]["id"] = ObjectId();
           }
+          for (let j = i+1; j < user.likes.length; j++) {
+            if (user.likes[j]["name"].toLowerCase() == user.likes[i]["name"].toLowerCase()) {
+              throw "please enter a unique like"
+            }
+          }
         }
         userObj.likes = user.likes;
       } else {
@@ -241,6 +261,11 @@ module.exports = {
 
           if (!user.dislikes[i]["id"]) {
             user.dislikes[i]["id"] = ObjectId();
+          }
+          for (let j = i+1; j < user.dislikes.length; j++) {
+            if (user.dislikes[j]["name"].toLowerCase() == user.dislikes[i]["name"].toLowerCase()) {
+              throw "please enter a unique dislike"
+            }
           }
         }
         userObj.dislikes = user.dislikes;

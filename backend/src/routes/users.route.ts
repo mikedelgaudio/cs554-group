@@ -225,7 +225,7 @@ usersRouter.post(
           for (let i = 0; i < req.body.dislikes.length; i++) {
             if (!isAUserDislikeItem(req.body.dislikes[i])) {
               return res
-                .status(400)
+                .status(200)
                 .json({ error: "Dislikes in array must be valid type" });
             }
           }
