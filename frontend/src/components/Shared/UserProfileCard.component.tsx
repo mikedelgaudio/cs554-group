@@ -71,7 +71,8 @@ const UserProfileCard = ({
           },
           currentUser,
         );
-        if (update) update(updatedUser.favoritedUsers);
+        console.log("yo! ", updatedUser);
+        if (update) update(true);
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {

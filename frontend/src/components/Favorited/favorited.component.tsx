@@ -12,6 +12,7 @@ const Favorited = () => {
   useTitle("Favorited - DuckedIn");
   const { currentUser } = useFirebaseAuth();
   const [users, setUsers] = useState<User[]>();
+  const [isRemoved, setIsRemoved] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const Favorited = () => {
     }
 
     fetchData();
-  }, [setUsers]);
+  }, [isRemoved]);
 
   const layout = () => {
     if (loading) {
@@ -55,7 +56,7 @@ const Favorited = () => {
               key={user?._id}
               id={user?.firebaseUid}
               isFavorited={true}
-              update={setUsers}
+              update={setIsRemoved}
             />
           );
         });
