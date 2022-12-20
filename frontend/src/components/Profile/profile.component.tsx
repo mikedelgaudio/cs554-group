@@ -54,7 +54,7 @@ const Profile = () => {
         setUser(userData);
         setCurrentUser(currentUserData);
         console.log(userData);
-        if (userData.socialMedias.length > 0) {
+        if (userData.socialMedia.length > 0) {
           setHasSocialMeda(true);
         }
         if (userData.likes.length > 0) {
@@ -80,24 +80,12 @@ const Profile = () => {
 
   const handleFavoriteToggle = async () => {
     try {
-      let updatedFavoriteList;
-
-      if (favorited) {
-        updatedFavoriteList = currentUserState?.favoritedUsers?.filter(
-          userFid => userFid !== user?.firebaseUid,
-        );
-      } else {
-        if (user) {
-          currentUserState?.favoritedUsers?.push(user?.firebaseUid);
-          updatedFavoriteList = currentUserState?.favoritedUsers;
-        }
-      }
       // TODO Update correct URLdata
       if (currentUser) {
         await postRequest(
           `http://localhost:3001/users/${currentUser.uid}/editUser`,
           {
-            favoritedUsers: updatedFavoriteList,
+            favoritedUsers: [user?.firebaseUid],
           },
           currentUser,
         );
