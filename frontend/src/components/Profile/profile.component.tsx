@@ -482,8 +482,17 @@ const Profile = () => {
               setUser(await addSocialMedia(currentUser, socialMediaURL));
             }
             catch (error) {
+              console.log(error);
+              console.log(typeof error);
               if (typeof error == 'string')
               TOAST_SERVICE.error(TOAST_ID, error, true);
+              else {
+                TOAST_SERVICE.error(
+                  TOAST_ID,
+                  "Please input a valid URL",
+                  true,
+                );
+              }
             }
           } else {
             TOAST_SERVICE.error(
