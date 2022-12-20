@@ -219,10 +219,10 @@ module.exports = {
           if (!user.socialMedia[i]["id"]) {
             user.socialMedia[i]["id"] = ObjectId();
           }
-          console.log("HERE I AM");
-          console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
+          // console.log("HERE I AM");
+          // console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
           if (!((user.socialMedia[i]["profileURL"].includes("http://") || user.socialMedia[i]["profileURL"].includes("https://")) && validator.isURL(user.socialMedia[i]["profileURL"]))) {
-            console.log("HALP");
+            // console.log("HALP");
             throw "please enter a valid link"
           }
           for (let j = i+1; j < user.socialMedia.length; j++) {
