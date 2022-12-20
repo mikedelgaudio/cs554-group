@@ -198,7 +198,7 @@ module.exports = {
     }
     if (user.profileImage) {
 
-      if ((user.profileImage.includes("http://") || user.profileImage.includes("https://")) && validator.isURL)
+      if (!((user.profileImage.includes("http://") || user.profileImage.includes("https://")) && validator.isURL(user.profileImage)))
       {
         throw "Please enter a valid link for images."
       }
@@ -219,12 +219,10 @@ module.exports = {
           if (!user.socialMedia[i]["id"]) {
             user.socialMedia[i]["id"] = ObjectId();
           }
-          // console.log("HERE I AM");
-          // console.log(validator.isURL("https://google.com"));
-          // console.log(user.socialMedia[i]["profileURL"])
-          // console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
-          if (!validator.isURL(user.socialMedia[i]["profileURL"])) {
-            // console.log("HALP");
+          console.log("HERE I AM");
+          console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
+          if (!((user.socialMedia[i]["profileURL"].includes("http://") || user.socialMedia[i]["profileURL"].includes("https://")) && validator.isURL(user.socialMedia[i]["profileURL"]))) {
+            console.log("HALP");
             throw "please enter a valid link"
           }
           for (let j = i+1; j < user.socialMedia.length; j++) {
