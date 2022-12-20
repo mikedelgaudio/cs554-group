@@ -19,10 +19,12 @@ app.listen(PORT, async () => {
   // Test connection to MongoDB and Redis
   try {
     await redisClient.connect();
+    // eslint-disable-next-line no-console
+    console.log("[REDIS] Successful connection.");
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error("[REDIS] Error - Unable to connect to Redis");
   }
   // eslint-disable-next-line no-console
-  console.log(`[EXPRESS] Running on port: ${PORT}`);
+  console.log(`[EXPRESS] Successful running on port: ${PORT}`);
 });
