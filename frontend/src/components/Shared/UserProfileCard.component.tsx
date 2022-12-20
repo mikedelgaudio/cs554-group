@@ -146,28 +146,32 @@ const UserProfileCard = ({
 
             {/* Body? */}
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-              <div>
+              <div className="my-3 md:my-0">
                 <h3 className="font-semibold text-lg">Social Media</h3>
-                <ul>
-                  {user?.socialMedia?.map((item: SocialMediaItem) => {
+                {user?.socialMedia?.length ? (
+                  user?.socialMedia?.map((item: SocialMediaItem) => {
                     return <li key={item?.id}>{item?.profileURL}</li>;
-                  })}
-                </ul>
+                  })
+                ) : (
+                  <p>No profiles provided.</p>
+                )}
               </div>
-              <div>
+              <div className="my-3 md:my-0">
                 <h3 className="font-semibold text-lg">Likes</h3>
-                <ul>
-                  {user?.likes?.map((item: UserLikeItem) => {
+                {user?.likes?.length ? (
+                  user?.likes?.map((item: UserLikeItem) => {
                     return (
                       <Tag key={item?.id} text={item?.name} removable={false} />
                     );
-                  })}
-                </ul>
+                  })
+                ) : (
+                  <p>No likes provided.</p>
+                )}
               </div>
-              <div>
+              <div className="my-3 md:my-0">
                 <h3 className="font-semibold text-lg">Dislikes</h3>
-                <ul>
-                  {user?.dislikes?.map((item: UserDislikeItem) => {
+                {user?.dislikes?.length ? (
+                  user?.dislikes?.map((item: UserDislikeItem) => {
                     return (
                       <Tag
                         style="bg-red-200 text-red-700"
@@ -176,8 +180,10 @@ const UserProfileCard = ({
                         removable={false}
                       />
                     );
-                  })}
-                </ul>
+                  })
+                ) : (
+                  <p>No dislikes provided.</p>
+                )}
               </div>
             </div>
           </div>

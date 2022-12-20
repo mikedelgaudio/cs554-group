@@ -9,6 +9,15 @@ import { PageLayout } from "../Shared/PageLayout.component";
 import { Tag } from "../Shared/Tag.component";
 import { Loading } from "../Shared/Loading.component";
 import { postRequest } from "../../utils/api.util";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faPhone,
+  faGlobe,
+  faFileAlt,
+  faBriefcase,
+} from "@fortawesome/free-solid-svg-icons";
+import noImg from "../../assets/noImg.jpg";
 import {
   addDislike,
   addLike,
@@ -103,7 +112,7 @@ const Profile = () => {
     <div className="flex gap-5 flex-col">
       {/* Form to edit Username */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -116,17 +125,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Username:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Username
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="username"
             defaultValue={currentUserState?.username}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -136,7 +145,7 @@ const Profile = () => {
 
       {/* Form to edit First Name */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -149,17 +158,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          First Name:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          First Name
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="firstName"
             defaultValue={currentUserState?.firstName}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -169,7 +178,7 @@ const Profile = () => {
 
       {/* Form to edit Last Name */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -182,17 +191,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Last Name:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Last Name
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="lastName"
             defaultValue={currentUserState?.lastName}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -202,7 +211,7 @@ const Profile = () => {
 
       {/* Form to Edit Profile Image URL */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -223,17 +232,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Profile Image URL:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Profile Image URL
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="profileImageURL"
             defaultValue={currentUserState?.profileImage}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -243,7 +252,7 @@ const Profile = () => {
 
       {/* Form to Edit Resume */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -260,8 +269,8 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Resume URL:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Resume URL
           <input
             className="border border-slate-400 p-2 rounded-md"
             type="text"
@@ -270,7 +279,7 @@ const Profile = () => {
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -280,7 +289,7 @@ const Profile = () => {
 
       {/* Form to Edit Phone Number (phone number, email, website, current role) */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -297,17 +306,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Phone Number:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Phone Number
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="phoneNumber"
             defaultValue={currentUserState?.contactInfo?.phoneNumber}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -350,7 +359,7 @@ const Profile = () => {
 
       {/* Form to Edit Website */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -367,17 +376,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Website:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Website
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="website"
             defaultValue={currentUserState?.contactInfo?.website}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -387,7 +396,7 @@ const Profile = () => {
 
       {/* Form to Edit Current Role */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -404,17 +413,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Current Role:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Current Role
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="currentRole"
             defaultValue={currentUserState?.contactInfo?.occupation}
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -457,7 +466,7 @@ const Profile = () => {
 
       {/* Add Social Media */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -479,17 +488,17 @@ const Profile = () => {
           // refetch page
         }}
       >
-        <label className="flex items-center gap-3">
-          Social Media URL:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Social Media URL
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="socialMediaURL"
             placeholder="instagram.com/gogo.the.gorilla.dnt/"
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -519,7 +528,7 @@ const Profile = () => {
 
       {/* Add Like */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -532,17 +541,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Like:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Like
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="like"
             placeholder="Web Programming"
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -571,7 +580,7 @@ const Profile = () => {
 
       {/* Add Dislike */}
       <form
-        className="flex gap-6"
+        className="flex items-end gap-6"
         onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -588,17 +597,17 @@ const Profile = () => {
           }
         }}
       >
-        <label className="flex items-center gap-3">
-          Dislike:
+        <label className="flex flex-col gap-3 text-lg font-bold">
+          Dislike
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="dislike"
             placeholder="Bugs in my code"
           />
         </label>
         <button
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded text-base font-medium bg-blue-500 text-white transition-all duration-200 py-3 px-5 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           type="submit"
           value="Submit"
         >
@@ -632,146 +641,157 @@ const Profile = () => {
   const viewingLayout = loading ? (
     <Loading />
   ) : (
-    <>
-      {/* Username */}
-      <h1>Username: {user?.username}</h1>
-
-      {/* Full Name */}
-      <h2>
-        Name: {user?.firstName} {user?.lastName}
-      </h2>
-
-      {/* Profile Image */}
-      {user?.profileImage ? (
-        <img src={user?.profileImage} alt="Profile Image" className="w-80" />
-      ) : null}
-
-      {/* Resume */}
-      {user?.resume ? (
-        <a href={`https://${user?.resume}`} target="_blank" rel="noreferrer">
-          Resume (Click Here)
-        </a>
-      ) : null}
-      {user?.resume ? <br /> : null}
-
-      {/* Contact Info (phone number, email, website, current role) */}
-      {user?.contactInfo.phoneNumber ? (
-        <p>Phone Number: {user?.contactInfo.phoneNumber}</p>
-      ) : null}
-      <p>Email: {user?.contactInfo.email}</p>
-      {user?.contactInfo.website ? (
-        <p>
-          Website:{" "}
-          <a
-            href={`https://${user?.contactInfo?.website}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {user?.contactInfo?.website}
-          </a>
-        </p>
-      ) : null}
-      {user?.contactInfo.occupation ? (
-        <div>
-          <p>Current Role: {user?.contactInfo.occupation}</p>
+    <div className="grid grid-row-3 grid-col-2 gap-4 text-center gap-6">
+      <div className="bg-slate-200 p-6 rounded-xl shadow-md flex flex-col items-center col-span-2">
+        {/* Profile Image */}
+        {user?.profileImage ? (
+          <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+        ) : (
+          <img
+            className="max-w-none w-40 h-40 lg:w-[16rem] lg:h-[16rem] rounded-full"
+            height={256}
+            width={256}
+            loading="lazy"
+            src={user?.profileImage || noImg}
+            alt={`${user?.firstName ?? "N/A"}'s profile`}
+          />
+        )}
+        <div className="mt-4">
+          {/* Full Name */}
+          <h1 className="text-4xl font-bold">
+            {user?.firstName} {user?.lastName}
+          </h1>
+          {/* Username */}
+          <h2 className="text-lg">@{user?.username}</h2>
         </div>
-      ) : null}
-      {user?.contactInfo ? <br /> : null}
+        {/* heart icon */}
+        <div className="flex justify-center mt-6">
+          <svg id="heart" height="0" width="0">
+            <defs>
+              <clipPath id="svgPath">
+                <path d="M20,35.09,4.55,19.64a8.5,8.5,0,0,1-.13-12l.13-.13a8.72,8.72,0,0,1,12.14,0L20,10.79l3.3-3.3a8.09,8.09,0,0,1,5.83-2.58,8.89,8.89,0,0,1,6.31,2.58,8.5,8.5,0,0,1,.13,12l-.13.13Z" />
+              </clipPath>
+            </defs>
+          </svg>
 
-      {/* Social Media */}
-      {/* if user.socialMedia array length is 0 */}
-      {hasSocialMedia ? <p>Social Media: </p> : null}
-      {user?.socialMedia ? (
-        user?.socialMedia.map(socialMedia => (
-          <div key={socialMedia.id}>
+          <div className="heart-container">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              className="heart-stroke"
+            >
+              <path d="M20,35.07,4.55,19.62a8.5,8.5,0,0,1-.12-12l.12-.12a8.72,8.72,0,0,1,12.14,0L20,10.77l3.3-3.3A8.09,8.09,0,0,1,29.13,4.9a8.89,8.89,0,0,1,6.31,2.58,8.5,8.5,0,0,1,.12,12l-.12.12ZM10.64,7.13A6.44,6.44,0,0,0,6.07,18.19L20,32.06,33.94,18.12A6.44,6.44,0,0,0,34,9l0,0a6.44,6.44,0,0,0-4.77-1.85A6,6,0,0,0,24.83,9L20,13.78,15.21,9A6.44,6.44,0,0,0,10.64,7.13Z" />
+            </svg>
+
+            <button
+              className={`${favorited ? "heart-on" : ""} heart-clip`}
+              onClick={() => handleFavoriteToggle()}
+              aria-label={`${favorited ? "Unfavorite" : "Favorite"} user: ${
+                user?.firstName
+              } ${user?.lastName}`}
+            ></button>
+          </div>
+        </div>
+      </div>
+      {/* Likes */}
+      <div className="bg-slate-200 p-6 flex flex-col flex-wrap rounded-xl shadow-md col-span-1 gap-4">
+        <h3 className="font-bold text-2xl text-left">Likes</h3>
+        <div>
+          {user?.likes?.length ? (
+            user?.likes.map(like => (
+              <Tag key={like.id} text={like.name} removable={false} />
+            ))
+          ) : (
+            <p>User has not provided any likes (yet!)</p>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-slate-200 p-6 flex flex-col rounded-xl shadow-md gap-y-3 row-span-2 col-span-1 text-left">
+        {/* Resume */}
+        <div className="text-md">
+          <FontAwesomeIcon icon={faFileAlt} className="mr-3" />
+          {user?.resume ? (
+            <a href={`${user?.resume}`} target="_blank" rel="noreferrer">
+              Click for Resume
+            </a>
+          ) : (
+            "Not provided"
+          )}
+        </div>
+
+        {/* Contact Info (phone number, email, website, current role) */}
+        <div className="text-md">
+          <FontAwesomeIcon icon={faPhone} className="mr-2" />
+          {user?.contactInfo.phoneNumber || "Not provided"}
+        </div>
+
+        <div className="text-md">
+          <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+          {user?.contactInfo.email || "Not provided"}
+        </div>
+
+        <div className="text-md">
+          <FontAwesomeIcon icon={faGlobe} className="mr-2" />
+          {user?.contactInfo?.website ? (
             <a
-              href={`https://${socialMedia.profileURL}`}
+              href={`${user?.contactInfo?.website}`}
               target="_blank"
               rel="noreferrer"
             >
-              {socialMedia?.profileURL}
+              {user?.contactInfo.website}
             </a>
-            <br />
-          </div>
-        ))
-      ) : (
-        <p>No Social Media</p>
-      )}
-      {user?.socialMedia ? <br /> : null}
+          ) : (
+            "Not provided"
+          )}
+        </div>
 
-      {/* Likes */}
-      {hasLikes ? <p>Likes: </p> : null}
-      {user?.likes ? (
-        user?.likes.map(like => (
-          <div key={like.id}>
-            <p>{like.name}</p>
-          </div>
-        ))
-      ) : (
-        <p>No Likes</p>
-      )}
-      {hasLikes ? <br /> : null}
-
-      {/* Dislikes */}
-      {hasDislikes ? <p>Dislikes: </p> : null}
-      {user?.dislikes ? (
-        user?.dislikes.map(dislike => (
-          <div key={dislike.id}>
-            <p>{dislike.name}</p>
-          </div>
-        ))
-      ) : (
-        <p>No Dislikes</p>
-      )}
-
-      {/* Favorited Users */}
-      {/* {hasFavoritedUsers ?
-          (
-            <p>Favorited Users: </p>
-          ) : null
-        }
-        {user?.favoritedUsers ? (
-          user?.favoritedUsers.map(favoriteId => (
-            <div key={favoriteId}>
-              <p>{favoriteId}</p>
-              <br/>
+        <div className="text-md">
+          <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
+          {user?.contactInfo.occupation || "Not provided"}
+        </div>
+        {/* Social Media */}
+        {/* if user.socialMedia array length is 0 */}
+        {hasSocialMedia ? <p>Social Media: </p> : null}
+        {user?.socialMedia ? (
+          user?.socialMedia.map(socialMedia => (
+            <div key={socialMedia.id}>
+              <a
+                href={`https://${socialMedia.profileURL}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {socialMedia?.profileURL}
+              </a>
+              <br />
             </div>
           ))
         ) : (
-          <p>No Favorited Users</p>
+          <p>No Social Media</p>
         )}
-        <br /> */}
+        {user?.socialMedia ? <br /> : null}
+      </div>
 
-      {/* Heart Icon */}
-      <div>
-        <svg id="heart" height="0" width="0">
-          <defs>
-            <clipPath id="svgPath">
-              <path d="M20,35.09,4.55,19.64a8.5,8.5,0,0,1-.13-12l.13-.13a8.72,8.72,0,0,1,12.14,0L20,10.79l3.3-3.3a8.09,8.09,0,0,1,5.83-2.58,8.89,8.89,0,0,1,6.31,2.58,8.5,8.5,0,0,1,.13,12l-.13.13Z" />
-            </clipPath>
-          </defs>
-        </svg>
-
-        <div className="heart-container">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 40 40"
-            className="heart-stroke"
-          >
-            <path d="M20,35.07,4.55,19.62a8.5,8.5,0,0,1-.12-12l.12-.12a8.72,8.72,0,0,1,12.14,0L20,10.77l3.3-3.3A8.09,8.09,0,0,1,29.13,4.9a8.89,8.89,0,0,1,6.31,2.58,8.5,8.5,0,0,1,.12,12l-.12.12ZM10.64,7.13A6.44,6.44,0,0,0,6.07,18.19L20,32.06,33.94,18.12A6.44,6.44,0,0,0,34,9l0,0a6.44,6.44,0,0,0-4.77-1.85A6,6,0,0,0,24.83,9L20,13.78,15.21,9A6.44,6.44,0,0,0,10.64,7.13Z" />
-          </svg>
-
-          <button
-            className={`${favorited ? "heart-on" : ""} heart-clip`}
-            onClick={() => handleFavoriteToggle()}
-            aria-label={`${favorited ? "Unfavorite" : "Favorite"} user: ${
-              user?.firstName
-            } ${user?.lastName}`}
-          ></button>
+      {/* Dislikes */}
+      <div className="bg-slate-200 p-6 flex flex-col flex-wrap rounded-xl shadow-md col-span-1 gap-4">
+        <h3 className="font-bold text-2xl text-left">Dislikes</h3>
+        <div>
+          {user?.dislikes?.length ? (
+            user?.dislikes.map(dislike => (
+              <Tag
+                style="bg-red-200 text-red-700"
+                key={dislike.id}
+                text={dislike.name}
+                removable={false}
+              />
+            ))
+          ) : (
+            <p>User has not provided any dislikes (yet!)</p>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
   const errorLayout = (
     <>
