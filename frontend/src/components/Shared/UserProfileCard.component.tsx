@@ -25,6 +25,7 @@ const UserProfileCard = ({
   isFavorited: boolean;
   updateVal?: number;
   update?: Dispatch<SetStateAction<any>>;
+  userFavorites?:String[]
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
