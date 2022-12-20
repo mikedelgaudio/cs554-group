@@ -12,15 +12,19 @@ import {
 import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
+import { Tag } from "./Tag.component";
+import { Dispatch, SetStateAction } from "react";
 
 const UserProfileCard = ({
   id,
   isFavorited,
-  userFavorites,
+  updateVal,
+  update,
 }: {
   id: string;
   isFavorited: boolean;
-  userFavorites?: string[];
+  updateVal?: number;
+  update?: Dispatch<SetStateAction<any>>;
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,26 +65,17 @@ const UserProfileCard = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      let updatedFavoriteList;
-
-      if (favorited) {
-        updatedFavoriteList = userFavorites?.filter(userFid => userFid !== id);
-      } else {
-        userFavorites?.push(id);
-        updatedFavoriteList = userFavorites;
-      }
-
       // TODO Update correct URLdata
       if (currentUser) {
-        await postRequest(
+        const updatedUser = await postRequest(
           `http://localhost:3001/users/${currentUser.uid}/editUser`,
           {
-            favoritedUsers: updatedFavoriteList,
+            favoritedUsers: [id],
           },
           currentUser,
         );
-        console.log("Am I reached");
-
+        console.log("yo! ", updatedUser);
+        if (update) update(id);
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {
@@ -151,29 +146,44 @@ const UserProfileCard = ({
 
             {/* Body? */}
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-              <div>
+              <div className="my-3 md:my-0">
                 <h3 className="font-semibold text-lg">Social Media</h3>
-                <ul>
-                  {user?.socialMedia?.map((item: SocialMediaItem) => {
+                {user?.socialMedia?.length ? (
+                  user?.socialMedia?.map((item: SocialMediaItem) => {
                     return <li key={item?.id}>{item?.profileURL}</li>;
-                  })}
-                </ul>
+                  })
+                ) : (
+                  <p>No profiles provided.</p>
+                )}
               </div>
-              <div>
+              <div className="my-3 md:my-0">
                 <h3 className="font-semibold text-lg">Likes</h3>
-                <ul>
-                  {user?.likes?.map((item: UserLikeItem) => {
-                    return <li key={item?.id}>{item?.name}</li>;
-                  })}
-                </ul>
+                {user?.likes?.length ? (
+                  user?.likes?.map((item: UserLikeItem) => {
+                    return (
+                      <Tag key={item?.id} text={item?.name} removable={false} />
+                    );
+                  })
+                ) : (
+                  <p>No likes provided.</p>
+                )}
               </div>
-              <div>
+              <div className="my-3 md:my-0">
                 <h3 className="font-semibold text-lg">Dislikes</h3>
-                <ul>
-                  {user?.dislikes?.map((item: UserDislikeItem) => {
-                    return <li key={item?.id}>{item?.name}</li>;
-                  })}
-                </ul>
+                {user?.dislikes?.length ? (
+                  user?.dislikes?.map((item: UserDislikeItem) => {
+                    return (
+                      <Tag
+                        style="bg-red-200 text-red-700"
+                        key={item?.id}
+                        text={item?.name}
+                        removable={false}
+                      />
+                    );
+                  })
+                ) : (
+                  <p>No dislikes provided.</p>
+                )}
               </div>
             </div>
           </div>

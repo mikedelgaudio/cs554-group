@@ -88,8 +88,12 @@ usersRouter.get(
     const firebaseUid = req.params.firebaseUid;
     let favorites;
     try {
+      let objArr: User[] = [];
       favorites = await data.getFavoritedUsers(firebaseUid);
-      res.json(favorites);
+      for (let i = 0; i < favorites.length; i++) {
+        objArr.push(await data.getOneUser(favorites[i]));
+      }
+      res.json(objArr);
     } catch (e) {
       res.status(400).json({ error: e });
     }
