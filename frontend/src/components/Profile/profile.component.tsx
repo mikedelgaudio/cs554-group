@@ -12,12 +12,13 @@ import {
   addDislike,
   addLike,
   addSocialMedia,
-  changeEmail,
+  // changeEmail,
   changeFirstName,
   changeLastName,
   changeOccupation,
   changePhoneNumber,
   changeProfilePicture,
+  changeResume,
   changeUsername,
   changeWebsite,
   deleteDislike,
@@ -51,7 +52,8 @@ const Profile = () => {
         const { data: currentUserData } = await axios.get(url2);
         setUser(userData);
         setCurrentUser(currentUserData);
-        if (userData.socialMedia.length > 0) {
+        console.log(userData);
+        if (userData.socialMedias.length > 0) {
           setHasSocialMeda(true);
         }
         if (userData.likes.length > 0) {
@@ -63,6 +65,7 @@ const Profile = () => {
         if (userData.favoritedUsers.length > 0) {
           setHasFavoritedUsers(true);
         }
+        console.log("hggg ", currentUserData?.favoritedUsers);
         if (currentUserData?.favoritedUsers?.includes(userData.firebaseUid)) {
           setFavorited(true);
         }
@@ -117,7 +120,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const username = formData.get("username");
-          if (username !== null && typeof username === "string") {
+          if (username !== "" && typeof username === "string") {
             changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
@@ -150,7 +153,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
-          if (firstName !== null && typeof firstName === "string") {
+          if (firstName !== "" && typeof firstName === "string") {
             changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
@@ -183,7 +186,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
-          if (lastName !== null && typeof lastName === "string") {
+          if (lastName !== "" && typeof lastName === "string") {
             changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
@@ -216,7 +219,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const profileImageURL = formData.get("profileImageURL");
-          if (profileImageURL !== null && typeof profileImageURL === "string") {
+          if (profileImageURL !== null && profileImageURL !== "" && typeof profileImageURL === "string") {
             changeProfilePicture(currentUser, profileImageURL);
           } else {
             TOAST_SERVICE.error(
@@ -245,6 +248,39 @@ const Profile = () => {
         </button>
       </form>
 
+      {/* Form to Edit Resume */}
+      <form
+        className="flex gap-6"
+        onSubmit={event => {
+          event.preventDefault();
+          const form = event.target as HTMLFormElement;
+          const formData = new FormData(form);
+          const resumeURL = formData.get("resumeURL");
+          if (resumeURL !== null && resumeURL !== "" && typeof resumeURL === "string") {
+            changeResume(currentUser, resumeURL);
+          } else {
+            TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
+          }
+        }}
+      >
+        <label className="flex items-center gap-3">
+          Resume URL:
+          <input
+            className="border border-slate-400 p-2 rounded-md"
+            type="text"
+            name="resumeURL"
+            defaultValue={currentUserState?.resume}
+          />
+        </label>
+        <button
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          type="submit"
+          value="Submit"
+        >
+          Submit
+        </button>
+      </form>
+
       {/* Form to Edit Phone Number (phone number, email, website, current role) */}
       <form
         className="flex gap-6"
@@ -253,7 +289,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const phoneNumber = formData.get("phoneNumber");
-          if (phoneNumber !== null && typeof phoneNumber === "string") {
+          if (phoneNumber !== null && phoneNumber !== "" && typeof phoneNumber === "string") {
             changePhoneNumber(currentUser, phoneNumber);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Phone Number cannot be blank", true);
@@ -278,7 +314,7 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Form to Edit Email */}
+      {/* Form to Edit Email
       <form
         className="flex gap-6"
         onSubmit={event => {
@@ -286,7 +322,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const email = formData.get("email");
-          if (email !== null && typeof email === "string") {
+          if (email !== null && email !== "" && typeof email === "string") {
             changeEmail(currentUser, email);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Email cannot be blank", true);
@@ -309,7 +345,7 @@ const Profile = () => {
         >
           Submit
         </button>
-      </form>
+      </form> */}
 
       {/* Form to Edit Website */}
       <form
@@ -319,7 +355,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const website = formData.get("website");
-          if (website !== null && typeof website === "string") {
+          if (website !== null && website !== "" && typeof website === "string") {
             changeWebsite(currentUser, website);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
@@ -352,7 +388,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const currentRole = formData.get("currentRole");
-          if (currentRole !== null && typeof currentRole === "string") {
+          if (currentRole !== null && currentRole !== "" && typeof currentRole === "string") {
             changeOccupation(currentUser, currentRole);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Current Role cannot be blank", true);
@@ -418,7 +454,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
-          if (socialMediaURL !== null && typeof socialMediaURL === "string") {
+          if (socialMediaURL !== null && socialMediaURL !== "" && typeof socialMediaURL === "string") {
             setUser(await addSocialMedia(currentUser, socialMediaURL));
           } else {
             TOAST_SERVICE.error(
@@ -479,7 +515,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          if (like !== null && typeof like === "string") {
+          if (like !== null && like !== "" && typeof like === "string") {
             setUser(await addLike(currentUser, like));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
@@ -535,7 +571,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
-          if (dislike !== null && typeof dislike === "string") {
+          if (dislike !== null && dislike !== "" && typeof dislike === "string") {
             setUser(await addDislike(currentUser, dislike));
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
@@ -597,7 +633,25 @@ const Profile = () => {
       </h2>
 
       {/* Profile Image */}
-      <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+      {user?.profileImage ? 
+        (
+          <img src={user?.profileImage} alt="Profile Image" className="w-80" />
+        ) : null
+      }
+
+      {/* Resume */}
+      {user?.resume ? (
+        <a
+          href={`https://${user?.resume}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Resume (Click Here)
+        </a>
+      ) : null}
+      {user?.resume ? (
+        <br/>
+      ) : null}
 
       {/* Contact Info (phone number, email, website, current role) */}
       {user?.contactInfo.phoneNumber ? (

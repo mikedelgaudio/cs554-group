@@ -12,15 +12,16 @@ import {
 import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
+import { Dispatch, SetStateAction } from "react";
 
 const UserProfileCard = ({
   id,
   isFavorited,
-  userFavorites,
+  update,
 }: {
   id: string;
   isFavorited: boolean;
-  userFavorites?: string[];
+  update: Dispatch<SetStateAction<any>>;
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,13 +64,14 @@ const UserProfileCard = ({
     try {
       // TODO Update correct URLdata
       if (currentUser) {
-        await postRequest(
+        const updatedUser = await postRequest(
           `http://localhost:3001/users/${currentUser.uid}/editUser`,
           {
             favoritedUsers: [id],
           },
           currentUser,
         );
+        if (update) update(updatedUser.favoritedUsers);
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {
