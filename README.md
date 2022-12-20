@@ -37,6 +37,9 @@ The Express server runs on http://localhost:3001 for the production Express code
 
 You can run the entire stack with a docker-compose command or run the MongoDB, Redis on your own and build the individual containers yourself.
 
+> **Warning**
+> In `.env` you must have `REDIS_URL=redis://host.docker.internal:6379` and `MONGO_URL=mongodb://host.docker.internal:27017`
+
 #### Run Docker Stack
 
 Run the redis, mongodb, express, and nginx production servers in one command.
@@ -45,7 +48,7 @@ For security, redis and mongodb sit on an internal docker network and not expose
 
 ```
 docker network create external-proxy
-docker-compose up
+docker-compose -f docker-compose.local.yml up -d
 ```
 
 If you'd like to run the Docker apps individually:
