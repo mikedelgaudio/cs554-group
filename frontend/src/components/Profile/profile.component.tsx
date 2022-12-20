@@ -431,7 +431,7 @@ const Profile = () => {
               <div key={socialMedia?.id}>
                 <p>
                   <a
-                    href={`https://${socialMedia.profileURL}`}
+                    href={`${socialMedia.profileURL}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -648,7 +648,7 @@ const Profile = () => {
 
       {/* Resume */}
       {user?.resume ? (
-        <a href={`https://${user?.resume}`} target="_blank" rel="noreferrer">
+        <a href={`${user?.resume}`} target="_blank" rel="noreferrer">
           Resume (Click Here)
         </a>
       ) : null}
@@ -663,7 +663,7 @@ const Profile = () => {
         <p>
           Website:{" "}
           <a
-            href={`https://${user?.contactInfo?.website}`}
+            href={`${user?.contactInfo?.website}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -685,7 +685,7 @@ const Profile = () => {
         user?.socialMedia.map(socialMedia => (
           <div key={socialMedia.id}>
             <a
-              href={`https://${socialMedia.profileURL}`}
+              href={`${socialMedia.profileURL}`}
               target="_blank"
               rel="noreferrer"
             >
