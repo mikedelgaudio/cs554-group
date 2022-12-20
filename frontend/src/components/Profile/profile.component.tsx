@@ -440,7 +440,7 @@ const Profile = () => {
               <div key={socialMedia?.id}>
                 <p>
                   <a
-                    href={`${socialMedia.profileURL}`}
+                    href={`https://${socialMedia.profileURL}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -713,7 +713,7 @@ const Profile = () => {
         <div className="text-md">
           <FontAwesomeIcon icon={faFileAlt} className="mr-3" />
           {user?.resume ? (
-            <a href={`${user?.resume}`} target="_blank" rel="noreferrer">
+            <a href={`https://${user?.resume}`} target="_blank" rel="noreferrer">
               Click for Resume
             </a>
           ) : (
@@ -736,7 +736,7 @@ const Profile = () => {
           <FontAwesomeIcon icon={faGlobe} className="mr-2" />
           {user?.contactInfo?.website ? (
             <a
-              href={`${user?.contactInfo?.website}`}
+              href={`https://${user?.contactInfo?.website}`}
               target="_blank"
               rel="noreferrer"
             >
