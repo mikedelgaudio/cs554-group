@@ -75,7 +75,7 @@ const UserProfileCard = ({
           },
           currentUser,
         );
-        console.log("yo! ", updatedUser);
+        // console.log("yo! ", updatedUser);
         if (update) update(id);
         setFavorited(prev => (prev = !prev));
       }

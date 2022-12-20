@@ -105,7 +105,7 @@ usersRouter.post(
   "/:firebaseUid/editUser",
   checkAuth,
   async (req: Request, res: Response) => {
-    console.log(req.body);
+    // console.log(req.body);
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
       throw "add uid as a parameter";
     }
@@ -186,9 +186,9 @@ usersRouter.post(
             .status(400)
             .json({ error: "Updated social medias must be a valid array" });
         } else {
-          console.log("EDSD");
+          // console.log("EDSD");
           for (let i = 0; i < req.body.socialMedia.length; i++) {
-            console.log("SDF");
+            // console.log("SDF");
             if (!isASocialMediaItem(req.body.socialMedia[i])) {
               return res
                 .status(400)
@@ -200,14 +200,14 @@ usersRouter.post(
       }
       if (req.body.likes) {
         if (!Array.isArray(req.body.likes)) {
-          console.log("Array Type Check");
+          // console.log("Array Type Check");
           return res
             .status(400)
             .json({ error: "Updated Likes must be a valid array" });
         } else {
           for (let i = 0; i < req.body.likes.length; i++) {
             if (!isAUserLikeItem(req.body.likes[i])) {
-              console.log("Array Value errors");
+              // console.log("Array Value errors");
               return res
                 .status(400)
                 .json({ error: "Likes in array must be valid type" });

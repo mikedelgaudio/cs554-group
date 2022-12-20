@@ -60,7 +60,7 @@ module.exports = {
       favoritedUsers: [],
       resume: "",
     };
-    console.log(newUser);
+    // console.log(newUser);
     let newInsertInformation = await userCollection.insertOne(newUser);
     if (newInsertInformation.insertedCount == 0) {
       throw "this didn't work";
@@ -71,14 +71,14 @@ module.exports = {
       if (!allUsers) {
         try {
           await redisClient.lPush("allUsers", hashing);
-          console.log("addedUserList");
+          // console.log("addedUserList");
         } catch (e) {
           throw "Reddis not adding";
         }
       } else {
         try {
           await redisClient.lPush("allUsers", hashing);
-          console.log("pushed more in");
+          // console.log("pushed more in");
         } catch (e) {
           throw "Reddis not adding";
         }
@@ -159,7 +159,7 @@ module.exports = {
   async getFavoritedUsers(firebaseUid: string) {
     let cached = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
     if (cached) {
-      console.log("getfy, ", cached);
+      // console.log("getfy, ", cached);
       return cached;
     } else {
       try {
@@ -219,12 +219,12 @@ module.exports = {
           if (!user.socialMedia[i]["id"]) {
             user.socialMedia[i]["id"] = ObjectId();
           }
-          console.log("HERE I AM");
-          console.log(validator.isURL("https://google.com"));
-          console.log(user.socialMedia[i]["profileURL"])
-          console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
+          // console.log("HERE I AM");
+          // console.log(validator.isURL("https://google.com"));
+          // console.log(user.socialMedia[i]["profileURL"])
+          // console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
           if (!validator.isURL(user.socialMedia[i]["profileURL"])) {
-            console.log("HALP");
+            // console.log("HALP");
             throw "please enter a valid link"
           }
           for (let j = i+1; j < user.socialMedia.length; j++) {
@@ -250,7 +250,7 @@ module.exports = {
           }
           for (let j = i+1; j < user.likes.length; j++) {
             if (user.likes[j]["name"].toLowerCase() == user.likes[i]["name"].toLowerCase()) {
-              console.log(user.likes[j]);
+              // console.log(user.likes[j]);
               throw "please enter a unique like"
             }
           }
@@ -283,8 +283,8 @@ module.exports = {
     }
 
     if (user.favoritedUsers) {
-      console.log("DO I REACH HERE?");
-      console.log(user.favoritedUsers);
+      // console.log("DO I REACH HERE?");
+      // console.log(user.favoritedUsers);
       if (!Array.isArray(user.favoritedUsers)) {
         throw "Updated favorites must be a valid array";
       } else {
@@ -295,10 +295,10 @@ module.exports = {
         }
 
         let oldArr = await redisClient.lRange("favorite" + firebaseUid, 0, -1);
-        console.log("THIS IS CURRENT FAVORITES");
-        console.log("oldArr: ", oldArr);
+        // console.log("THIS IS CURRENT FAVORITES");
+        // console.log("oldArr: ", oldArr);
         if (oldArr) {
-          console.log("eee");
+          // console.log("eee");
           let favName = "favorite" + firebaseUid;
           if (oldArr.includes(user.favoritedUsers[0])) {
             await redisClient.lRem(favName, 0, user.favoritedUsers[0]);
@@ -307,9 +307,9 @@ module.exports = {
               oldArr.splice(index, 1);
             }
           } else {
-            console.log(user.favoritedUsers[0]);
+            // console.log(user.favoritedUsers[0]);
             await redisClient.lPush(favName, user.favoritedUsers[0]);
-            console.log(favName);
+            // console.log(favName);
             oldArr.push(user.favoritedUsers[0]);
           }
           userObj.favoritedUsers = oldArr;

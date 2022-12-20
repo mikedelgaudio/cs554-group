@@ -74,7 +74,7 @@ export const changeProfilePicture = async (
     if (typeof e == 'string') {
       throw "Please enter a Valid Link"
     }else {
-      console.log("WISH WASH WISH")
+      // console.log("WISH WASH WISH")
     throw (e);
     }  }
 };
@@ -252,7 +252,7 @@ export const addLike = async (currentUser: any, like: string) => {
   const user = await axios.get(
     `http://localhost:3001/users/profile/${currentUser.uid}`,
   );
-  console.log(user);
+  // console.log(user);
   for (let i = 0; i < user.data.likes.length; i++) {
     if (user.data.likes[i]["name"] === like){
       throw "please select a unique like"
@@ -271,7 +271,7 @@ export const addLike = async (currentUser: any, like: string) => {
       return data;
     }
   } catch (e: any) {
-    console.log("HELPER LIKES I AM HERE")
+    // console.log("HELPER LIKES I AM HERE")
     if(typeof e == 'string')
       throw "Cannot be duplicate value"
       else{
@@ -308,7 +308,7 @@ export const addDislike = async (currentUser: any, dislike: string) => {
   const user = await axios.get(
     `http://localhost:3001/users/profile/${currentUser.uid}`,
   );
-  console.log(dislike)
+  // console.log(dislike)
   for (let i = 0; i < user.data.dislikes.length; i++) {
     if (user.data.dislikes[i]["name"] === dislike){
       throw "please select a unique dislike"

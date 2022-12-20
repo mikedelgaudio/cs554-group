@@ -62,7 +62,7 @@ const Profile = () => {
         const { data: currentUserData } = await axios.get(url2);
         setUser(userData);
         setCurrentUser(currentUserData);
-        console.log(userData);
+        // console.log(userData);
         if (userData.socialMedia.length > 0) {
           setHasSocialMeda(true);
         }
@@ -75,7 +75,7 @@ const Profile = () => {
         if (userData.favoritedUsers.length > 0) {
           setHasFavoritedUsers(true);
         }
-        console.log("hggg ", currentUserData?.favoritedUsers);
+        // console.log("hggg ", currentUserData?.favoritedUsers);
         if (currentUserData?.favoritedUsers?.includes(userData.firebaseUid)) {
           setFavorited(true);
         }
@@ -225,7 +225,7 @@ const Profile = () => {
             try{
                await changeProfilePicture(currentUser, profileImageURL);
             }catch(e){
-              console.log("HERE")
+              // console.log("HERE")
               if(typeof e == "string")
                 TOAST_SERVICE.error(TOAST_ID, e, true);
             else{
@@ -493,7 +493,7 @@ const Profile = () => {
             }
             catch (error) {
               console.log(error);
-              console.log(typeof error);
+              // console.log(typeof error);
               if (typeof error == 'string')
               TOAST_SERVICE.error(TOAST_ID, error, true);
               else {
@@ -560,14 +560,14 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          console.log(currentUser)
+          // console.log(currentUser)
           if (
             like !== null &&
             like !== "" &&
             typeof like === "string"
           ) {
             try {
-              console.log(like);
+              // console.log(like);
               setUser(await addLike(currentUser, like));
             }
             catch (e: any) {
@@ -627,7 +627,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
-          console.log(currentUser)
+          // console.log(currentUser)
           if (
             dislike !== null &&
             dislike !== "" &&
