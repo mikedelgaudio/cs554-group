@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import noImg from "../../assets/noImg.jpg";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
@@ -13,7 +13,6 @@ import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
 import { Tag } from "./Tag.component";
-import { Dispatch, SetStateAction } from "react";
 
 const UserProfileCard = ({
   id,
@@ -25,7 +24,7 @@ const UserProfileCard = ({
   isFavorited: boolean;
   updateVal?: number;
   update?: Dispatch<SetStateAction<any>>;
-  userFavorites?:String[]
+  userFavorites?: String[];
 }) => {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +37,7 @@ const UserProfileCard = ({
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `http://localhost:3001/users/profile/${id}`,
+          `${import.meta.env?.VITE_API_URL}/users/profile/${id}`,
         );
         setUser(data);
       } catch (e: any) {
@@ -69,7 +68,7 @@ const UserProfileCard = ({
       // TODO Update correct URLdata
       if (currentUser) {
         const updatedUser = await postRequest(
-          `http://localhost:3001/users/${currentUser.uid}/editUser`,
+          `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
           {
             favoritedUsers: [id],
           },

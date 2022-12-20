@@ -21,7 +21,9 @@ const Favorited = () => {
       try {
         // TODO Update with actual backend URL /users/favorited
         const allUsersData = await getRequest(
-          `http://localhost:3001/users/favorited/${currentUser?.uid}`,
+          `${import.meta.env?.VITE_API_URL}/users/favorited/${
+            currentUser?.uid
+          }`,
           currentUser ? currentUser : undefined,
         );
         // Filter current user

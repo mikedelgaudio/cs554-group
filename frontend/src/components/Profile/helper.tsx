@@ -6,7 +6,7 @@ export const changeUsername = async (currentUser: any, newUserName: string) => {
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           username: newUserName,
         },
@@ -26,7 +26,7 @@ export const changeFirstName = async (
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           firstName: newFirstName,
         },
@@ -43,7 +43,7 @@ export const changeLastName = async (currentUser: any, newLastName: string) => {
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           lastName: newLastName,
         },
@@ -63,7 +63,7 @@ export const changeProfilePicture = async (
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           profileImage: newProfilePicture,
         },
@@ -80,7 +80,7 @@ export const changeResume = async (currentUser: any, newResume: string) => {
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           resume: newResume,
         },
@@ -98,13 +98,13 @@ export const changePhoneNumber = async (
   newPhoneNumber: string,
 ) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.contactInfo.phoneNumber = newPhoneNumber;
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           contactInfo: user.data.contactInfo,
         },
@@ -118,12 +118,12 @@ export const changePhoneNumber = async (
 
 // Change Email
 // export const changeEmail = async (currentUser: any, newEmail: string) => {
-//     const user = await axios.get(`http://localhost:3001/users/profile/${currentUser.uid}`);
+//     const user = await axios.get(`${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`);
 //     user.data.contactInfo.email = newEmail;
 //     try {
 //         if (currentUser) {
 //             await postRequest(
-//                 `http://localhost:3001/users/${currentUser.uid}/editUser`,
+//                 `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
 //                 {
 //                     contactInfo: user.data.contactInfo,
 //                 },
@@ -138,13 +138,13 @@ export const changePhoneNumber = async (
 // Change Website
 export const changeWebsite = async (currentUser: any, newWebsite: string) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.contactInfo.website = newWebsite;
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           contactInfo: user.data.contactInfo,
         },
@@ -162,13 +162,13 @@ export const changeOccupation = async (
   newOccupation: string,
 ) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.contactInfo.occupation = newOccupation;
   try {
     if (currentUser) {
       await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           contactInfo: user.data.contactInfo,
         },
@@ -186,13 +186,13 @@ export const addSocialMedia = async (
   socialMediaURL: string,
 ) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.socialMedia.push({ profileURL: socialMediaURL });
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           socialMedia: user.data.socialMedia,
         },
@@ -211,7 +211,7 @@ export const deleteSocialMedia = async (
   socialMediaID: any,
 ) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.socialMedia = user.data.socialMedia.filter(
     (socialMedia: any) => socialMedia.id !== socialMediaID,
@@ -219,7 +219,7 @@ export const deleteSocialMedia = async (
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           socialMedia: user.data.socialMedia,
         },
@@ -235,13 +235,13 @@ export const deleteSocialMedia = async (
 // Add a Like
 export const addLike = async (currentUser: any, like: string) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.likes.push({ name: like });
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           likes: user.data.likes,
         },
@@ -257,13 +257,13 @@ export const addLike = async (currentUser: any, like: string) => {
 // Delete a Like
 export const deleteLike = async (currentUser: any, likeID: any) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.likes = user.data.likes.filter((like: any) => like.id !== likeID);
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           likes: user.data.likes,
         },
@@ -279,13 +279,13 @@ export const deleteLike = async (currentUser: any, likeID: any) => {
 // Add a Dislike
 export const addDislike = async (currentUser: any, dislike: string) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.dislikes.push({ name: dislike });
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           dislikes: user.data.dislikes,
         },
@@ -301,7 +301,7 @@ export const addDislike = async (currentUser: any, dislike: string) => {
 // Delete a Dislike
 export const deleteDislike = async (currentUser: any, dislikeID: any) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   user.data.dislikes = user.data.dislikes.filter(
     (dislike: any) => dislike.id !== dislikeID,
@@ -309,7 +309,7 @@ export const deleteDislike = async (currentUser: any, dislikeID: any) => {
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           dislikes: user.data.dislikes,
         },
@@ -328,12 +328,12 @@ export const modifyFavorites = async (
   favoritedUserID: any,
 ) => {
   const user = await axios.get(
-    `http://localhost:3001/users/profile/${currentUser.uid}`,
+    `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
   try {
     if (currentUser) {
       const data = await postRequest(
-        `http://localhost:3001/users/${currentUser.uid}/editUser`,
+        `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
         {
           favoritedUsers: [favoritedUserID],
         },

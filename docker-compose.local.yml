@@ -1,0 +1,54 @@
+version: "3"
+services:
+  mongodb:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+    volumes:
+      - db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "testing123"
+    networks:
+      - internal-proxy
+  redis:
+    image: "redis:7.0"
+    networks:
+      - internal-proxy
+    ports:
+      - "6379:6379"
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    depends_on:
+      - redis
+      - mongodb
+    env_file:
+      - ./backend/.env
+    networks:
+      - external-proxy
+      - internal-proxy
+    ports:
+      - "3001:3001"
+    command: npm start
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "4173:80"
+    command: ["nginx", "-g", "daemon off;"]
+    networks:
+      - external-proxy
+networks:
+  external-proxy:
+    external: true
+  internal-proxy:
+    external: false
+volumes:
+  db:

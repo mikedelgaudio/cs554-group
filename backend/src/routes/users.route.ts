@@ -6,7 +6,7 @@ import {
   UserLikeItem,
 } from "../data/interfaces";
 import { checkAuth } from "../middleware/token.middleware";
-let data = require("../data/users");
+const data = require("../data/users");
 
 export const usersRouter: Router = express.Router();
 
@@ -58,7 +58,7 @@ usersRouter.get(
     }
     const firebaseUid = req.params.firebaseUid;
     try {
-      let users = await data.getOneUser(firebaseUid);
+      const users = await data.getOneUser(firebaseUid);
       res.json(users);
     } catch (e) {
       res.status(404).json({ error: e });
@@ -85,7 +85,7 @@ usersRouter.get(
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
       throw "add uid as a parameter";
     }
-    let firebaseUid = req.params.firebaseUid;
+    const firebaseUid = req.params.firebaseUid;
     let favorites;
     try {
       let objArr: User[] = [];
@@ -95,7 +95,6 @@ usersRouter.get(
       }
       res.json(objArr);
     } catch (e) {
-      console.log(e);
       res.status(400).json({ error: e });
     }
   },
@@ -105,15 +104,13 @@ usersRouter.post(
   "/:firebaseUid/editUser",
   checkAuth,
   async (req: Request, res: Response) => {
-    console.log(req.body);
     if (!req.params.firebaseUid || typeof req.params.firebaseUid !== "string") {
       throw "add uid as a parameter";
     }
     try {
-      let firebaseUid = req.params.firebaseUid;
+      const firebaseUid = req.params.firebaseUid;
 
-      //console.log(username, email, password);
-      let userObj = {} as User;
+      const userObj = {} as User;
 
       if (req.body.username) {
         if (typeof req.body.username != "string" || !req.body.username) {
@@ -163,7 +160,7 @@ usersRouter.post(
         }
       }
       if (req.body.contactInfo) {
-        let contactFields = ["phoneNumber", "email", "website", "occupation"];
+        const contactFields = ["phoneNumber", "email", "website", "occupation"];
 
         for (const [k, v] of Object.entries(req.body.contactInfo)) {
           if (!contactFields.includes(k)) {
@@ -186,9 +183,7 @@ usersRouter.post(
             .status(400)
             .json({ error: "Updated social medias must be a valid array" });
         } else {
-          console.log("EDSD");
           for (let i = 0; i < req.body.socialMedia.length; i++) {
-            console.log("SDF");
             if (!isASocialMediaItem(req.body.socialMedia[i])) {
               return res
                 .status(400)
@@ -200,14 +195,12 @@ usersRouter.post(
       }
       if (req.body.likes) {
         if (!Array.isArray(req.body.likes)) {
-          console.log("Array Type Check");
           return res
             .status(400)
             .json({ error: "Updated Likes must be a valid array" });
         } else {
           for (let i = 0; i < req.body.likes.length; i++) {
             if (!isAUserLikeItem(req.body.likes[i])) {
-              console.log("Array Value errors");
               return res
                 .status(400)
                 .json({ error: "Likes in array must be valid type" });
@@ -249,7 +242,7 @@ usersRouter.post(
         }
       }
 
-      let answer = await data.patchUser(userObj, firebaseUid);
+      const answer = await data.patchUser(userObj, firebaseUid);
 
       return res.json(answer);
     } catch (e) {
@@ -263,54 +256,9 @@ usersRouter.get("/:firebaseUid", async (req: Request, res: Response) => {
     throw "add uid as a parameter";
   }
   try {
-    let users = await data.getAllUsers(req.params.firebaseUid);
+    const users = await data.getAllUsers(req.params.firebaseUid);
     return res.json(users);
   } catch (e) {
     res.status(404).json({ error: e });
   }
 });
-
-/* 
-
-/auth/register -> createa user:
-
-{
-	_id: "507f1f77bcf86cd799439011",
-	username: “mikeydellWooHoo”,
-	password: ################, ← hashed value
-	firstName: “Mike”,
-	lastName: “Dell”,
-	profileImage:  
-	contactInfo: {
-				phoneNumber: “201-204-2482”,
-				email: “blahblah@gmail.com”,
-				personalWebsite: “hoboken.com”
-				currentRole: “Senior CS Major”
-            }, 
-	socialMedia: [
-        {
-            _id: “12497c4c-b923-422f-98bb-801f8bd737ba”, 
-            profileURL: “https://twitter.com/CityofHoboken”
-        }
-    ],
-    likes: [
-        {
-            _id: “7e13b59d-18b0-439f-ac68-2d6bfed7ee72”, 
-            like: “Swimming”
-        },
-        {
-            _id: “7e13b59d-18b0-439f-ac68-2d6bfed7ee71”, 
-            like: Running
-        }, 
-    ],
-    dislikes: [
-        {
-            _id: "5349b4ddd2781d08c09890f3",
-            dislike: “Running”
-        }, 
-    ],
-    favortiedUsers: [“507f1f77bcf86cd799439011”] 
-}
-
-
-*/

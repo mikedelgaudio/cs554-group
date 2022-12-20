@@ -1,23 +1,23 @@
+import {
+  faBriefcase,
+  faEnvelope,
+  faFileAlt,
+  faGlobe,
+  faPhone,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import noImg from "../../assets/noImg.jpg";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/useTitle.hook";
 import { User } from "../../models/user.backend.model";
+import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
+import { Loading } from "../Shared/Loading.component";
 import { PageLayout } from "../Shared/PageLayout.component";
 import { Tag } from "../Shared/Tag.component";
-import { Loading } from "../Shared/Loading.component";
-import { postRequest } from "../../utils/api.util";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEnvelope,
-  faPhone,
-  faGlobe,
-  faFileAlt,
-  faBriefcase,
-} from "@fortawesome/free-solid-svg-icons";
-import noImg from "../../assets/noImg.jpg";
 import {
   addDislike,
   addLike,
@@ -51,8 +51,10 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useFirebaseAuth();
   let TOAST_ID = "ERROR_UPDATING_PROFILE";
-  const url = "http://localhost:3001/users/profile/" + params.id;
-  const url2 = "http://localhost:3001/users/profile/" + currentUser?.uid;
+  const url = `${import.meta.env?.VITE_API_URL}/users/profile/${params.id}`;
+  const url2 = `${import.meta.env?.VITE_API_URL}/users/profile/${
+    currentUser?.uid
+  }`;
   useEffect(() => {
     async function getUser() {
       setLoading(true);
@@ -92,7 +94,7 @@ const Profile = () => {
       // TODO Update correct URLdata
       if (currentUser) {
         await postRequest(
-          `http://localhost:3001/users/${currentUser.uid}/editUser`,
+          `${import.meta.env?.VITE_API_URL}/users/${currentUser.uid}/editUser`,
           {
             favoritedUsers: [user?.firebaseUid],
           },

@@ -7,7 +7,7 @@ COPY ./backend/ ./
 RUN npm run build
 
 ### STAGE 2: RUN ###
-FROM node:18.12-alpine as production
+FROM node:18.12 as production
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/dist/ ./
 USER node
