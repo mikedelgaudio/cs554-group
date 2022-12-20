@@ -71,8 +71,12 @@ export const changeProfilePicture = async (
       );
     }
   } catch (e: any) {
-    console.log(e);
-  }
+    if (typeof e == 'string') {
+      throw "Please enter a Valid Link"
+    }else {
+      console.log("WISH WASH WISH")
+    throw (e);
+    }  }
 };
 
 // change Resume
@@ -206,7 +210,6 @@ export const addSocialMedia = async (
       return data;
     }
   } catch (e: any) {
-    console.log("FRONTEND I AM HERE")
     console.log(e);
     if (typeof e == 'string') {
       throw "please enter a valid link"
@@ -268,6 +271,12 @@ export const addLike = async (currentUser: any, like: string) => {
       return data;
     }
   } catch (e: any) {
+    console.log("HELPER LIKES I AM HERE")
+    if(typeof e == 'string')
+      throw "Cannot be duplicate value"
+      else{
+        throw e
+      }
     console.log(e);
   }
 };
@@ -318,6 +327,11 @@ export const addDislike = async (currentUser: any, dislike: string) => {
       return data;
     }
   } catch (e: any) {
+    if(typeof e == 'string')
+    throw "Cannot be duplicate value"
+    else{
+      throw e
+    }
     console.log(e);
   }
 };

@@ -212,7 +212,7 @@ const Profile = () => {
       {/* Form to Edit Profile Image URL */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
@@ -222,7 +222,17 @@ const Profile = () => {
             profileImageURL !== "" &&
             typeof profileImageURL === "string"
           ) {
-            changeProfilePicture(currentUser, profileImageURL);
+            try{
+               await changeProfilePicture(currentUser, profileImageURL);
+            }catch(e){
+              console.log("HERE")
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+            else{
+              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for profile image.", true);
+            }   
+            }
+            
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -561,7 +571,11 @@ const Profile = () => {
               setUser(await addLike(currentUser, like));
             }
             catch (e: any) {
+              if(typeof e == "string")
               TOAST_SERVICE.error(TOAST_ID, e, true);
+              else{
+                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for likes", true);
+              }
             }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
@@ -623,8 +637,11 @@ const Profile = () => {
               setUser(await addDislike(currentUser, dislike));
             }
             catch (e) {
-              TOAST_SERVICE.error(TOAST_ID, "Please enter a unique dislike", true);
-            }
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+              else{
+                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for dislikes", true);
+              }            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
