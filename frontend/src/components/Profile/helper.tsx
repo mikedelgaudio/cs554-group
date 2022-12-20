@@ -268,6 +268,12 @@ export const addLike = async (currentUser: any, like: string) => {
       return data;
     }
   } catch (e: any) {
+    console.log("HELPER LIKES I AM HERE")
+    if(typeof e == 'string')
+      throw "Cannot be duplicate value"
+      else{
+        throw e
+      }
     console.log(e);
   }
 };
@@ -318,6 +324,11 @@ export const addDislike = async (currentUser: any, dislike: string) => {
       return data;
     }
   } catch (e: any) {
+    if(typeof e == 'string')
+    throw "Cannot be duplicate value"
+    else{
+      throw e
+    }
     console.log(e);
   }
 };

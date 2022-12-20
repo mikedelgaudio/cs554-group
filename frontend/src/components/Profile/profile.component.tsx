@@ -561,7 +561,11 @@ const Profile = () => {
               setUser(await addLike(currentUser, like));
             }
             catch (e: any) {
+              if(typeof e == "string")
               TOAST_SERVICE.error(TOAST_ID, e, true);
+              else{
+                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for likes", true);
+              }
             }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
@@ -623,8 +627,11 @@ const Profile = () => {
               setUser(await addDislike(currentUser, dislike));
             }
             catch (e) {
-              TOAST_SERVICE.error(TOAST_ID, "Please enter a unique dislike", true);
-            }
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+              else{
+                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for dislikes", true);
+              }            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }

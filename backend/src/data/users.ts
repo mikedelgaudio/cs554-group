@@ -244,6 +244,7 @@ module.exports = {
           }
           for (let j = i+1; j < user.likes.length; j++) {
             if (user.likes[j]["name"].toLowerCase() == user.likes[i]["name"].toLowerCase()) {
+              console.log(user.likes[j]);
               throw "please enter a unique like"
             }
           }
