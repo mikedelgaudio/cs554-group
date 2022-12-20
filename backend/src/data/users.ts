@@ -197,7 +197,9 @@ module.exports = {
       userObj.lastName = user.lastName;
     }
     if (user.profileImage) {
-      if (!validator.isURL(user.profileImage)) {
+
+      if ((user.profileImage.includes("http://") || user.profileImage.includes("https://")) && validator.isURL)
+      {
         throw "Please enter a valid link for images."
       }
       userObj.profileImage = user.profileImage;
