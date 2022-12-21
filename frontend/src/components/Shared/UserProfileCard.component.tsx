@@ -13,6 +13,7 @@ import { postRequest } from "../../utils/api.util";
 import { TOAST_SERVICE } from "../../utils/toast.util";
 import { Loading } from "./Loading.component";
 import { Tag } from "./Tag.component";
+import { handleSocialMedia } from "../Profile/helper";
 
 const UserProfileCard = ({
   id,
@@ -150,7 +151,16 @@ const UserProfileCard = ({
                 <h3 className="font-semibold text-lg">Social Media</h3>
                 {user?.socialMedia?.length ? (
                   user?.socialMedia?.map((item: SocialMediaItem) => {
-                    return <li key={item?.id}>{item?.profileURL}</li>;
+                    const { site, icon } = handleSocialMedia(item?.profileURL);
+                    return (
+                      <Tag
+                        url={`https://${item?.profileURL}`}
+                        key={item?.id}
+                        icon={icon}
+                        text={site}
+                        removable={false}
+                      />
+                    );
                   })
                 ) : (
                   <p>No profiles provided.</p>

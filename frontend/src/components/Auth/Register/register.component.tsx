@@ -58,13 +58,14 @@ const Register = () => {
       });
 
       navigate("/");
-    } catch (e) {
+    } catch (e: any) {
+      const TOAST_MESSAGE =
+        e.code === "auth/weak-password"
+          ? "Password should be at least 6 characters"
+          : "Unexpected error unable to register user. Please try again after refreshing the page";
       const TOAST_ID = "FAILED_TO_REGISTER";
-      TOAST_SERVICE.error(
-        TOAST_ID,
-        "Unexpected error unable to register user. Please try again after refreshing the page",
-        true,
-      );
+
+      TOAST_SERVICE.error(TOAST_ID, TOAST_MESSAGE, true);
     }
 
     (e.target as HTMLFormElement).reset();

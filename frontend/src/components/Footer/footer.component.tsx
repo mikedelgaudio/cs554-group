@@ -1,9 +1,11 @@
 import { Link, NavLink } from "react-router-dom";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 
 // TODO
 // Must align footer profile URL
 
 const Footer = () => {
+  const { currentUser } = useFirebaseAuth();
   const links = () => {
     return (
       <>
@@ -27,7 +29,7 @@ const Footer = () => {
         <li>
           <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            to={"/profile/1"}
+            to={`/profile/${currentUser?.uid}`}
           >
             Profile
           </NavLink>

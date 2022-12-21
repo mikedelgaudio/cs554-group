@@ -22,7 +22,6 @@ import {
   addDislike,
   addLike,
   addSocialMedia,
-  // changeEmail,
   changeFirstName,
   changeLastName,
   changeOccupation,
@@ -34,7 +33,7 @@ import {
   deleteDislike,
   deleteLike,
   deleteSocialMedia,
-  modifyFavorites,
+  handleSocialMedia,
 } from "./helper";
 
 const Profile = () => {
@@ -120,7 +119,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const username = formData.get("username");
-          if (username && username.toString().trim() !== "" && typeof username === "string") {
+          if (
+            username &&
+            username.toString().trim() !== "" &&
+            typeof username === "string"
+          ) {
             changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
@@ -153,7 +156,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
-          if (firstName && firstName.toString().trim() !== "" && typeof firstName === "string") {
+          if (
+            firstName &&
+            firstName.toString().trim() !== "" &&
+            typeof firstName === "string"
+          ) {
             changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
@@ -186,7 +193,11 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
-          if (lastName && lastName.toString().trim() !== "" && typeof lastName === "string") {
+          if (
+            lastName &&
+            lastName.toString().trim() !== "" &&
+            typeof lastName === "string"
+          ) {
             changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
@@ -224,17 +235,19 @@ const Profile = () => {
             profileImageURL.toString().trim() !== "" &&
             typeof profileImageURL === "string"
           ) {
-            try{
-               await changeProfilePicture(currentUser, profileImageURL);
-            }catch(e){
-              console.log("HERE")
-              if(typeof e == "string")
-                TOAST_SERVICE.error(TOAST_ID, e, true);
-            else{
-              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for profile image.", true);
-            }   
+            try {
+              await changeProfilePicture(currentUser, profileImageURL);
+            } catch (e) {
+              console.log("HERE");
+              if (typeof e == "string") TOAST_SERVICE.error(TOAST_ID, e, true);
+              else {
+                TOAST_SERVICE.error(
+                  TOAST_ID,
+                  "Must submit valid URL for profile image.",
+                  true,
+                );
+              }
             }
-            
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -275,14 +288,17 @@ const Profile = () => {
             resumeURL.toString().trim() !== "" &&
             typeof resumeURL === "string"
           ) {
-            try{
-            await changeResume(currentUser, resumeURL);}
-            catch(e){
-              if(typeof e == "string")
-                TOAST_SERVICE.error(TOAST_ID, e, true);
-            else{
-              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for resume.", true);
-            } 
+            try {
+              await changeResume(currentUser, resumeURL);
+            } catch (e) {
+              if (typeof e == "string") TOAST_SERVICE.error(TOAST_ID, e, true);
+              else {
+                TOAST_SERVICE.error(
+                  TOAST_ID,
+                  "Must submit valid URL for resume.",
+                  true,
+                );
+              }
             }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
@@ -292,7 +308,7 @@ const Profile = () => {
         <label className="flex flex-col gap-3 text-lg font-bold">
           Resume URL
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="resumeURL"
             defaultValue={currentUserState?.resume}
@@ -391,21 +407,16 @@ const Profile = () => {
             typeof website === "string"
           ) {
             try {
-            await changeWebsite(currentUser, website);
-          }
-          catch (error) {
-            console.log(error);
-            console.log(typeof error);
-            if (typeof error == 'string')
-            TOAST_SERVICE.error(TOAST_ID, error, true);
-            else {
-              TOAST_SERVICE.error(
-                TOAST_ID,
-                "Please input a valid URL",
-                true,
-              );
+              await changeWebsite(currentUser, website);
+            } catch (error) {
+              console.log(error);
+              console.log(typeof error);
+              if (typeof error == "string")
+                TOAST_SERVICE.error(TOAST_ID, error, true);
+              else {
+                TOAST_SERVICE.error(TOAST_ID, "Please input a valid URL", true);
+              }
             }
-          }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
           }
@@ -466,39 +477,6 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Delete Social Media */}
-      <div className="border-2">
-        <p>Current Social Media</p>
-        <br />
-        {user?.socialMedia
-          ? user?.socialMedia.map(socialMedia => (
-              <div key={socialMedia?.id}>
-                <p>
-                  <a
-                    href={`${socialMedia.profileURL}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {socialMedia?.profileURL}
-                  </a>
-                </p>
-                <button
-                  className="profileButton"
-                  onClick={async () => {
-                    setUser(
-                      await deleteSocialMedia(currentUser, socialMedia.id),
-                    );
-                  }}
-                >
-                  Delete
-                </button>
-                <br />
-                <br />
-              </div>
-            ))
-          : null}
-      </div>
-
       {/* Add Social Media */}
       <form
         className="flex items-end gap-6"
@@ -507,7 +485,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
-          let e:string = "noError"
+          let e: string = "noError";
           if (
             socialMediaURL !== null &&
             socialMediaURL.toString().trim() !== "" &&
@@ -515,18 +493,14 @@ const Profile = () => {
           ) {
             try {
               setUser(await addSocialMedia(currentUser, socialMediaURL));
-            }
-            catch (error) {
+              form.reset();
+            } catch (error) {
               console.log(error);
               console.log(typeof error);
-              if (typeof error == 'string')
-              TOAST_SERVICE.error(TOAST_ID, error, true);
+              if (typeof error == "string")
+                TOAST_SERVICE.error(TOAST_ID, error, true);
               else {
-                TOAST_SERVICE.error(
-                  TOAST_ID,
-                  "Please input a valid URL",
-                  true,
-                );
+                TOAST_SERVICE.error(TOAST_ID, "Please input a valid URL", true);
               }
             }
           } else {
@@ -557,24 +531,27 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Delete Likes */}
-      <div className="border-2">
-        <p>Current Likes</p>
-        <br />
-        <div>
-          {user?.likes
-            ? user?.likes.map(like => (
+      {/* Delete Social Media */}
+      <div>
+        {user?.socialMedia
+          ? user?.socialMedia.map(socialMedia => {
+              const { site, icon } = handleSocialMedia(socialMedia?.profileURL);
+              return (
                 <Tag
-                  key={like.id}
-                  text={like.name}
+                  key={socialMedia?.id}
+                  text={site}
+                  icon={icon}
+                  url={`https://${socialMedia?.profileURL}`}
                   removable={true}
-                  state={async () =>
-                    setUser(await deleteLike(currentUser, like.id))
-                  }
+                  state={async () => {
+                    setUser(
+                      await deleteSocialMedia(currentUser, socialMedia.id),
+                    );
+                  }}
                 />
-              ))
-            : null}
-        </div>
+              );
+            })
+          : null}
       </div>
 
       {/* Add Like */}
@@ -585,7 +562,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          console.log(currentUser)
+          console.log(currentUser);
           if (
             like !== null &&
             like.toString().trim() !== "" &&
@@ -594,12 +571,15 @@ const Profile = () => {
             try {
               console.log(like);
               setUser(await addLike(currentUser, like));
-            }
-            catch (e: any) {
-              if(typeof e == "string")
-              TOAST_SERVICE.error(TOAST_ID, e, true);
-              else{
-                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for likes", true);
+              form.reset();
+            } catch (e: any) {
+              if (typeof e == "string") TOAST_SERVICE.error(TOAST_ID, e, true);
+              else {
+                TOAST_SERVICE.error(
+                  TOAST_ID,
+                  "Cannot have duplicate values for likes",
+                  true,
+                );
               }
             }
           } else {
@@ -608,7 +588,7 @@ const Profile = () => {
         }}
       >
         <label className="flex flex-col gap-3 text-lg font-bold">
-          Like
+          Likes
           <input
             className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
@@ -625,23 +605,23 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Delete Dislike */}
-      <div className="border-2">
-        <p>Current Dislikes</p>
-        <br />
-        {user?.dislikes
-          ? user?.dislikes.map(dislike => (
-              <Tag
-                style="bg-red-200 text-red-700"
-                key={dislike.id}
-                text={dislike.name}
-                removable={true}
-                state={async () =>
-                  setUser(await deleteDislike(currentUser, dislike.id))
-                }
-              />
-            ))
-          : null}
+      {/* Delete Likes */}
+      <div>
+        <div>
+          {user?.likes
+            ? user?.likes.map(like => (
+                <Tag
+                  style="bg-green-200 text-green-700"
+                  key={like.id}
+                  text={like.name}
+                  removable={true}
+                  state={async () =>
+                    setUser(await deleteLike(currentUser, like.id))
+                  }
+                />
+              ))
+            : null}
+        </div>
       </div>
 
       {/* Add Dislike */}
@@ -652,7 +632,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
-          console.log(currentUser)
+          console.log(currentUser);
           if (
             dislike !== null &&
             dislike.toString().trim() !== "" &&
@@ -660,20 +640,24 @@ const Profile = () => {
           ) {
             try {
               setUser(await addDislike(currentUser, dislike));
+              form.reset();
+            } catch (e) {
+              if (typeof e == "string") TOAST_SERVICE.error(TOAST_ID, e, true);
+              else {
+                TOAST_SERVICE.error(
+                  TOAST_ID,
+                  "Cannot have duplicate values for dislikes",
+                  true,
+                );
+              }
             }
-            catch (e) {
-              if(typeof e == "string")
-                TOAST_SERVICE.error(TOAST_ID, e, true);
-              else{
-                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for dislikes", true);
-              }            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
         }}
       >
         <label className="flex flex-col gap-3 text-lg font-bold">
-          Dislike
+          Dislikes
           <input
             className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
@@ -690,24 +674,19 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Form to delete a favorited user? */}
-      <div className="border-2">
-        <p>Current Favorited Users</p>
-        <br />
-        {user?.favoritedUsers
-          ? user?.favoritedUsers.map(favoriteId => (
-              <div key={favoriteId}>
-                <p>{favoriteId}</p>
-                <button
-                  className="profileButton"
-                  onClick={async () => {
-                    setUser(await modifyFavorites(currentUser, favoriteId));
-                  }}
-                >
-                  Delete
-                </button>
-                <br />
-              </div>
+      {/* Delete Dislike */}
+      <div>
+        {user?.dislikes
+          ? user?.dislikes.map(dislike => (
+              <Tag
+                style="bg-red-200 text-red-700"
+                key={dislike.id}
+                text={dislike.name}
+                removable={true}
+                state={async () =>
+                  setUser(await deleteDislike(currentUser, dislike.id))
+                }
+              />
             ))
           : null}
       </div>
@@ -826,26 +805,28 @@ const Profile = () => {
           <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
           {user?.contactInfo.occupation || "Not provided"}
         </div>
-        {/* Social Media */}
-        {/* if user.socialMedia array length is 0 */}
-        {hasSocialMedia ? <p>Social Media: </p> : null}
-        {user?.socialMedia ? (
-          user?.socialMedia.map(socialMedia => (
-            <div key={socialMedia.id}>
-              <a
-                href={`https://${socialMedia.profileURL}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {socialMedia?.profileURL}
-              </a>
-              <br />
-            </div>
-          ))
-        ) : (
-          <p>No Social Media</p>
-        )}
-        {user?.socialMedia ? <br /> : null}
+
+        <div className="text-md">
+          {/* Social Media */}
+          {/* if user.socialMedia array length is 0 */}
+          {hasSocialMedia ? <p className="mb-2">Social Media </p> : null}
+          {user?.socialMedia ? (
+            user?.socialMedia.map(socialMedia => {
+              const { site, icon } = handleSocialMedia(socialMedia.profileURL);
+              return (
+                <Tag
+                  key={socialMedia.id}
+                  url={`https://${socialMedia.profileURL}`}
+                  text={site}
+                  icon={icon}
+                  removable={false}
+                />
+              );
+            })
+          ) : (
+            <p>No Social Media</p>
+          )}
+        </div>
       </div>
 
       {/* Dislikes */}
