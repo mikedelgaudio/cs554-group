@@ -219,7 +219,7 @@ const Profile = () => {
           const profileImageURL = formData.get("profileImageURL");
           if (
             profileImageURL !== null &&
-            profileImageURL !== "" &&
+            profileImageURL.toString().trim() !== "" &&
             typeof profileImageURL === "string"
           ) {
             try{
@@ -270,7 +270,7 @@ const Profile = () => {
           const resumeURL = formData.get("resumeURL");
           if (
             resumeURL !== null &&
-            resumeURL !== "" &&
+            resumeURL.toString().trim() !== "" &&
             typeof resumeURL === "string"
           ) {
             try{
@@ -315,7 +315,7 @@ const Profile = () => {
           const phoneNumber = formData.get("phoneNumber");
           if (
             phoneNumber !== null &&
-            phoneNumber !== "" &&
+            phoneNumber.toString().trim() !== "" &&
             typeof phoneNumber === "string"
           ) {
             changePhoneNumber(currentUser, phoneNumber);
@@ -385,7 +385,7 @@ const Profile = () => {
           const website = formData.get("website");
           if (
             website !== null &&
-            website !== "" &&
+            website.toString().trim() !== "" &&
             typeof website === "string"
           ) {
             try {
@@ -437,7 +437,7 @@ const Profile = () => {
           const currentRole = formData.get("currentRole");
           if (
             currentRole !== null &&
-            currentRole !== "" &&
+            currentRole.toString().trim() !== "" &&
             typeof currentRole === "string"
           ) {
             changeOccupation(currentUser, currentRole);
@@ -508,7 +508,7 @@ const Profile = () => {
           let e:string = "noError"
           if (
             socialMediaURL !== null &&
-            socialMediaURL !== "" &&
+            socialMediaURL.toString().trim() !== "" &&
             typeof socialMediaURL === "string"
           ) {
             try {
@@ -586,7 +586,7 @@ const Profile = () => {
           console.log(currentUser)
           if (
             like !== null &&
-            like !== "" &&
+            like.toString().trim() !== "" &&
             typeof like === "string"
           ) {
             try {
@@ -653,7 +653,7 @@ const Profile = () => {
           console.log(currentUser)
           if (
             dislike !== null &&
-            dislike !== "" &&
+            dislike.toString().trim() !== "" &&
             typeof dislike === "string"
           ) {
             try {
