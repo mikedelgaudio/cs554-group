@@ -157,6 +157,12 @@ export const changeWebsite = async (currentUser: any, newWebsite: string) => {
     }
   } catch (e: any) {
     console.log(e);
+    if (typeof e == 'string') {
+      throw "please enter a valid link"
+    }
+    else {
+    throw (e);
+    }
   }
 };
 

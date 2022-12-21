@@ -370,7 +370,7 @@ const Profile = () => {
       {/* Form to Edit Website */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
@@ -380,7 +380,22 @@ const Profile = () => {
             website !== "" &&
             typeof website === "string"
           ) {
-            changeWebsite(currentUser, website);
+            try {
+            await changeWebsite(currentUser, website);
+          }
+          catch (error) {
+            console.log(error);
+            console.log(typeof error);
+            if (typeof error == 'string')
+            TOAST_SERVICE.error(TOAST_ID, error, true);
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                "Please input a valid URL",
+                true,
+              );
+            }
+          }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
           }

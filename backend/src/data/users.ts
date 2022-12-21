@@ -205,7 +205,15 @@ module.exports = {
       userObj.profileImage = user.profileImage;
     }
     if (user.contactInfo) {
-      userObj.contactInfo = user.contactInfo;
+      console.log("getting here");
+      if (user.contactInfo.website && ((!user.contactInfo.website.includes("http://") && !(user.contactInfo.website.includes("https://")) || !validator.isURL(user.contactInfo.website)))) {
+        console.log("please break")
+        throw "Please enter a valid website";
+      }
+      if (user.contactInfo.email && !validator.isEmail(user.contactInfo.email)) {
+        throw "Please enter a valid email";
+      }
+       userObj.contactInfo = user.contactInfo;
     }
     if (user.resume) {
       userObj.resume = user.resume;
