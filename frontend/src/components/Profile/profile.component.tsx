@@ -76,7 +76,6 @@ const Profile = () => {
         if (userData.favoritedUsers.length > 0) {
           setHasFavoritedUsers(true);
         }
-        console.log("hggg ", currentUserData?.favoritedUsers);
         if (currentUserData?.favoritedUsers?.includes(userData.firebaseUid)) {
           setFavorited(true);
         }
@@ -102,7 +101,6 @@ const Profile = () => {
         setFavorited(prev => (prev = !prev));
       }
     } catch (e) {
-      console.log(e);
       const TOAST_ID = "FAILED_TO_FAVORITE_USER_TOGGLE";
       TOAST_SERVICE.error(TOAST_ID, "Failed to update user favorites", true);
     }
@@ -541,7 +539,7 @@ const Profile = () => {
                   key={socialMedia?.id}
                   text={site}
                   icon={icon}
-                  url={`https://${socialMedia?.profileURL}`}
+                  url={`${socialMedia?.profileURL}`}
                   removable={true}
                   state={async () => {
                     setUser(
@@ -698,18 +696,15 @@ const Profile = () => {
     <div className="grid grid-row-3 grid-col-2 gap-4 text-center gap-6">
       <div className="bg-slate-200 p-6 rounded-xl shadow-md flex flex-col items-center col-span-2">
         {/* Profile Image */}
-        {user?.profileImage ? (
-          <img src={user?.profileImage} alt="Profile Image" className="w-80" />
-        ) : (
-          <img
-            className="max-w-none w-40 h-40 lg:w-[16rem] lg:h-[16rem] rounded-full"
-            height={256}
-            width={256}
-            loading="lazy"
-            src={user?.profileImage || noImg}
-            alt={`${user?.firstName ?? "N/A"}'s profile`}
-          />
-        )}
+        <img
+          className="max-w-none w-40 h-40 lg:w-[16rem] lg:h-[16rem] rounded-full"
+          height={256}
+          width={256}
+          loading="lazy"
+          src={user?.profileImage || noImg}
+          alt={`${user?.firstName ?? "N/A"}'s profile`}
+        />
+
         <div className="mt-4">
           {/* Full Name */}
           <h1 className="text-4xl font-bold">
@@ -816,7 +811,7 @@ const Profile = () => {
               return (
                 <Tag
                   key={socialMedia.id}
-                  url={`https://${socialMedia.profileURL}`}
+                  url={`${socialMedia.profileURL}`}
                   text={site}
                   icon={icon}
                   removable={false}

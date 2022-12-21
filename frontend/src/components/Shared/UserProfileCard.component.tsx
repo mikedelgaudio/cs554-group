@@ -154,7 +154,7 @@ const UserProfileCard = ({
                     const { site, icon } = handleSocialMedia(item?.profileURL);
                     return (
                       <Tag
-                        url={`https://${item?.profileURL}`}
+                        url={`${item?.profileURL}`}
                         key={item?.id}
                         icon={icon}
                         text={site}
