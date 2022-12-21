@@ -22,7 +22,6 @@ import {
   addDislike,
   addLike,
   addSocialMedia,
-  // changeEmail,
   changeFirstName,
   changeLastName,
   changeOccupation,
@@ -34,7 +33,7 @@ import {
   deleteDislike,
   deleteLike,
   deleteSocialMedia,
-  modifyFavorites,
+  handleSocialMedia,
 } from "./helper";
 
 const Profile = () => {
@@ -274,7 +273,7 @@ const Profile = () => {
         <label className="flex flex-col gap-3 text-lg font-bold">
           Resume URL
           <input
-            className="border border-slate-400 p-2 rounded-md"
+            className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="resumeURL"
             defaultValue={currentUserState?.resume}
@@ -433,39 +432,6 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Delete Social Media */}
-      <div className="border-2">
-        <p>Current Social Media</p>
-        <br />
-        {user?.socialMedia
-          ? user?.socialMedia.map(socialMedia => (
-              <div key={socialMedia?.id}>
-                <p>
-                  <a
-                    href={`${socialMedia.profileURL}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {socialMedia?.profileURL}
-                  </a>
-                </p>
-                <button
-                  className="profileButton"
-                  onClick={async () => {
-                    setUser(
-                      await deleteSocialMedia(currentUser, socialMedia.id),
-                    );
-                  }}
-                >
-                  Delete
-                </button>
-                <br />
-                <br />
-              </div>
-            ))
-          : null}
-      </div>
-
       {/* Add Social Media */}
       <form
         className="flex items-end gap-6"
@@ -480,6 +446,7 @@ const Profile = () => {
             typeof socialMediaURL === "string"
           ) {
             setUser(await addSocialMedia(currentUser, socialMediaURL));
+            form.reset();
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -508,24 +475,27 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Delete Likes */}
-      <div className="border-2">
-        <p>Current Likes</p>
-        <br />
-        <div>
-          {user?.likes
-            ? user?.likes.map(like => (
+      {/* Delete Social Media */}
+      <div>
+        {user?.socialMedia
+          ? user?.socialMedia.map(socialMedia => {
+              const { site, icon } = handleSocialMedia(socialMedia?.profileURL);
+              return (
                 <Tag
-                  key={like.id}
-                  text={like.name}
+                  key={socialMedia?.id}
+                  text={site}
+                  icon={icon}
+                  url={`https://${socialMedia?.profileURL}`}
                   removable={true}
-                  state={async () =>
-                    setUser(await deleteLike(currentUser, like.id))
-                  }
+                  state={async () => {
+                    setUser(
+                      await deleteSocialMedia(currentUser, socialMedia.id),
+                    );
+                  }}
                 />
-              ))
-            : null}
-        </div>
+              );
+            })
+          : null}
       </div>
 
       {/* Add Like */}
@@ -538,13 +508,14 @@ const Profile = () => {
           const like = formData.get("like");
           if (like !== null && like !== "" && typeof like === "string") {
             setUser(await addLike(currentUser, like));
+            form.reset();
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
         }}
       >
         <label className="flex flex-col gap-3 text-lg font-bold">
-          Like
+          Likes
           <input
             className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
@@ -561,23 +532,23 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Delete Dislike */}
-      <div className="border-2">
-        <p>Current Dislikes</p>
-        <br />
-        {user?.dislikes
-          ? user?.dislikes.map(dislike => (
-              <Tag
-                style="bg-red-200 text-red-700"
-                key={dislike.id}
-                text={dislike.name}
-                removable={true}
-                state={async () =>
-                  setUser(await deleteDislike(currentUser, dislike.id))
-                }
-              />
-            ))
-          : null}
+      {/* Delete Likes */}
+      <div>
+        <div>
+          {user?.likes
+            ? user?.likes.map(like => (
+                <Tag
+                  style="bg-green-200 text-green-700"
+                  key={like.id}
+                  text={like.name}
+                  removable={true}
+                  state={async () =>
+                    setUser(await deleteLike(currentUser, like.id))
+                  }
+                />
+              ))
+            : null}
+        </div>
       </div>
 
       {/* Add Dislike */}
@@ -594,13 +565,14 @@ const Profile = () => {
             typeof dislike === "string"
           ) {
             setUser(await addDislike(currentUser, dislike));
+            form.reset();
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
         }}
       >
         <label className="flex flex-col gap-3 text-lg font-bold">
-          Dislike
+          Dislikes
           <input
             className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
@@ -617,24 +589,19 @@ const Profile = () => {
         </button>
       </form>
 
-      {/* Form to delete a favorited user? */}
-      <div className="border-2">
-        <p>Current Favorited Users</p>
-        <br />
-        {user?.favoritedUsers
-          ? user?.favoritedUsers.map(favoriteId => (
-              <div key={favoriteId}>
-                <p>{favoriteId}</p>
-                <button
-                  className="profileButton"
-                  onClick={async () => {
-                    setUser(await modifyFavorites(currentUser, favoriteId));
-                  }}
-                >
-                  Delete
-                </button>
-                <br />
-              </div>
+      {/* Delete Dislike */}
+      <div>
+        {user?.dislikes
+          ? user?.dislikes.map(dislike => (
+              <Tag
+                style="bg-red-200 text-red-700"
+                key={dislike.id}
+                text={dislike.name}
+                removable={true}
+                state={async () =>
+                  setUser(await deleteDislike(currentUser, dislike.id))
+                }
+              />
             ))
           : null}
       </div>
@@ -753,26 +720,28 @@ const Profile = () => {
           <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
           {user?.contactInfo.occupation || "Not provided"}
         </div>
-        {/* Social Media */}
-        {/* if user.socialMedia array length is 0 */}
-        {hasSocialMedia ? <p>Social Media: </p> : null}
-        {user?.socialMedia ? (
-          user?.socialMedia.map(socialMedia => (
-            <div key={socialMedia.id}>
-              <a
-                href={`https://${socialMedia.profileURL}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {socialMedia?.profileURL}
-              </a>
-              <br />
-            </div>
-          ))
-        ) : (
-          <p>No Social Media</p>
-        )}
-        {user?.socialMedia ? <br /> : null}
+
+        <div className="text-md">
+          {/* Social Media */}
+          {/* if user.socialMedia array length is 0 */}
+          {hasSocialMedia ? <p className="mb-2">Social Media </p> : null}
+          {user?.socialMedia ? (
+            user?.socialMedia.map(socialMedia => {
+              const { site, icon } = handleSocialMedia(socialMedia.profileURL);
+              return (
+                <Tag
+                  key={socialMedia.id}
+                  url={`https://${socialMedia.profileURL}`}
+                  text={site}
+                  icon={icon}
+                  removable={false}
+                />
+              );
+            })
+          ) : (
+            <p>No Social Media</p>
+          )}
+        </div>
       </div>
 
       {/* Dislikes */}

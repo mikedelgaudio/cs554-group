@@ -1,6 +1,30 @@
 import axios from "axios";
 import { postRequest } from "../../utils/api.util";
+import { TOAST_SERVICE } from "../../utils/toast.util";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFacebook,
+  faTwitter,
+  faLinkedin,
+  faReddit,
+  faInstagram,
+} from "@fortawesome/free-brands-svg-icons";
 
+const TOAST_ID = "SUCCESS_UPDATING_PROFILE";
+
+export const handleSocialMedia = (url: string) => {
+  const supportedSites = [
+    { site: "Facebook", icon: faFacebook },
+    { site: "Twitter", icon: faTwitter },
+    { site: "LinkedIn", icon: faLinkedin },
+    { site: "Instagram", icon: faInstagram },
+    { site: "Reddit", icon: faReddit },
+  ];
+  const determinedSite = supportedSites.find(site =>
+    url.includes(site.site.toLowerCase()),
+  );
+  return determinedSite ?? { site: url, icon: faCircleUser };
+};
 // Change username
 export const changeUsername = async (currentUser: any, newUserName: string) => {
   try {
@@ -12,6 +36,7 @@ export const changeUsername = async (currentUser: any, newUserName: string) => {
         },
         currentUser,
       );
+      TOAST_SERVICE.success(TOAST_ID, "Successfully updated username", true);
     }
   } catch (e: any) {
     console.log(e);
@@ -32,6 +57,7 @@ export const changeFirstName = async (
         },
         currentUser,
       );
+      TOAST_SERVICE.success(TOAST_ID, "Successfully updated first name", true);
     }
   } catch (e: any) {
     console.log(e);
@@ -49,6 +75,7 @@ export const changeLastName = async (currentUser: any, newLastName: string) => {
         },
         currentUser,
       );
+      TOAST_SERVICE.success(TOAST_ID, "Successfully updated last name", true);
     }
   } catch (e: any) {
     console.log(e);
@@ -69,6 +96,11 @@ export const changeProfilePicture = async (
         },
         currentUser,
       );
+      TOAST_SERVICE.success(
+        TOAST_ID,
+        "Successfully updated profile picture",
+        true,
+      );
     }
   } catch (e: any) {
     console.log(e);
@@ -86,6 +118,7 @@ export const changeResume = async (currentUser: any, newResume: string) => {
         },
         currentUser,
       );
+      TOAST_SERVICE.success(TOAST_ID, "Successfully updated resume", true);
     }
   } catch (e: any) {
     console.log(e);
@@ -109,6 +142,11 @@ export const changePhoneNumber = async (
           contactInfo: user.data.contactInfo,
         },
         currentUser,
+      );
+      TOAST_SERVICE.success(
+        TOAST_ID,
+        "Successfully updated phone number",
+        true,
       );
     }
   } catch (e: any) {
@@ -150,6 +188,11 @@ export const changeWebsite = async (currentUser: any, newWebsite: string) => {
         },
         currentUser,
       );
+      TOAST_SERVICE.success(
+        TOAST_ID,
+        "Successfully updated personal website",
+        true,
+      );
     }
   } catch (e: any) {
     console.log(e);
@@ -174,6 +217,7 @@ export const changeOccupation = async (
         },
         currentUser,
       );
+      TOAST_SERVICE.success(TOAST_ID, "Successfully updated occupation", true);
     }
   } catch (e: any) {
     console.log(e);
