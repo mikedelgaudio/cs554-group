@@ -92,6 +92,12 @@ export const changeResume = async (currentUser: any, newResume: string) => {
       );
     }
   } catch (e: any) {
+    if(typeof e == 'string')
+      throw "Cannot be duplicate value"
+    else{
+      throw e
+    }
+      
     console.log(e);
   }
 };
