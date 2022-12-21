@@ -59,10 +59,17 @@ const Register = () => {
 
       navigate("/");
     } catch (e: any) {
-      const TOAST_MESSAGE =
-        e.code === "auth/weak-password"
-          ? "Password should be at least 6 characters"
-          : "Unexpected error unable to register user. Please try again after refreshing the page";
+      console.log(e.code);
+      let TOAST_MESSAGE;
+      if (e.code === "auth/weak-password") {
+        console.log("con");
+        TOAST_MESSAGE = "Password should be at least 6 characters";
+      } else if (e.code === "auth/email-already-in-use") {
+        TOAST_MESSAGE = "Email already used";
+      } else {
+        TOAST_MESSAGE =
+          "Unexpected error unable to register user. Please try again after refreshing the page";
+      }
       const TOAST_ID = "FAILED_TO_REGISTER";
 
       TOAST_SERVICE.error(TOAST_ID, TOAST_MESSAGE, true);
