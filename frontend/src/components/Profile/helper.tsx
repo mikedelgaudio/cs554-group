@@ -71,8 +71,12 @@ export const changeProfilePicture = async (
       );
     }
   } catch (e: any) {
-    console.log(e);
-  }
+    if (typeof e == 'string') {
+      throw "Please enter a Valid Link"
+    }else {
+      console.log("WISH WASH WISH")
+    throw (e);
+    }  }
 };
 
 // change Resume
@@ -88,6 +92,12 @@ export const changeResume = async (currentUser: any, newResume: string) => {
       );
     }
   } catch (e: any) {
+    if(typeof e == 'string')
+      throw "Cannot be duplicate value"
+    else{
+      throw e
+    }
+      
     console.log(e);
   }
 };
@@ -153,6 +163,12 @@ export const changeWebsite = async (currentUser: any, newWebsite: string) => {
     }
   } catch (e: any) {
     console.log(e);
+    if (typeof e == 'string') {
+      throw "please enter a valid link"
+    }
+    else {
+    throw (e);
+    }
   }
 };
 
@@ -188,6 +204,11 @@ export const addSocialMedia = async (
   const user = await axios.get(
     `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
+  for (let i = 0; i < user.data.socialMedia.length; i++) {
+    if (user.data.socialMedia[i]["profileURL"] === socialMediaURL){
+      throw "please select a unique Social Media"
+  }
+}
   user.data.socialMedia.push({ profileURL: socialMediaURL });
   try {
     if (currentUser) {
@@ -202,6 +223,12 @@ export const addSocialMedia = async (
     }
   } catch (e: any) {
     console.log(e);
+    if (typeof e == 'string') {
+      throw "please enter a valid link"
+    }
+    else {
+    throw (e);
+    }
   }
 };
 
@@ -237,6 +264,12 @@ export const addLike = async (currentUser: any, like: string) => {
   const user = await axios.get(
     `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
+  console.log(user);
+  for (let i = 0; i < user.data.likes.length; i++) {
+    if (user.data.likes[i]["name"] === like){
+      throw "please select a unique like"
+  }
+}
   user.data.likes.push({ name: like });
   try {
     if (currentUser) {
@@ -250,6 +283,12 @@ export const addLike = async (currentUser: any, like: string) => {
       return data;
     }
   } catch (e: any) {
+    console.log("HELPER LIKES I AM HERE")
+    if(typeof e == 'string')
+      throw "Cannot be duplicate value"
+      else{
+        throw e
+      }
     console.log(e);
   }
 };
@@ -281,6 +320,12 @@ export const addDislike = async (currentUser: any, dislike: string) => {
   const user = await axios.get(
     `${import.meta.env?.VITE_API_URL}/users/profile/${currentUser.uid}`,
   );
+  console.log(dislike)
+  for (let i = 0; i < user.data.dislikes.length; i++) {
+    if (user.data.dislikes[i]["name"] === dislike){
+      throw "please select a unique dislike"
+  }
+}
   user.data.dislikes.push({ name: dislike });
   try {
     if (currentUser) {
@@ -294,6 +339,11 @@ export const addDislike = async (currentUser: any, dislike: string) => {
       return data;
     }
   } catch (e: any) {
+    if(typeof e == 'string')
+    throw "Cannot be duplicate value"
+    else{
+      throw e
+    }
     console.log(e);
   }
 };

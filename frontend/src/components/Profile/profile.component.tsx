@@ -120,7 +120,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const username = formData.get("username");
-          if (username !== "" && typeof username === "string") {
+          if (username && username.toString().trim() !== "" && typeof username === "string") {
             changeUsername(currentUser, username);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Username cannot be blank", true);
@@ -153,7 +153,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const firstName = formData.get("firstName");
-          if (firstName !== "" && typeof firstName === "string") {
+          if (firstName && firstName.toString().trim() !== "" && typeof firstName === "string") {
             changeFirstName(currentUser, firstName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "First Name cannot be blank", true);
@@ -186,7 +186,7 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const lastName = formData.get("lastName");
-          if (lastName !== "" && typeof lastName === "string") {
+          if (lastName && lastName.toString().trim() !== "" && typeof lastName === "string") {
             changeLastName(currentUser, lastName);
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Last Name cannot be blank", true);
@@ -214,17 +214,27 @@ const Profile = () => {
       {/* Form to Edit Profile Image URL */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const profileImageURL = formData.get("profileImageURL");
           if (
             profileImageURL !== null &&
-            profileImageURL !== "" &&
+            profileImageURL.toString().trim() !== "" &&
             typeof profileImageURL === "string"
           ) {
-            changeProfilePicture(currentUser, profileImageURL);
+            try{
+               await changeProfilePicture(currentUser, profileImageURL);
+            }catch(e){
+              console.log("HERE")
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+            else{
+              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for profile image.", true);
+            }   
+            }
+            
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -255,17 +265,25 @@ const Profile = () => {
       {/* Form to Edit Resume */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const resumeURL = formData.get("resumeURL");
           if (
             resumeURL !== null &&
-            resumeURL !== "" &&
+            resumeURL.toString().trim() !== "" &&
             typeof resumeURL === "string"
           ) {
-            changeResume(currentUser, resumeURL);
+            try{
+            await changeResume(currentUser, resumeURL);}
+            catch(e){
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+            else{
+              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for resume.", true);
+            } 
+            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
           }
@@ -299,7 +317,7 @@ const Profile = () => {
           const phoneNumber = formData.get("phoneNumber");
           if (
             phoneNumber !== null &&
-            phoneNumber !== "" &&
+            phoneNumber.toString().trim() !== "" &&
             typeof phoneNumber === "string"
           ) {
             changePhoneNumber(currentUser, phoneNumber);
@@ -362,17 +380,32 @@ const Profile = () => {
       {/* Form to Edit Website */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const website = formData.get("website");
           if (
             website !== null &&
-            website !== "" &&
+            website.toString().trim() !== "" &&
             typeof website === "string"
           ) {
-            changeWebsite(currentUser, website);
+            try {
+            await changeWebsite(currentUser, website);
+          }
+          catch (error) {
+            console.log(error);
+            console.log(typeof error);
+            if (typeof error == 'string')
+            TOAST_SERVICE.error(TOAST_ID, error, true);
+            else {
+              TOAST_SERVICE.error(
+                TOAST_ID,
+                "Please input a valid URL",
+                true,
+              );
+            }
+          }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Website cannot be blank", true);
           }
@@ -406,7 +439,7 @@ const Profile = () => {
           const currentRole = formData.get("currentRole");
           if (
             currentRole !== null &&
-            currentRole !== "" &&
+            currentRole.toString().trim() !== "" &&
             typeof currentRole === "string"
           ) {
             changeOccupation(currentUser, currentRole);
@@ -474,12 +507,28 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const socialMediaURL = formData.get("socialMediaURL");
+          let e:string = "noError"
           if (
             socialMediaURL !== null &&
-            socialMediaURL !== "" &&
+            socialMediaURL.toString().trim() !== "" &&
             typeof socialMediaURL === "string"
           ) {
-            setUser(await addSocialMedia(currentUser, socialMediaURL));
+            try {
+              setUser(await addSocialMedia(currentUser, socialMediaURL));
+            }
+            catch (error) {
+              console.log(error);
+              console.log(typeof error);
+              if (typeof error == 'string')
+              TOAST_SERVICE.error(TOAST_ID, error, true);
+              else {
+                TOAST_SERVICE.error(
+                  TOAST_ID,
+                  "Please input a valid URL",
+                  true,
+                );
+              }
+            }
           } else {
             TOAST_SERVICE.error(
               TOAST_ID,
@@ -496,7 +545,7 @@ const Profile = () => {
             className="border border-slate-400 p-2 rounded-md font-normal"
             type="text"
             name="socialMediaURL"
-            placeholder="instagram.com/gogo.the.gorilla.dnt/"
+            placeholder="https://instagram.com/gogo.the.gorilla.dnt/"
           />
         </label>
         <button
@@ -536,8 +585,23 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const like = formData.get("like");
-          if (like !== null && like !== "" && typeof like === "string") {
-            setUser(await addLike(currentUser, like));
+          console.log(currentUser)
+          if (
+            like !== null &&
+            like.toString().trim() !== "" &&
+            typeof like === "string"
+          ) {
+            try {
+              console.log(like);
+              setUser(await addLike(currentUser, like));
+            }
+            catch (e: any) {
+              if(typeof e == "string")
+              TOAST_SERVICE.error(TOAST_ID, e, true);
+              else{
+                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for likes", true);
+              }
+            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Like cannot be blank", true);
           }
@@ -588,12 +652,21 @@ const Profile = () => {
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
           const dislike = formData.get("dislike");
+          console.log(currentUser)
           if (
             dislike !== null &&
-            dislike !== "" &&
+            dislike.toString().trim() !== "" &&
             typeof dislike === "string"
           ) {
-            setUser(await addDislike(currentUser, dislike));
+            try {
+              setUser(await addDislike(currentUser, dislike));
+            }
+            catch (e) {
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+              else{
+                TOAST_SERVICE.error(TOAST_ID, "Cannot have duplicate values for dislikes", true);
+              }            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Dislike cannot be blank", true);
           }
