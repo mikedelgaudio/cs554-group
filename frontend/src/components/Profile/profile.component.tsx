@@ -263,7 +263,7 @@ const Profile = () => {
       {/* Form to Edit Resume */}
       <form
         className="flex items-end gap-6"
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
           const formData = new FormData(form);
@@ -273,7 +273,15 @@ const Profile = () => {
             resumeURL !== "" &&
             typeof resumeURL === "string"
           ) {
-            changeResume(currentUser, resumeURL);
+            try{
+            await changeResume(currentUser, resumeURL);}
+            catch(e){
+              if(typeof e == "string")
+                TOAST_SERVICE.error(TOAST_ID, e, true);
+            else{
+              TOAST_SERVICE.error(TOAST_ID, "Must submit valid URL for resume.", true);
+            } 
+            }
           } else {
             TOAST_SERVICE.error(TOAST_ID, "Resume URL cannot be blank", true);
           }

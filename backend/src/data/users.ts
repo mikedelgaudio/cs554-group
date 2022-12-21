@@ -216,6 +216,9 @@ module.exports = {
        userObj.contactInfo = user.contactInfo;
     }
     if (user.resume) {
+      if (!((user.resume.includes("http://") || user.resume.includes("https://")) && validator.isURL(user.resume))) {
+            throw "pleae enter a valid link for your resume"
+          }
       userObj.resume = user.resume;
     }
     if (user.socialMedia) {
