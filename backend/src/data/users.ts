@@ -6,9 +6,12 @@ import {
   UserDislikeItem,
   UserLikeItem,
 } from "./interfaces";
+// @ts-ignore
+const validator = require('validator');
 const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 const { ObjectId } = require("mongodb");
+
 
 function isAUserDislikeItem(obj: any): obj is UserDislikeItem {
   return "name" in obj;
@@ -19,6 +22,7 @@ function isAUserLikeItem(obj: any): obj is UserLikeItem {
 function isASocialMediaItem(obj: any): obj is SocialMediaItem {
   return "profileURL" in obj;
 }
+
 module.exports = {
   isASocialMediaItem,
   isAUserDislikeItem,
@@ -193,12 +197,28 @@ module.exports = {
       userObj.lastName = user.lastName;
     }
     if (user.profileImage) {
+
+      if (!((user.profileImage.includes("http://") || user.profileImage.includes("https://")) && validator.isURL(user.profileImage)))
+      {
+        throw "Please enter a valid link for images."
+      }
       userObj.profileImage = user.profileImage;
     }
     if (user.contactInfo) {
-      userObj.contactInfo = user.contactInfo;
+      console.log("getting here");
+      if (user.contactInfo.website && ((!user.contactInfo.website.includes("http://") && !(user.contactInfo.website.includes("https://")) || !validator.isURL(user.contactInfo.website)))) {
+        console.log("please break")
+        throw "Please enter a valid website";
+      }
+      if (user.contactInfo.email && !validator.isEmail(user.contactInfo.email)) {
+        throw "Please enter a valid email";
+      }
+       userObj.contactInfo = user.contactInfo;
     }
     if (user.resume) {
+      if (!((user.resume.includes("http://") || user.resume.includes("https://")) && validator.isURL(user.resume))) {
+            throw "pleae enter a valid link for your resume"
+          }
       userObj.resume = user.resume;
     }
     if (user.socialMedia) {
@@ -209,6 +229,17 @@ module.exports = {
           }
           if (!user.socialMedia[i]["id"]) {
             user.socialMedia[i]["id"] = ObjectId();
+          }
+          console.log("HERE I AM");
+          console.log(validator.isURL(user.socialMedia[i]["profileURL"]));
+          if (!((user.socialMedia[i]["profileURL"].includes("http://") || user.socialMedia[i]["profileURL"].includes("https://")) && validator.isURL(user.socialMedia[i]["profileURL"]))) {
+            console.log("HALP");
+            throw "please enter a valid link"
+          }
+          for (let j = i+1; j < user.socialMedia.length; j++) {
+            if (user.socialMedia[i]["profileURL"] === user.socialMedia[j]["profileURL"]){
+              throw "no duplicate items allowed";
+            }
           }
         }
         userObj.socialMedia = user.socialMedia;
@@ -226,6 +257,12 @@ module.exports = {
           if (!user.likes[i]["id"]) {
             user.likes[i]["id"] = ObjectId();
           }
+          for (let j = i+1; j < user.likes.length; j++) {
+            if (user.likes[j]["name"].toLowerCase() == user.likes[i]["name"].toLowerCase()) {
+              console.log(user.likes[j]);
+              throw "please enter a unique like"
+            }
+          }
         }
         userObj.likes = user.likes;
       } else {
@@ -241,6 +278,11 @@ module.exports = {
 
           if (!user.dislikes[i]["id"]) {
             user.dislikes[i]["id"] = ObjectId();
+          }
+          for (let j = i+1; j < user.dislikes.length; j++) {
+            if (user.dislikes[j]["name"].toLowerCase() == user.dislikes[i]["name"].toLowerCase()) {
+              throw "please enter a unique dislike"
+            }
           }
         }
         userObj.dislikes = user.dislikes;
